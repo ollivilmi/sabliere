@@ -1,3 +1,5 @@
+require 'src/states/BaseState'
+
 require 'src/states/play/PlayState'
 require 'src/states/StateMachine'
 

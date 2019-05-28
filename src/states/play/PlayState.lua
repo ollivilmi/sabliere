@@ -11,6 +11,8 @@ end
 
 function PlayState:update(dt)
     self.player:update(dt)
+
+
     for k, brick in pairs(self.bricks) do
         if self.player:collides(brick) then
             self.player.grounded = true
