@@ -1,4 +1,4 @@
-require 'src/states/PlayState'
+require 'src/states/play/PlayState'
 require 'src/states/StateMachine'
 
 gStateMachine = {}
