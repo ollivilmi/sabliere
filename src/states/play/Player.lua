@@ -15,7 +15,7 @@ end
 function Player:update(dt)
     if not self.grounded then
         self.dy = self.dy + GRAVITY * dt
-        self.y = self.y + self.dy
+        self.y = math.min(VIRTUAL_HEIGHT - self.height, self.y + self.dy)
     end
 
     if love.keyboard.wasPressed('space') then
