@@ -7,12 +7,17 @@ function Player:init(texture)
     self.width = texture:getWidth()
     self.height = texture:getHeight()
     self.x = VIRTUAL_WIDTH / 2
-    self.y = VIRTUAL_HEIGHT - self.height
+    self.y = VIRTUAL_HEIGHT / 2
     
-    -- self.setKinematic()
     self.dy = 0
     self.dx = 0
+    self.grounded = false
     self.speed = 100
+    self:initHitboxes()
+    self.cRight = false
+    self.cLeft = false
+    self.cBot = false
+    self.cTop = false
 end
 
 function Player:update(dt)
@@ -27,8 +32,9 @@ function Player:update(dt)
     end
 
     if love.keyboard.isDown('space') then
-        self:jump()
-        gSounds.player.jump:play()
+        if self:jump() then
+            gSounds.player.jump:play()
+        end
     end
 end
 
