@@ -14,6 +14,8 @@ function love.load()
     })
 
     love.keyboard.keysPressed = {}
+    love.mouse.buttonsPressed = {}
+    love.mouse.wheelmoved = 0
 end
 
 function love.resize(w,h)
@@ -23,10 +25,20 @@ end
 function love.update(dt)
     gStateMachine:update(dt)
     love.keyboard.keysPressed = {}
+    love.mouse.buttonsPressed = {}
+    love.mouse.wheelmoved = 0
 end
 
 function love.keypressed(key)
     love.keyboard.keysPressed[key] = true
+end
+
+function love.mousepressed(x, y, button)
+    love.mouse.buttonsPressed[button] = true
+end
+
+function love.wheelmoved(x, y)
+    love.mouse.wheelmoved = y
 end
 
 function love.keyboard.wasPressed(key)
@@ -35,6 +47,10 @@ function love.keyboard.wasPressed(key)
     else
         return false
     end
+end
+
+function love.mouse.wasPressed(button)
+    return love.mouse.buttonsPressed[button]
 end
 
 function love.draw()

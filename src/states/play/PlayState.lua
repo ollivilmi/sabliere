@@ -6,6 +6,9 @@ PlayState = Class{__includes = BaseState}
 function PlayState:enter(params)
     self.player = Player(gTextures.player, 0.1)
     self.bricks = {}
+
+    self.cursor = 10
+
     -- ground
     table.insert(self.bricks, Brick(0, VIRTUAL_HEIGHT-10, VIRTUAL_WIDTH, 10))
 
@@ -24,8 +27,13 @@ function PlayState:update(dt)
         end
     end
 
+    if love.mouse.wheelmoved ~= 0 then
+        self.cursor = math.max(10, love.mouse.wheelmoved > 0 and self.cursor + 2 or self.cursor - 2)
+    end
+
     self.player:update(dt)
 end
+
 
 function PlayState:render()
     local backgroundWidth = gTextures.background:getWidth()
@@ -41,6 +49,9 @@ function PlayState:render()
         brick:render()
     end
     self.player:render()
+
+    local x, y = push:toGame(love.mouse.getX(), love.mouse.getY())
+    love.graphics.rectangle('line', x, y, self.cursor, self.cursor)
 
     love.graphics.setFont(gFonts['small'])
     love.graphics.print('grounded: ' .. (self.player.grounded and 1 or 0), VIRTUAL_WIDTH - 60, 5)

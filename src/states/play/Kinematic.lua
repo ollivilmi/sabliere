@@ -1,5 +1,3 @@
-require 'src/states/play/Collision'
-
 Kinematic = Class{__includes = Collision}
 
 function Kinematic:applyDeltas(dt)
@@ -33,7 +31,7 @@ function Kinematic:applyCollision(target)
 
     if self:collidesRight(target) then
         self.dx = math.min(0, self.dx)
-        self.x = target.x
+        self.x = target.x - self.width
         self.cRight = true
     elseif self:collidesLeft(target) then
         self.dx = math.max(0, self.dx)
