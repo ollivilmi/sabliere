@@ -9,11 +9,14 @@ function PlayState:enter(params)
 
     self.cursor = 10
 
-    -- ground
-    table.insert(self.bricks, Brick(0, VIRTUAL_HEIGHT-10, VIRTUAL_WIDTH, 10))
-
     -- test brick
-    table.insert(self.bricks, Brick(100, VIRTUAL_HEIGHT - 30, 40, 100))
+    table.insert(self.bricks, Brick(100, VIRTUAL_HEIGHT - 30, 100, 100))
+
+    -- ground
+    for k, brick in pairs(Brick:rectangle(0, VIRTUAL_HEIGHT-10, 700, 30)) do
+        table.insert(self.bricks, brick)
+    end
+
 end
 
 function PlayState:update(dt)
