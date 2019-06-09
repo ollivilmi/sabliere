@@ -11,12 +11,14 @@ function Brick:init(x, y, width, height)
 
     self.health = 1
     self.broken = false
+    self.color = {1, 1, 1, 1}
 end
 
 function Brick:update(dt)
 end
 
 function Brick:render()
+    love.graphics.setColor(self.color)
     love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
 end
 

@@ -13,8 +13,11 @@ function Collision:collides(target)
     return true
 end
 
-function Collision:circleCollides(target)
-    if 
+-- function Collision:collidesCircle(target)
+-- end
+
+function Collision:collidesPoint(target)
+    return self.x <= target.x and self.x + self.width >= target.x and self.y <= target.y and self.y + self.height >= target.y
 end
 
 function Collision:initHitboxes(target)

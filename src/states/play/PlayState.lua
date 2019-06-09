@@ -29,9 +29,12 @@ function PlayState:update(dt)
             self.player.grounded = true
             self.player:applyCollision(brick)
         end
+        
+        if brick:collidesPoint(self.cursor) then
+            brick.color = {1, 0, 0, 1}
+        end
     end
 
-    
     -- TODO: mouse click checks for colliding bricks, which are then destroyed
     -- each destroyed brick should be added to your "ammo" for building
 --    if love.mouse.wasPressed(1) then
