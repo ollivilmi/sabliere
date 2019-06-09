@@ -1,5 +1,6 @@
 require 'src/states/play/Player'
 require 'src/states/play/Brick'
+require 'src/states/play/Cursor'
 
 PlayState = Class{__includes = BaseState}
 
@@ -7,7 +8,7 @@ function PlayState:enter(params)
     self.player = Player(gTextures.player, 0.1)
     self.bricks = {}
 
-    self.cursor = 10
+    self.cursor = Cursor(10)
 
     -- test brick
     table.insert(self.bricks, Brick(100, VIRTUAL_HEIGHT - 30, 100, 100))
@@ -30,10 +31,18 @@ function PlayState:update(dt)
         end
     end
 
-    if love.mouse.wheelmoved ~= 0 then
-        self.cursor = math.max(10, love.mouse.wheelmoved > 0 and self.cursor + 2 or self.cursor - 2)
-    end
+    
+    -- TODO: mouse click checks for colliding bricks, which are then destroyed
+    -- each destroyed brick should be added to your "ammo" for building
+--    if love.mouse.wasPressed(1) then
+ --       for k, brick in pairs(self.bricks) do
+   --         if self.cursor:collides(brick) then
+   --             brick:break(self.cursor)
+  --          end
+ --       end
+ --   end
 
+    self.cursor:update(dt)
     self.player:update(dt)
 end
 
@@ -52,9 +61,7 @@ function PlayState:render()
         brick:render()
     end
     self.player:render()
-
-    local x, y = push:toGame(love.mouse.getX(), love.mouse.getY())
-    love.graphics.rectangle('line', x, y, self.cursor, self.cursor)
+    self.cursor:render()
 
     love.graphics.setFont(gFonts['small'])
     love.graphics.print('grounded: ' .. (self.player.grounded and 1 or 0), VIRTUAL_WIDTH - 60, 5)

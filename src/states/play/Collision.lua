@@ -13,6 +13,10 @@ function Collision:collides(target)
     return true
 end
 
+function Collision:circleCollides(target)
+    if 
+end
+
 function Collision:initHitboxes(target)
     local HITBOX_SIZE = 3
 

@@ -48,12 +48,12 @@ function Brick:rectangle(x, y, width, height)
         -- looping rectangle by:    width / (width/height)
         -- which equals width incremented by height for each iteration
         for i = x, x + width, height do
-                table.insert(rectangle, Brick(i,y,height,height))
+            table.insert(rectangle, Brick(i,y,height,height))
         end
     else
         remainder = math.fmod(width, height)
         for j = y, y + height, width do
-                table.insert(rectangle, Brick(x,j,width,width))
+            table.insert(rectangle, Brick(x,j,width,width))
         end
     end
     
