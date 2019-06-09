@@ -39,5 +39,6 @@ function Player:update(dt)
 end
 
 function Player:render()
+    love.graphics.setColor(1,1,1,1)
     love.graphics.draw(self.texture, self.x, self.y, 0, 1)
 end

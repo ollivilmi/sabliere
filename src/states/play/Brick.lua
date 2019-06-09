@@ -10,7 +10,7 @@ function Brick:init(x, y, width, height)
     self.height = height
 
     self.health = 1
-    self.broken = false
+    self.destroyed = false
     self.color = {1, 1, 1, 1}
 end
 
@@ -22,18 +22,26 @@ function Brick:render()
     love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
 end
 
-function Brick:destroy()
+function Brick:destroy(circle)
     local segments = {}
+    self.destroyed = true
 
     -- break into 4x4 smaller segments
     if self.width > MINIMUM_BRICK_SIZE then
         for x = self.x, self.x + self.width, self.width / 2 do
             for y = self.y, self.y + self.height, self.height / 2 do
-                table.insert(segments, Brick(x, y, self.width/2, self.height/2))
+                brick = Brick(x, y, self.width/2, self.height/2)
+
+                if circle:collides(brick) then
+                    segs = brick:destroy(circle)
+                    for i,v in pairs(segs) do
+                        table.insert(segments, v)
+                    end
+                else
+                    table.insert(segments, brick)
+                end
             end
         end
-    else
-        self.broken = true
     end
 
     return segments 

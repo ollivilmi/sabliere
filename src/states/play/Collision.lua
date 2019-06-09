@@ -13,24 +13,6 @@ function Collision:collides(target)
     return true
 end
 
-function math.clamp(val, lower, upper)
-    if lower > upper then lower, upper = upper, lower end
-    return math.max(lower, math.min(upper, val))
-end
-
-function Collision:collidesCircle(target)
-    -- closest x and y to circle
-    closestX = math.clamp(self.x, target.x, target.x + target.width)
-    closestY = math.clamp(self.y, target.y, target.y + target.height)
-
-    distanceX = self.x - closestX
-    distanceY = self.y - closestY
-
-    -- If the distance is less than the circle's radius, an intersection occurs
-    distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
-    return distanceSquared < (self.radius * self.radius);
-end
-
 function Collision:collidesPoint(target)
     return self.x <= target.x and self.x + self.width >= target.x and self.y <= target.y and self.y + self.height >= target.y
 end

@@ -1,10 +1,15 @@
-Cursor = Class{__includes = Collision}
+Cursor = Class{}
+require 'src/states/play/Circle'
 
 function Cursor:init(radius)
     self.radius = radius
     self.minRadius = radius
     self.x = 0
     self.y = 0
+end
+
+function Cursor:click()
+    return Circle(self.x, self.y, self.radius)
 end
 
 function Cursor:update(dt)
