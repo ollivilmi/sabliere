@@ -30,7 +30,7 @@ function PlayState:update(dt)
             self.player:applyCollision(brick)
         end
         
-        if brick:collidesPoint(self.cursor) then
+        if self.cursor:collidesCircle(brick) then
             brick.color = {1, 0, 0, 1}
         end
     end
