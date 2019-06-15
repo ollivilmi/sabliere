@@ -11,7 +11,7 @@ function PlayState:enter(params)
     self.cursor = Cursor(10)
 
     -- test brick
-    table.insert(self.bricks, Brick(100, VIRTUAL_HEIGHT - 30, 100, 100))
+    table.insert(self.bricks, Brick(100, VIRTUAL_HEIGHT - 130, 120, 120))
 
     -- ground
     for k,brick in pairs(Brick:rectangle(0, VIRTUAL_HEIGHT-10, 700, 30)) do
@@ -34,16 +34,24 @@ function PlayState:update(dt)
     -- each destroyed brick should be added to your "ammo" for building
     if love.mouse.wasPressed(1) then
         local pos = self.cursor:click()
+        local toDestroy = {}
+        local toAdd = {}
 
         for k, brick in pairs(self.bricks) do
             if brick ~= nil and pos:collides(brick) then
-                for i, b in pairs(brick:destroy(pos)) do
-                    b.color = {1, 0, 0, 1}
-                    table.insert(self.bricks, b)
-                end
-
-                self.bricks[k] = nil
+                table.insert(toDestroy, k)
             end
+        end
+
+        for k, brick in pairs(toDestroy) do
+            for i, b in pairs(self.bricks[brick]:destroy(pos)) do
+                table.insert(toAdd, b)
+            end
+            self.bricks[brick] = nil
+        end
+
+        for k, brick in pairs(toAdd) do
+            table.insert(self.bricks, brick)
         end
     end
 

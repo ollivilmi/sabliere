@@ -18,26 +18,31 @@ end
 
 function Brick:render()
     love.graphics.setColor(self.color)
-    love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
+    love.graphics.rectangle('line', self.x, self.y, self.width, self.height)
 end
 
 function Brick:destroy(circle)
     local segments = {}
+    local width = self.width/2
+    local height = self.height/2
+    local bricks = {}
 
-    -- break into 4x4 smaller segments
-    if self.width > MINIMUM_BRICK_SIZE then
-        for x = self.x, self.x + self.width, self.width / 2 do
-            for y = self.y, self.y + self.height, self.height / 2 do
-                brick = Brick(x, y, self.width/2, self.height/2)
+    -- break into 4x4 smaller segments by dividing height & width by 2
+    if width >= MINIMUM_BRICK_SIZE then
+        for x = self.x, self.x + width, width do
+            for y = self.y, self.y + height, height do
+                table.insert(bricks, Brick(x, y, width, height))
+            end
+        end
 
-                if circle:collides(brick) then
-                    segs = brick:destroy(circle)
-                    for i,v in pairs(segs) do
-                        table.insert(segments, v)
-                    end
-                else
-                    table.insert(segments, brick)
+        for k, brick in pairs(bricks) do 
+            if circle:collides(brick) then
+                for i,v in pairs(brick:destroy(circle)) do
+                    table.insert(segments, v)
                 end
+                brick = nil
+            else
+                table.insert(segments, brick)
             end
         end
     end
