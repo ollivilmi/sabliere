@@ -6,11 +6,6 @@ function Circle:init(x, y, radius)
     self.radius = radius
 end
 
-function math.clamp(val, lower, upper)
-    if lower > upper then lower, upper = upper, lower end
-    return math.max(lower, math.min(upper, val))
-end
-
 function Circle:collides(target)
     -- closest x and y to circle
     closestX = math.clamp(self.x, target.x, target.x + target.width)

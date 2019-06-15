@@ -1,5 +1,6 @@
+require 'src/states/play/lib/physics/Hitbox'
+
 Collision = Class{}
-require 'src/states/play/Hitbox'
 
 function Collision:collides(target)
     if self.x > target.x + target.width or target.x > self.x + self.width then
@@ -11,10 +12,6 @@ function Collision:collides(target)
     end
 
     return true
-end
-
-function Collision:collidesPoint(target)
-    return self.x <= target.x and self.x + self.width >= target.x and self.y <= target.y and self.y + self.height >= target.y
 end
 
 function Collision:initHitboxes(target)

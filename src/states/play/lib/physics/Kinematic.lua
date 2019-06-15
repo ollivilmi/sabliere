@@ -1,3 +1,5 @@
+require 'src/states/play/lib/physics/Collision'
+
 Kinematic = Class{__includes = Collision}
 
 function Kinematic:applyDeltas(dt)

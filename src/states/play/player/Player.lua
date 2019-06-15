@@ -1,8 +1,9 @@
-require 'src/states/play/Kinematic'
+require 'src/states/play/lib/physics/Kinematic'
+require 'src/states/play/player/Cursor'
 
 Player = Class{__includes = Kinematic}
 
-function Player:init(texture)
+function Player:init(texture, playState)
     self.texture = texture
     self.width = texture:getWidth()
     self.height = texture:getHeight()
@@ -14,10 +15,8 @@ function Player:init(texture)
     self.grounded = false
     self.speed = 100
     self:initHitboxes()
-    self.cRight = false
-    self.cLeft = false
-    self.cBot = false
-    self.cTop = false
+
+    self.cursor = Cursor(10, playState)
 end
 
 function Player:update(dt)
@@ -36,9 +35,12 @@ function Player:update(dt)
             gSounds.player.jump:play()
         end
     end
+
+    self.cursor:update(dt)
 end
 
 function Player:render()
     love.graphics.setColor(1,1,1,1)
     love.graphics.draw(self.texture, self.x, self.y, 0, 1)
+    self.cursor:render()
 end
