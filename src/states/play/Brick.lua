@@ -10,7 +10,6 @@ function Brick:init(x, y, width, height)
     self.height = height
 
     self.health = 1
-    self.destroyed = false
     self.color = {1, 1, 1, 1}
 end
 
@@ -24,7 +23,6 @@ end
 
 function Brick:destroy(circle)
     local segments = {}
-    self.destroyed = true
 
     -- break into 4x4 smaller segments
     if self.width > MINIMUM_BRICK_SIZE then

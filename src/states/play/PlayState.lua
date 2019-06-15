@@ -24,7 +24,7 @@ function PlayState:update(dt)
     self.player.grounded = false
 
     for k, brick in pairs(self.bricks) do
-        if self.player:collides(brick) then
+        if brick ~= nil and self.player:collides(brick) then
             self.player.grounded = true
             self.player:applyCollision(brick)
         end
@@ -34,30 +34,16 @@ function PlayState:update(dt)
     -- each destroyed brick should be added to your "ammo" for building
     if love.mouse.wasPressed(1) then
         local pos = self.cursor:click()
-        local toAdd = {}
-        local toRemove = {}
 
         for k, brick in pairs(self.bricks) do
-            if pos:collides(brick) then
-                table.insert(toRemove, brick)
-            end
-        end
+            if brick ~= nil and pos:collides(brick) then
+                for i, b in pairs(brick:destroy(pos)) do
+                    b.color = {1, 0, 0, 1}
+                    table.insert(self.bricks, b)
+                end
 
-        for k, brick in pairs(toRemove) do
-            for i, b in pairs(brick:destroy(pos)) do
-                b.color = {1, 0, 0, 1}
-                table.insert(toAdd, b)
+                self.bricks[k] = nil
             end
-        end
-
-        for k, brick in pairs(self.bricks) do
-            if brick.destroyed then
-                table.remove(self.bricks, k)
-            end
-        end
-
-        for k, brick in pairs(toAdd) do
-            table.insert(self.bricks, brick)
         end
     end
 
@@ -77,7 +63,9 @@ function PlayState:render()
         VIRTUAL_WIDTH / (backgroundWidth - 1), VIRTUAL_HEIGHT / (backgroundHeight - 1))
     
     for k, brick in pairs(self.bricks) do
-        brick:render()
+        if brick ~= nil then
+            brick:render()
+        end
     end
     self.player:render()
     self.cursor:render()
