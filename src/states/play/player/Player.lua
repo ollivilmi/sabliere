@@ -1,5 +1,5 @@
 require 'src/states/play/lib/physics/Kinematic'
-require 'src/states/play/player/Cursor'
+require 'src/states/play/player/Tool'
 
 Player = Class{__includes = Kinematic}
 
@@ -16,7 +16,7 @@ function Player:init(texture, playState)
     self.speed = 100
     self:initHitboxes()
 
-    self.cursor = Cursor(10, playState)
+    self.tool = Tool(playState)
 end
 
 function Player:update(dt)
@@ -36,11 +36,11 @@ function Player:update(dt)
         end
     end
 
-    self.cursor:update(dt)
+    self.tool:update(dt)
 end
 
 function Player:render()
     love.graphics.setColor(1,1,1,1)
     love.graphics.draw(self.texture, self.x, self.y, 0, 1)
-    self.cursor:render()
+    self.tool:render()
 end

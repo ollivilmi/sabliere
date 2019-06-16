@@ -9,7 +9,7 @@ function Level:init(playState)
     }
 
     -- test brick
-    table.insert(self.bricks, Brick(100, VIRTUAL_HEIGHT - 130, 120, 120))
+    table.insert(self.bricks, Brick(96, VIRTUAL_HEIGHT - 130, 120, 120))
 
     -- ground
     for k,brick in pairs(Brick:rectangle(0, VIRTUAL_HEIGHT-10, 700, 30)) do
@@ -33,6 +33,10 @@ function Level:gravity()
             end
         end
     end
+end
+
+function Level:createBrick(brick)
+    table.insert(self.bricks, brick)
 end
 
 function Level:destroyBricks(pos)

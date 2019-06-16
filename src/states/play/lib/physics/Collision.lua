@@ -14,6 +14,16 @@ function Collision:collides(target)
     return true
 end
 
+-- Hitboxes are used to check which side is currently colliding with target
+-- when AABB collision is not enough
+--
+-- HITBOX_SIZE is an offset to make left+right hitboxes not collide horizontally
+-- top+bottom hitboxes not collide vertically
+--
+-- Basically creates the hitboxes for a rectangular object like this:
+--                __
+--               |  |
+--                ‾‾
 function Collision:initHitboxes(target)
     local HITBOX_SIZE = 3
 
@@ -31,15 +41,15 @@ function Collision:initHitboxes(target)
             self.height - HITBOX_SIZE*2
         ),
         top = Hitbox(
-            self.x,
+            self.x + HITBOX_SIZE,
             self.y,
-            self.width,
+            self.width - HITBOX_SIZE*2,
             HITBOX_SIZE
         ),
         bottom = Hitbox(
-            self.x,
+            self.x + HITBOX_SIZE,
             self.y + self.height - HITBOX_SIZE,
-            self.width,
+            self.width - HITBOX_SIZE*2,
             HITBOX_SIZE
         )
     }

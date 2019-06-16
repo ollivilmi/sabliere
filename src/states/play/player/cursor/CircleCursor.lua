@@ -1,36 +1,36 @@
-Cursor = Class{}
+require 'src/states/play/player/cursor/Cursor'
 require 'src/states/play/lib/physics/Circle'
 
-function Cursor:init(radius, playState)
+CircleCursor = Class{__includes = Cursor}
+
+function CircleCursor:init(radius, increment, action)
     self.radius = radius
     self.minRadius = radius
+    self.increment = increment
     self.x = 0
     self.y = 0
-    self.playState = playState
+    self.action = action
 end
 
-function Cursor:getPosition()
+function CircleCursor:getPosition()
     return Circle(self.x, self.y, self.radius)
 end
 
-function Cursor:update(dt)
+function CircleCursor:update(dt)
     self.x, self.y = push:toGame(love.mouse.getX(), love.mouse.getY())
 
     if love.mouse.wheelmoved ~= 0 then
-        self.radius = math.max(self.minRadius, love.mouse.wheelmoved > 0 and self.radius + 2 or self.radius - 2)
+        self.radius = math.max(self.minRadius, love.mouse.wheelmoved > 0 and self.radius + self.increment 
+        or self.radius - self.increment)
     end
 
     -- mouse click checks for colliding bricks, which are then destroyed
     -- each destroyed brick should be added to your "ammo" for building
     if love.mouse.wasPressed(1) then
-        self.playState.level:destroyBricks(self:getPosition())
+        self.action()
     end
 end
 
--- TODO: switch mode between destroy to build
-function Cursor:switchMode()
-end
-
-function Cursor:render()
+function CircleCursor:render()
     love.graphics.circle('line', self.x, self.y, self.radius)
 end
