@@ -11,7 +11,7 @@ function Tool:init(playState)
             end
         ),
         build = SquareCursor(
-            BRICK_SIZE, BRICK_SIZE, function()
+            BRICK_SIZE, function()
                 playState.level:createBrick(self.current:getPosition())
             end
         )

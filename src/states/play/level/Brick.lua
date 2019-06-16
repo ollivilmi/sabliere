@@ -1,5 +1,4 @@
 Brick = Class{__includes = Collision}
-SNAP = 5
 
 -- Bricks are squares with min length BRICK_SIZE
 function Brick:init(x, y, length)

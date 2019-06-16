@@ -2,10 +2,9 @@ require 'src/states/play/player/cursor/Cursor'
 
 SquareCursor = Class{__includes = BaseState}
 
-function SquareCursor:init(length, increment, action)
+function SquareCursor:init(length, action)
     self.length = length
-    self.minlength = length
-    self.increment = increment
+    self.increment = 1
     self.x = 0
     self.y = 0
     self.action = action
@@ -18,12 +17,13 @@ end
 
 function SquareCursor:update(dt)
     self.x, self.y = push:toGame(love.mouse.getX(), love.mouse.getY())
-    self.x, self.y = math.snap(5, self.x, self.y)
+    self.x, self.y = math.snap(SNAP, self.x, self.y)
 
-
+    -- to properly split squares, the area must be in binary increments
     if love.mouse.wheelmoved ~= 0 then
-        self.length = math.max(self.minlength, love.mouse.wheelmoved > 0 and self.length + self.increment 
-        or self.length - self.increment)
+        self.increment = math.max(0, love.mouse.wheelmoved > 0 and self.increment + 1 
+        or self.increment - 1)
+        self.length = BRICK_SIZE * (2 ^ self.increment)
     end
 
     if love.mouse.wasPressed(1) then

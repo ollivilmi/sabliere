@@ -9,10 +9,10 @@ function Level:init(playState)
     }
 
     -- test brick
-    table.insert(self.bricks, Brick(96, VIRTUAL_HEIGHT - 130, 120, 120))
+    table.insert(self.bricks, Brick(0, VIRTUAL_HEIGHT - 130, 80, 80))
 
     -- ground
-    for k,brick in pairs(Brick:rectangle(0, VIRTUAL_HEIGHT-10, 700, 30)) do
+    for k,brick in pairs(Brick:rectangle(0, VIRTUAL_HEIGHT-30, 700, 30)) do
         table.insert(self.bricks, brick)
     end
 end
