@@ -1,42 +1,15 @@
 Brick = Class{__includes = Collision}
-
 SNAP = 5
 
--- Bricks are squares, size divisible by 5 determined by constant BRICK_SIZE
+-- Bricks are squares with min length BRICK_SIZE
 function Brick:init(x, y, length)
-    oldValues = {x,y, length}
-    self.x, self.y = self:snap(x, y, length)
-    self:testSnap(oldValues, {self.x, self.y, length})
+    self.x, self.y, length = math.snap(SNAP, x, y, length)
 
     self.width = length
     self.height = length
 
     self.health = 1
     self.color = {1, 1, 1, 1}
-end
-
--- Make sure the brick is aligned
-function Brick:snap(x, y, length)
-    x = x - math.fmod(x, SNAP)
-    y = y - math.fmod(y, SNAP)
-    length = math.min(BRICK_SIZE, length - math.fmod(length, SNAP))
-    return x, y, length
-end
-
--- Debugging
-function Brick:testSnap(oldValues, newValues)
-    changed = false
-    for i = 1, 3 do
-        if oldValues[i] ~= newValues[i] then
-            changed = true
-        end
-    end
-    if changed then
-        print("Snapped from " .. table.concat(oldValues,", ") .. " -> " .. table.concat(newValues,", "))
-    end
-end
-
-function Brick:update(dt)
 end
 
 function Brick:render()

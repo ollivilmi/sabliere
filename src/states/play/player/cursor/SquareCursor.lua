@@ -18,6 +18,8 @@ end
 
 function SquareCursor:update(dt)
     self.x, self.y = push:toGame(love.mouse.getX(), love.mouse.getY())
+    self.x, self.y = math.snap(5, self.x, self.y)
+
 
     if love.mouse.wheelmoved ~= 0 then
         self.length = math.max(self.minlength, love.mouse.wheelmoved > 0 and self.length + self.increment 
