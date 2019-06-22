@@ -1,19 +1,19 @@
-require 'src/states/play/level/Brick'
+require 'src/states/play/level/Tile'
 
 Level = Class{}
 
 function Level:init(playState)
-    self.bricks = {}
+    self.tiles = {}
     self.kinematicObjects = { 
         player = playState.player 
     }
 
     -- test brick
-    table.insert(self.bricks, Brick(0, VIRTUAL_HEIGHT - 130, 80, 80))
+    table.insert(self.tiles, Tile(0, VIRTUAL_HEIGHT - 130, 80, 80))
 
     -- ground
-    for k,brick in pairs(Brick:rectangle(0, VIRTUAL_HEIGHT-30, 700, 30)) do
-        table.insert(self.bricks, brick)
+    for k,brick in pairs(Tile:rectangle(0, VIRTUAL_HEIGHT-30, 700, 30)) do
+        table.insert(self.tiles, brick)
     end
 end
 
@@ -27,7 +27,7 @@ function Level:gravity()
         -- with ground
         object.grounded = false
 
-        for k, brick in pairs(self.bricks) do
+        for k, brick in pairs(self.tiles) do
             if brick ~= nil and object:collides(brick) then
                 object:applyCollision(brick)
             end
@@ -35,29 +35,29 @@ function Level:gravity()
     end
 end
 
-function Level:createBrick(brick)
-    table.insert(self.bricks, brick)
+function Level:createTile(brick)
+    table.insert(self.tiles, brick)
 end
 
-function Level:destroyBricks(pos)
+function Level:destroyTiles(pos)
     local toDestroy = {}
     local toAdd = {}
 
-    for k, brick in pairs(self.bricks) do
+    for k, brick in pairs(self.tiles) do
         if brick ~= nil and pos:collides(brick) then
             table.insert(toDestroy, k)
         end
     end
 
     for k, brick in pairs(toDestroy) do
-        for i, b in pairs(self.bricks[brick]:destroy(pos)) do
+        for i, b in pairs(self.tiles[brick]:destroy(pos)) do
             table.insert(toAdd, b)
         end
-        self.bricks[brick] = nil
+        self.tiles[brick] = nil
     end
 
     for k, brick in pairs(toAdd) do
-        table.insert(self.bricks, brick)
+        table.insert(self.tiles, brick)
     end
 end
 
@@ -71,7 +71,7 @@ function Level:render()
         -- scale factors on X and Y axis so it fills the screen
         VIRTUAL_WIDTH / (backgroundWidth - 1), VIRTUAL_HEIGHT / (backgroundHeight - 1))
     
-    for k, brick in pairs(self.bricks) do
+    for k, brick in pairs(self.tiles) do
         if brick ~= nil then
             brick:render()
         end

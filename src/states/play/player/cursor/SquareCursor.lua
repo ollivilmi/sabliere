@@ -10,20 +10,20 @@ function SquareCursor:init(length, action)
     self.action = action
 end
 
--- for square cursor, we will snap to nearest block divisible by MINIMUM_BRICK_SIZE
+-- for square cursor, we will snap to nearest block divisible by MINIMUM_TILE_SIZE
 function SquareCursor:getPosition()
-    return Brick(self.x, self.y, self.length)
+    return Tile(self.x, self.y, self.length)
 end
 
 function SquareCursor:update(dt)
     self.x, self.y = push:toGame(love.mouse.getX(), love.mouse.getY())
-    self.x, self.y = math.snap(SNAP, self.x, self.y)
+    self.x, self.y = math.snap(self.x, self.y)
 
     -- to properly split squares, the area must be in binary increments
     if love.mouse.wheelmoved ~= 0 then
         self.increment = math.max(0, love.mouse.wheelmoved > 0 and self.increment + 1 
         or self.increment - 1)
-        self.length = BRICK_SIZE * (2 ^ self.increment)
+        self.length = TILE_SIZE * (2 ^ self.increment)
     end
 
     if love.mouse.wasPressed(1) then

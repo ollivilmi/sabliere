@@ -3,11 +3,11 @@ function math.clamp(val, lower, upper)
     return math.max(lower, math.min(upper, val))
 end
 
-function math.snap(snap, ...)
+function math.snap(...)
     newValues = {...}
 
     for i, value in ipairs(newValues) do
-        newValues[i] = value - math.fmod(value, snap)
+        newValues[i] = value - math.fmod(value, SNAP)
     end
     return unpack(newValues)
 end

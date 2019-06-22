@@ -1,32 +1,32 @@
-Brick = Class{__includes = Collision}
+Tile = Class{__includes = Collision}
 
--- Bricks are squares with min length BRICK_SIZE
-function Brick:init(x, y, length)
-    self.x, self.y, length = math.snap(SNAP, x, y, length)
+-- Tiles are squares with min length TILE_SIZE
+function Tile:init(x, y, length)
+    self.x, self.y, length = math.snap(x, y, length)
 
     self.width = length
     self.height = length
 
     self.health = 1
-    self.color = {1, 1, 1, 1}
+    self.color = {0.6, 0.4, 0.2, 1}
 end
 
-function Brick:render()
+function Tile:render()
     love.graphics.setColor(self.color)
-    love.graphics.rectangle('line', self.x, self.y, self.width, self.height)
+    love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
 end
 
-function Brick:destroy(circle)
+function Tile:destroy(circle)
     local segments = {}
     local width = self.width/2
     local height = self.height/2
     local bricks = {}
 
     -- break into 4x4 smaller segments by dividing height & width by 2
-    if width >= BRICK_SIZE then
+    if width >= TILE_SIZE then
         for x = self.x, self.x + width, width do
             for y = self.y, self.y + height, height do
-                table.insert(bricks, Brick(x, y, width, height))
+                table.insert(bricks, Tile(x, y, width, height))
             end
         end
 
@@ -45,8 +45,8 @@ function Brick:destroy(circle)
     return segments 
 end
 
--- From rectangle to squares (bricks) - return as table
-function Brick:rectangle(x, y, width, height)
+-- From rectangle to squares (tiles) - return as table
+function Tile:rectangle(x, y, width, height)
     local rectangle = {}
     local remainder = 0
     local wider = width > height
@@ -56,18 +56,18 @@ function Brick:rectangle(x, y, width, height)
         -- looping rectangle by:    width / (width/height)
         -- which equals width incremented by height for each iteration
         for i = x, x + width, height do
-            table.insert(rectangle, Brick(i,y,height,height))
+            table.insert(rectangle, Tile(i,y,height,height))
         end
     else
         remainder = math.fmod(width, height)
         for j = y, y + height, width do
-            table.insert(rectangle, Brick(x,j,width,width))
+            table.insert(rectangle, Tile(x,j,width,width))
         end
     end
     
     -- handle leftovers recursively (while width/height has a remainder)
     if remainder ~= 0 then
-        for k, brick in pairs(Brick:rectangle(
+        for k, brick in pairs(Tile:rectangle(
             wider and x + width - remainder or x, 
             wider and y or y + height - remainder, 
             wider and remainder or width, 

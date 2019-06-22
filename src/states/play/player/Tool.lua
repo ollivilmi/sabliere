@@ -6,13 +6,13 @@ function Tool:init(playState)
     self.playState = playState
     self.tools = {
         destroy = CircleCursor(
-            BRICK_SIZE, 2, function()
-                playState.level:destroyBricks(self.current:getPosition())
+            TILE_SIZE, 2, function()
+                playState.level:destroyTiles(self.current:getPosition())
             end
         ),
         build = SquareCursor(
-            BRICK_SIZE, function()
-                playState.level:createBrick(self.current:getPosition())
+            TILE_SIZE, function()
+                playState.level:createTile(self.current:getPosition())
             end
         )
     }
