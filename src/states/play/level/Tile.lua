@@ -3,7 +3,11 @@ Tile = Class{__includes = Collision}
 -- Tiles are squares with min length TILE_SIZE
 function Tile:init(x, y, length)
     self.x, self.y, length = math.snap(x, y, length)
-
+    self.map = {
+        x = self.x / TILE_SIZE + 1,
+        y = self.y / TILE_SIZE + 1,
+        count = length / TILE_SIZE - 1
+    }
     self.width = length
     self.height = length
 
@@ -52,16 +56,16 @@ function Tile:rectangle(x, y, width, height)
     local wider = width > height
 
     if wider then
-        remainder = math.fmod(height, width)
+        remainder = width % height
         -- looping rectangle by:    width / (width/height)
         -- which equals width incremented by height for each iteration
-        for i = x, x + width, height do
-            table.insert(rectangle, Tile(i,y,height,height))
+        for x = x, x + width, height do
+            table.insert(rectangle, Tile(x,y,height,height))
         end
     else
-        remainder = math.fmod(width, height)
-        for j = y, y + height, width do
-            table.insert(rectangle, Tile(x,j,width,width))
+        remainder = height % width
+        for y = y, y + height, width do
+            table.insert(rectangle, Tile(x,y,width,width))
         end
     end
     

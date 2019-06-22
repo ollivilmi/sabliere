@@ -3,17 +3,37 @@ require 'src/states/play/level/Tile'
 Level = Class{}
 
 function Level:init(playState)
+    self.mapWidth = VIRTUAL_WIDTH / TILE_SIZE
+    self.mapHeight = VIRTUAL_HEIGHT / TILE_SIZE
     self.tiles = {}
+
+    for y = 1, self.mapHeight do
+        table.insert(self.tiles, {})
+        for x = 1, self.mapWidth do
+            table.insert(self.tiles[y], {
+                {}
+            })
+        end
+    end
+
     self.kinematicObjects = { 
         player = playState.player 
     }
 
     -- test brick
-    table.insert(self.tiles, Tile(0, VIRTUAL_HEIGHT - 130, 80, 80))
+    self:addTile(Tile(0, VIRTUAL_HEIGHT - 130, 80, 80))
 
     -- ground
-    for k,brick in pairs(Tile:rectangle(0, VIRTUAL_HEIGHT-30, 700, 30)) do
-        table.insert(self.tiles, brick)
+    for k,tile in pairs(Tile:rectangle(0, VIRTUAL_HEIGHT-TILE_SIZE, VIRTUAL_WIDTH, TILE_SIZE)) do
+        self:addTile(tile)
+    end
+end
+
+function Level:addTile(tile)
+    for y = tile.map.y, tile.map.y + tile.map.count do
+        for x = tile.map.x, tile.map.x + tile.map.count do
+            self.tiles[y][x] = tile   
+        end
     end
 end
 
@@ -27,37 +47,51 @@ function Level:gravity()
         -- with ground
         object.grounded = false
 
-        for k, brick in pairs(self.tiles) do
-            if brick ~= nil and object:collides(brick) then
-                object:applyCollision(brick)
+        self:toAllTiles(function(tile)
+            if tile.x ~= nil and object:collides(tile) then
+                object:applyCollision(tile)
             end
+        end)
+    end
+end
+
+function Level:toAllTiles(action)
+    for y = 1, self.mapHeight do
+        for x = 1, self.mapWidth do
+            action(self.tiles[y][x])
         end
     end
 end
 
-function Level:createTile(brick)
-    table.insert(self.tiles, brick)
+function Level:toTile(tile, action)
+    for y = tile.map.y, tile.map.y + tile.map.count do
+        for x = tile.map.x, tile.map.x + tile.map.count do
+            action(self.tiles[y][x])            
+        end
+    end
 end
 
 function Level:destroyTiles(pos)
     local toDestroy = {}
     local toAdd = {}
 
-    for k, brick in pairs(self.tiles) do
-        if brick ~= nil and pos:collides(brick) then
-            table.insert(toDestroy, k)
+    for y = 1, self.mapHeight do
+        for x = 1, self.mapWidth do
+            if self.tiles[y][x].x ~= nil and pos:collides(self.tiles[y][x]) then
+                table.insert(toDestroy, self.tiles[y][x])
+                self.tiles[y][x] = {}
+            end
         end
     end
 
-    for k, brick in pairs(toDestroy) do
-        for i, b in pairs(self.tiles[brick]:destroy(pos)) do
-            table.insert(toAdd, b)
+    for k, tile in pairs(toDestroy) do
+        for i, t in pairs(tile:destroy(pos)) do
+            table.insert(toAdd, t)
         end
-        self.tiles[brick] = nil
     end
 
-    for k, brick in pairs(toAdd) do
-        table.insert(self.tiles, brick)
+    for k, tile in pairs(toAdd) do
+        self:addTile(tile)
     end
 end
 
@@ -69,11 +103,12 @@ function Level:render()
         0, 0, 
         0,
         -- scale factors on X and Y axis so it fills the screen
-        VIRTUAL_WIDTH / (backgroundWidth - 1), VIRTUAL_HEIGHT / (backgroundHeight - 1))
-    
-    for k, brick in pairs(self.tiles) do
-        if brick ~= nil then
-            brick:render()
+        VIRTUAL_WIDTH / (backgroundWidth - 1), VIRTUAL_HEIGHT / (backgroundHeight - 1)
+    )
+
+    self:toAllTiles(function(tile) 
+        if tile.x ~= nil then
+            tile:render()
         end
-    end
+    end)
 end

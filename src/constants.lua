@@ -12,4 +12,10 @@ GRAVITY = 8
 TILE_SIZE = 10
 SNAP = TILE_SIZE
 
+TILE_TYPE = {
+    empty = 0,
+    static = 1,
+    dynamic = 2
+}
+
 DEBUG_MODE = true

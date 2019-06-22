@@ -12,7 +12,7 @@ function Tool:init(playState)
         ),
         build = SquareCursor(
             TILE_SIZE, function()
-                playState.level:createTile(self.current:getPosition())
+                playState.level:addTile(self.current:getPosition())
             end
         )
     }
