@@ -7,12 +7,12 @@ function Tool:init(playState)
     self.tools = {
         destroy = CircleCursor(
             TILE_SIZE, 2, function()
-                playState.level:destroyTiles(self.current:getPosition())
+                playState.level.tilemap:removeTiles(self.current:getPosition())
             end
         ),
         build = SquareCursor(
             TILE_SIZE, function()
-                playState.level:addTile(self.current:getPosition())
+                playState.level.tilemap:addTile(self.current:getPosition())
             end
         )
     }
