@@ -43,6 +43,7 @@ function Kinematic:applyCollision(target)
 
     if self:collidesBottom(target) then
         self.dy = math.min(0, self.dy)
+        self.y = math.floor(self.y)
         self.grounded = true
         self.cBot = true
     elseif self:collidesTop(target) then

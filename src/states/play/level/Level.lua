@@ -47,11 +47,48 @@ function Level:gravity()
         -- with ground
         object.grounded = false
 
-        self:toAllTiles(function(tile)
-            if tile.x ~= nil and object:collides(tile) then
-                object:applyCollision(tile)
+        left_tile = math.floor(object.x / TILE_SIZE) + 1
+        right_tile = math.floor((object.x + object.width) / TILE_SIZE) + 1
+        top_tile = math.floor(object.y / TILE_SIZE) + 1
+        bottom_tile = math.floor((object.y + object.height) / TILE_SIZE) + 1
+
+        for y = top_tile, bottom_tile do
+            for x = left_tile, right_tile do
+
+                if self:tileInMap(y,x) and object:collides(self.tiles[y][x]) then
+                    object:applyCollision(self.tiles[y][x])   
+                end
             end
-        end)
+        end
+    end
+end
+
+function Level:tileInMap(y,x)
+    return y > 0 and x > 0 and y <= self.mapHeight and x <= self.mapWidth and self.tiles[y][x].x ~= nil
+end
+
+function Level:expand(y,x)
+    if y > self.mapHeight then
+        for y = self.mapHeight + 1, y do
+            table.insert(self.tiles, {})
+            for x = 1, self.mapHeight do
+                table.insert(self.tiles[y], {
+                    {}
+                })
+            end
+        end
+        self.mapHeight = y
+    end
+
+    if x > self.mapWidth then
+        for y = 1, self.mapHeight do
+            for x = self.mapWidth + 1, x do
+                table.insert(self.tiles[y], {
+                    {}
+                })
+            end
+        end
+        self.mapWidth = x
     end
 end
 

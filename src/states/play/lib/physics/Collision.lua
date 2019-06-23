@@ -25,7 +25,7 @@ end
 --               |  |
 --                ‾‾
 function Collision:initHitboxes(target)
-    local HITBOX_SIZE = 3
+    local HITBOX_SIZE = 6
 
     self.hitBoxes = {
         right = Hitbox(
