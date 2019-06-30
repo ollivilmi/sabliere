@@ -1,19 +1,23 @@
 require 'src/states/play/player/Player'
 require 'src/states/play/level/Level'
+require 'src/states/play/level/Camera'
 
 PlayState = Class{__includes = BaseState}
 
 function PlayState:enter(params)
     self.player = Player(gTextures.player, self)
     self.level = Level(self)
+    gCamera = Camera(100, self.player, 50)
 end
 
 function PlayState:update(dt)
     self.player:update(dt)
+    gCamera:update(dt)
     self.level:update(dt)
 end
 
 function PlayState:render()
+    gCamera:render()
     self.level:render()
     self.player:render()
 

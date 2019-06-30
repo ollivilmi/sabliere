@@ -8,7 +8,7 @@ gFonts = {
 }
 
 gTextures = {
-    background = love.graphics.newImage(dir .. '/textures/pub.png'),
+    sand = love.graphics.newImage(dir .. '/textures/sand.png'),
     player = love.graphics.newImage(dir .. '/textures/player.png')
 }
 

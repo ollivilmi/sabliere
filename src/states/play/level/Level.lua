@@ -30,15 +30,6 @@ function Level:gravity()
 end
 
 function Level:render()
-    local backgroundWidth = gTextures.background:getWidth()
-    local backgroundHeight = gTextures.background:getHeight()
-
-    love.graphics.draw(gTextures.background, 
-        0, 0, 
-        0,
-        -- scale factors on X and Y axis so it fills the screen
-        VIRTUAL_WIDTH / (backgroundWidth - 1), VIRTUAL_HEIGHT / (backgroundHeight - 1)
-    )
-
+    love.graphics.clear(0.5, 0.4, 0.3, 255)
     self.tilemap:render()
 end

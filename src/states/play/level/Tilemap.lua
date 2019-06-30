@@ -15,7 +15,7 @@ function Tilemap:init()
     end
 
     -- test brick
-    self:addTile(Tile(0, VIRTUAL_HEIGHT - 130, 80, 80))
+    self:addTile(Tile(0, VIRTUAL_HEIGHT - 130, 80))
 
     -- ground
     for k,tile in pairs(Tile:rectangle(0, VIRTUAL_HEIGHT-TILE_SIZE, VIRTUAL_WIDTH, TILE_SIZE)) do
@@ -24,6 +24,15 @@ function Tilemap:init()
 end
 
 function Tilemap:addTile(tile)
+    if tile.x < 0 or tile.y < 0 then
+        return
+    end
+
+    if not self:inBounds(tile.map.y, tile.map.x) then
+        -- TODO: refactor for readability
+        self:expand(tile.map.y * tile.map.count, tile.map.x * tile.map.count)
+    end
+
     for y = tile.map.y, tile.map.y + tile.map.count do
         for x = tile.map.x, tile.map.x + tile.map.count do
             self.tiles[y][x] = tile   
@@ -31,15 +40,19 @@ function Tilemap:addTile(tile)
     end
 end
 
+function Tilemap:inBounds(y,x)
+    return y > 0 and x > 0 and y <= self.mapHeight and x <= self.mapWidth
+end
+
 function Tilemap:hasTile(y,x)
-    return y > 0 and x > 0 and y <= self.mapHeight and x <= self.mapWidth and self.tiles[y][x].x ~= nil
+    return self:inBounds(y,x) and self.tiles[y][x].x ~= nil
 end
 
 function Tilemap:expand(y,x)
     if y > self.mapHeight then
         for y = self.mapHeight + 1, y do
             table.insert(self.tiles, {})
-            for x = 1, self.mapHeight do
+            for x = 1, self.mapWidth do
                 table.insert(self.tiles[y], {
                     {}
                 })
@@ -114,10 +127,13 @@ function Tilemap:toTilesNearObject(object, action)
     end
 end
 
+-- TODO: refactor for readability
 function Tilemap:render()
-    self:toAllTiles(function(tile) 
-        if tile.x ~= nil then
-            tile:render()
+    for y = 1, self.mapHeight do
+        for x = 1, self.mapWidth do
+            if self.tiles[y][x].image ~= nil then
+                love.graphics.draw(gTextures[self.tiles[y][x].image], (x-1)*TILE_SIZE, (y-1)*TILE_SIZE)
+            end
         end
-    end)
+    end
 end

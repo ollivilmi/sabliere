@@ -17,7 +17,7 @@ function CircleCursor:getPosition()
 end
 
 function CircleCursor:update(dt)
-    self.x, self.y = push:toGame(love.mouse.getX(), love.mouse.getY())
+    self:updateCoordinates()
 
     if love.mouse.wheelmoved ~= 0 then
         self.radius = math.max(self.minRadius, love.mouse.wheelmoved > 0 and self.radius + self.increment 

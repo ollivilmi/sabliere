@@ -77,3 +77,9 @@ end
 function Collision:collidesTop(target)
     return self.hitBoxes.top:collides(target)
 end
+
+function Collision:getCenter()
+    local x = self.x - (VIRTUAL_WIDTH / 2) + (self.width / 2)
+    local y = self.y - (VIRTUAL_HEIGHT / 2) + (self.height / 2)
+    return x,y
+end

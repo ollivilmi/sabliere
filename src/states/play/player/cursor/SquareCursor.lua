@@ -1,6 +1,6 @@
 require 'src/states/play/player/cursor/Cursor'
 
-SquareCursor = Class{__includes = BaseState}
+SquareCursor = Class{__includes = Cursor}
 
 function SquareCursor:init(length, action)
     self.length = length
@@ -16,7 +16,7 @@ function SquareCursor:getPosition()
 end
 
 function SquareCursor:update(dt)
-    self.x, self.y = push:toGame(love.mouse.getX(), love.mouse.getY())
+    self:updateCoordinates()
     self.x, self.y = math.snap(self.x, self.y)
 
     -- to properly split squares, the area must be in binary increments

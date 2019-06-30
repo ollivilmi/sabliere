@@ -1,7 +1,7 @@
 Tile = Class{__includes = Collision}
 
 -- Tiles are squares with min length TILE_SIZE
-function Tile:init(x, y, length)
+function Tile:init(x, y, length, image)
     self.x, self.y, length = math.snap(x, y, length)
     self.map = {
         x = self.x / TILE_SIZE + 1,
@@ -12,12 +12,7 @@ function Tile:init(x, y, length)
     self.height = length
 
     self.health = 1
-    self.color = {0.6, 0.4, 0.2, 1}
-end
-
-function Tile:render()
-    love.graphics.setColor(self.color)
-    love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
+    self.image = image or "sand"
 end
 
 function Tile:destroy(circle)
@@ -30,7 +25,7 @@ function Tile:destroy(circle)
     if width >= TILE_SIZE then
         for x = self.x, self.x + width, width do
             for y = self.y, self.y + height, height do
-                table.insert(bricks, Tile(x, y, width, height))
+                table.insert(bricks, Tile(x, y, width, self.image))
             end
         end
 
@@ -50,7 +45,7 @@ function Tile:destroy(circle)
 end
 
 -- From rectangle to squares (tiles) - return as table
-function Tile:rectangle(x, y, width, height)
+function Tile:rectangle(x, y, width, height, image)
     local rectangle = {}
     local remainder = 0
     local wider = width > height
@@ -60,12 +55,12 @@ function Tile:rectangle(x, y, width, height)
         -- looping rectangle by:    width / (width/height)
         -- which equals width incremented by height for each iteration
         for x = x, x + width, height do
-            table.insert(rectangle, Tile(x,y,height,height))
+            table.insert(rectangle, Tile(x,y,height,image))
         end
     else
         remainder = height % width
         for y = y, y + height, width do
-            table.insert(rectangle, Tile(x,y,width,width))
+            table.insert(rectangle, Tile(x,y,width,image))
         end
     end
     
