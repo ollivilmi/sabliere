@@ -3,10 +3,11 @@ require 'src/states/play/player/Tool'
 
 Player = Class{__includes = Kinematic}
 
-function Player:init(texture, playState)
-    self.texture = texture
-    self.width = texture:getWidth()
-    self.height = texture:getHeight()
+function Player:init(playState)
+    self.texture = gTextures.player
+    self.characterQuads = GenerateQuads(gTextures.player, 50, 100)
+    self.width = 50
+    self.height = 100
     self.x = VIRTUAL_WIDTH / 2
     self.y = VIRTUAL_HEIGHT / 2
     
@@ -41,6 +42,6 @@ end
 
 function Player:render()
     love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(self.texture, self.x, self.y, 0, 1)
+    love.graphics.draw(self.texture, self.characterQuads[1], self.x, self.y, 0, 1)
     self.tool:render()
 end
