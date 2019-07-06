@@ -1,14 +1,14 @@
-Animation = Class{}
+Animated = Class{}
 
-function Animation:init(def)
+function Animated:init(def)
     self.frames = def.frames
     self.interval = def.interval
     self.timer = 0
     self.currentFrame = 1
 end
 
-function Animation:update(dt)
-    -- no need to update if animation is only one frame
+function Animated:update(dt)
+    -- no need to update if Animated is only one frame
     if #self.frames > 1 then
         self.timer = self.timer + dt
 
@@ -20,6 +20,6 @@ function Animation:update(dt)
     end
 end
 
-function Animation:get()
+function Animated:get()
     return self.frames[self.currentFrame]
 end

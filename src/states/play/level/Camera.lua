@@ -18,9 +18,11 @@ function Camera:update(dt)
     x = math.floor(x)
     y = math.floor(y)
 
+    -- basically we take the vector of camera (x,y) -> target (x,y)
+    -- and then adjust speed
     if math.floor(math.distance(x,y,self.x,self.y)) > self.offset then
-        self.dx = (x - self.x)*self.speed
-        self.dy = (y - self.y)*self.speed
+        self.dx = math.floor((x - self.x)*self.speed)
+        self.dy = math.floor((y - self.y)*self.speed)
     else
         self.dx = 0
         self.dy = 0
