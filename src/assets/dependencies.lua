@@ -9,7 +9,8 @@ gFonts = {
 
 gTextures = {
     sand = love.graphics.newImage(dir .. '/textures/sand.png'),
-    player = love.graphics.newImage(dir .. '/textures/dude.png')
+    player = love.graphics.newImage(dir .. '/textures/dude.png'),
+    background = love.graphics.newImage(dir .. '/textures/mountain.png')
 }
 
 gSounds = {

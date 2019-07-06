@@ -14,11 +14,8 @@ function Tilemap:init()
         end
     end
 
-    -- test brick
-    self:addTile(Tile(0, VIRTUAL_HEIGHT - 130, 80))
-
     -- ground
-    for k,tile in pairs(Tile:rectangle(0, VIRTUAL_HEIGHT-TILE_SIZE, VIRTUAL_WIDTH, TILE_SIZE)) do
+    for k,tile in pairs(Tile:rectangle(0, MAP_HEIGHT-TILE_SIZE, MAP_WIDTH, TILE_SIZE)) do
         self:addTile(tile)
     end
 end

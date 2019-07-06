@@ -34,5 +34,6 @@ function Tool:update(dt)
 end
 
 function Tool:render()
+    love.graphics.setColor(0,0,0)
     self.current:render()
 end

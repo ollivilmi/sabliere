@@ -7,11 +7,13 @@ function Camera:init(speed, objectToFollow, offset)
     self.x, self.y = objectToFollow:getCenter()
     self.dx = 0
     self.dy = 0
+    self.maxWidth = MAP_WIDTH - VIRTUAL_WIDTH
+    self.maxHeight = MAP_HEIGHT - VIRTUAL_HEIGHT
 end
 
 function Camera:update(dt)
-    self.x = self.x + self.dx
-    self.y = self.y + self.dy
+    self.x = math.min(self.maxWidth, math.max(0, self.x + self.dx))
+    self.y = math.min(self.maxHeight, math.max(0,self.y + self.dy))
 
     local x, y = self.objectToFollow:getCenter()
     

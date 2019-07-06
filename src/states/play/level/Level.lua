@@ -31,5 +31,6 @@ end
 
 function Level:render()
     love.graphics.clear(0.5, 0.4, 0.3, 255)
+    love.graphics.draw(gTextures.background, 0, 0)
     self.tilemap:render()
 end

@@ -7,8 +7,8 @@ function Player:init(playState)
     self:loadSheet(gTextures.player)
     self.width = 50
     self.height = 100
-    self.x = VIRTUAL_WIDTH / 2
-    self.y = VIRTUAL_HEIGHT / 2
+    self.x = MAP_WIDTH / 2
+    self.y = MAP_HEIGHT - 300
     
     self.dy = 0
     self.dx = 0
