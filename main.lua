@@ -33,6 +33,12 @@ function love.keypressed(key)
     love.keyboard.keysPressed[key] = true
 end
 
+function log(message)
+    if DEBUG_MODE then
+        print(message)
+    end
+end
+
 function love.mousepressed(x, y, button)
     love.mouse.buttonsPressed[button] = true
 end

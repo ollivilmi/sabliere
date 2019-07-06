@@ -4,9 +4,9 @@ Tile = Class{__includes = Collision}
 function Tile:init(x, y, length, image)
     self.x, self.y, length = math.snap(x, y, length)
     self.map = {
-        x = self.x / TILE_SIZE + 1,
+        x = self.x / TILE_SIZE + 1, -- addition because tables are 1 indexed
         y = self.y / TILE_SIZE + 1,
-        count = length / TILE_SIZE - 1
+        count = length / TILE_SIZE -1 -- subtraction because coords are 0 indexed
     }
     self.width = length
     self.height = length

@@ -28,9 +28,13 @@ function Tilemap:addTile(tile)
         return
     end
 
-    if not self:inBounds(tile.map.y, tile.map.x) then
-        -- TODO: refactor for readability
-        self:expand(tile.map.y * tile.map.count, tile.map.x * tile.map.count)
+    -- check furthest possible x and y in tile
+    local fx = tile.map.x + tile.map.count
+    local fy = tile.map.y + tile.map.count
+
+    if not self:inBounds(fy, fx) then
+        self:expand(fy, fx)
+        log("map expanded, new dimensions: [" .. self.mapWidth .. "," .. self.mapHeight .. "]")
     end
 
     for y = tile.map.y, tile.map.y + tile.map.count do
