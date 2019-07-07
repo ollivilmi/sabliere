@@ -80,9 +80,9 @@ function Tile:rectangle(x, y, width, height, image)
     return rectangle
 end
 
--- workaround solution for now, used in Tilemap:addTile()
+-- bandaid solution to change collision to reuse a method
 function Tile:collider()
-    return Collision(self.x, self.y, self.width - TILE_SIZE, self.height - TILE_SIZE)
+    return Collision(self.x+1, self.y+1, self.width-2, self.height-2)
 end
 
 function Tile:toString()

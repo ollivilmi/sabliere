@@ -38,7 +38,13 @@ function Tilemap:addTile(tile, destroy)
     if destroy then
         self:removeTiles(tile:collider())
     else
-    -- break tileToAdd, append
+    -- append mode
+    -- toTilesNeararea (newTile)
+    -- if newTile collides with existing tile, add to collisions
+    -- for each unique colliding tile, we have a list of collisions
+    -- then we apply the destroy method to each of these tiles
+    -- 
+    -- loop if collided:collides(newTiles) -> destroy -> newTiles
     end
 
     for y = tile.map.y, fy do
@@ -47,16 +53,6 @@ function Tilemap:addTile(tile, destroy)
         end
     end
 end
-
--- toTilesNeararea (newTile)
--- if newTile collides with existing tile, add to collisions
--- for each unique colliding tile, we have a list of collisions
--- then we apply the destroy method to each of these tiles
--- 
--- loop if collided:collides(newTiles) -> destroy -> newTiles
---
--- OR to make it extremely simple, just destroy the old tiles!
--- implement both for the option to choose.
 
 function Tilemap:inBounds(y,x)
     return y > 0 and x > 0 and y <= self.mapHeight and x <= self.mapWidth
