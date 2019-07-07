@@ -1,3 +1,5 @@
+require 'src/states/play/lib/physics/Rectangle'
+
 Tilemap = Class{}
 
 function Tilemap:init()
@@ -14,9 +16,12 @@ function Tilemap:init()
         end
     end
 
-    -- ground
-    for k,tile in pairs(Tile:rectangle(0, MAP_HEIGHT-TILE_SIZE, MAP_WIDTH, TILE_SIZE)) do
-        self:addTile(tile)
+    self:addTiles(Rectangle(0, MAP_HEIGHT-TILE_SIZE, MAP_WIDTH, TILE_SIZE))
+end
+
+function Tilemap:addTiles(rectangle, image)
+    for k,tile in pairs(Tile:fromRectangle(rectangle, image)) do
+        self:addTile(tile, true)
     end
 end
 

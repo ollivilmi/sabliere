@@ -44,9 +44,18 @@ function Tile:destroy(area)
     return segments 
 end
 
+-- sadly there is no function overloading in lua
+function Tile:fromRectangle(rectangle, image)
+    return self:rectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height, image)
+end
+
 -- From rectangle to squares (tiles) - return as table
 function Tile:rectangle(x, y, width, height, image)
     local rectangle = {}
+    if width == height then
+        table.insert(rectangle, Tile(x,y,width,image))
+        return rectangle
+    end
     local remainder = 0
     local wider = width > height
 

@@ -1,6 +1,7 @@
 Tool = Class{}
 require 'src/states/play/player/cursor/CircleCursor'
 require 'src/states/play/player/cursor/SquareCursor'
+require 'src/states/play/player/cursor/RectangleCursor'
 
 function Tool:init(playState)
     self.playState = playState
@@ -13,6 +14,13 @@ function Tool:init(playState)
         build = SquareCursor(
             TILE_SIZE, function()
                 playState.level.tilemap:addTile(self.current:getPosition(), true)
+            end
+        ),
+        buildRectangle = RectangleCursor(
+            function()
+                r = self.current:getPosition()
+                print(r.x,r.y,r.width,r.height)
+                playState.level.tilemap:addTiles(self.current:getPosition())
             end
         )
     }
@@ -30,6 +38,8 @@ function Tool:update(dt)
         self:switch("destroy")
     elseif love.keyboard.wasPressed('2') then
         self:switch("build")
+    elseif love.keyboard.wasPressed('3') then
+        self:switch("buildRectangle")
     end
 end
 

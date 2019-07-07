@@ -15,6 +15,7 @@ function love.load()
 
     love.keyboard.keysPressed = {}
     love.mouse.buttonsPressed = {}
+    love.mouse.buttonsReleased = {}
     love.mouse.wheelmoved = 0
 end
 
@@ -26,6 +27,7 @@ function love.update(dt)
     gStateMachine:update(dt)
     love.keyboard.keysPressed = {}
     love.mouse.buttonsPressed = {}
+    love.mouse.buttonsReleased = {}
     love.mouse.wheelmoved = 0
 end
 
@@ -33,14 +35,12 @@ function love.keypressed(key)
     love.keyboard.keysPressed[key] = true
 end
 
-function log(message)
-    if DEBUG_MODE then
-        print(message)
-    end
-end
-
 function love.mousepressed(x, y, button)
     love.mouse.buttonsPressed[button] = true
+end
+
+function love.mousereleased(x, y, button)
+    love.mouse.buttonsReleased[button] = true
 end
 
 function love.wheelmoved(x, y)
@@ -57,6 +57,16 @@ end
 
 function love.mouse.wasPressed(button)
     return love.mouse.buttonsPressed[button]
+end
+
+function love.mouse.wasReleased(button)
+    return love.mouse.buttonsReleased[button]
+end
+
+function log(message)
+    if DEBUG_MODE then
+        print(message)
+    end
 end
 
 function love.draw()
