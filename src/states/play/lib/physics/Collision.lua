@@ -30,7 +30,7 @@ function Collision:initHitboxes(target)
 
     self.hitBoxes = {
         right = Hitbox(
-            self.x + self.width, 
+            self.x + self.width - HITBOX_SIZE, 
             self.y + HITBOX_SIZE, 
             HITBOX_SIZE, 
             self.height - HITBOX_SIZE*2
@@ -83,4 +83,10 @@ function Collision:getCenter()
     local x = self.x - (VIRTUAL_WIDTH / 2) + (self.width / 2)
     local y = self.y - (VIRTUAL_HEIGHT / 2) + (self.height / 2)
     return x,y
+end
+
+function Collision:renderHitboxes()
+    for k,hitbox in pairs(self.hitBoxes) do
+        hitbox:render()
+    end
 end

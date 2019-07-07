@@ -5,5 +5,4 @@ function Rectangle:init(x, y, width, height)
     self.y = y
     self.width = width
     self.height = height
-    self.type = "rectangle"
 end

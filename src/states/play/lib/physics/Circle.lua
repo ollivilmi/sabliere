@@ -6,7 +6,6 @@ function Circle:init(x, y, radius)
     self.x = x
     self.y = y
     self.radius = radius
-    self.type = "circle"
 end
 
 function Circle:collides(target)

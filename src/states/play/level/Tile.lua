@@ -80,6 +80,16 @@ function Tile:rectangle(x, y, width, height, image)
     return rectangle
 end
 
+-- workaround solution for now, used in Tilemap:addTile()
+function Tile:collider()
+    return Collision(self.x, self.y, self.width - TILE_SIZE, self.height - TILE_SIZE)
+end
+
 function Tile:toString()
     return self.map.x .. "," .. self.map.y .. ";" .. self.map.count
+end
+
+function Tile:render()
+    love.graphics.setColor(0,0,0)
+    love.graphics.rectangle('line', self.x, self.y, self.width, self.height)
 end

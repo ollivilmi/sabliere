@@ -1,8 +1,8 @@
 Tilemap = Class{}
 
 function Tilemap:init()
-    self.mapWidth = VIRTUAL_WIDTH / TILE_SIZE
-    self.mapHeight = VIRTUAL_HEIGHT / TILE_SIZE
+    self.mapWidth = MAP_WIDTH / TILE_SIZE
+    self.mapHeight = MAP_HEIGHT / TILE_SIZE
     self.tiles = {}
 
     for y = 1, self.mapHeight do
@@ -20,7 +20,7 @@ function Tilemap:init()
     end
 end
 
-function Tilemap:addTile(tile)
+function Tilemap:addTile(tile, destroy)
     if tile.x < 0 or tile.y < 0 then
         return
     end
@@ -34,12 +34,29 @@ function Tilemap:addTile(tile)
         log("map expanded, new dimensions: [" .. self.mapWidth .. "," .. self.mapHeight .. "]")
     end
 
+    -- remove existing tiles
+    if destroy then
+        self:removeTiles(tile:collider())
+    else
+    -- break tileToAdd, append
+    end
+
     for y = tile.map.y, fy do
         for x = tile.map.x, fx do
             self.tiles[y][x] = tile   
         end
     end
 end
+
+-- toTilesNeararea (newTile)
+-- if newTile collides with existing tile, add to collisions
+-- for each unique colliding tile, we have a list of collisions
+-- then we apply the destroy method to each of these tiles
+-- 
+-- loop if collided:collides(newTiles) -> destroy -> newTiles
+--
+-- OR to make it extremely simple, just destroy the old tiles!
+-- implement both for the option to choose.
 
 function Tilemap:inBounds(y,x)
     return y > 0 and x > 0 and y <= self.mapHeight and x <= self.mapWidth
@@ -94,10 +111,7 @@ function Tilemap:removeTiles(area)
     local toDestroy = {}
     local toAdd = {}
 
-    -- turn circle to rectangle for the convenience of checking adjacent tiles
-    areaToCheck = area.type == "rectangle" and area or area:toRectangle()
-
-    self:toTilesNearRectangle(areaToCheck, function(y,x)
+    self:toTilesNear(area, function(y,x)
         if self.tiles[y][x].x ~= nil and area:collides(self.tiles[y][x]) then
             -- toString provides us a unique key to avoid duplicates
             local tilekey = self.tiles[y][x]:toString()
@@ -118,16 +132,21 @@ function Tilemap:removeTiles(area)
     end
 end
 
--- Used for eg. collision detection
-function Tilemap:toTilesNearRectangle(rectangle, action)
-    left_tile = math.floor(rectangle.x / TILE_SIZE) + 1
-    right_tile = math.floor((rectangle.x + rectangle.width) / TILE_SIZE) + 1
-    top_tile = math.floor(rectangle.y / TILE_SIZE) + 1
-    bottom_tile = math.floor((rectangle.y + rectangle.height) / TILE_SIZE) + 1
+-- Used to only check adjacent tiles for performance
+function Tilemap:toTilesNear(area, action)
+    -- turn circle to rectangle for the convenience of checking adjacent tiles
+    area = area.width ~= nil and area or area:toRectangle()
+
+    left_tile = math.floor(area.x / TILE_SIZE) + 1
+    right_tile = math.floor((area.x + area.width) / TILE_SIZE) + 1
+    top_tile = math.floor(area.y / TILE_SIZE) + 1
+    bottom_tile = math.floor((area.y + area.height) / TILE_SIZE) + 1
 
     for y = top_tile, bottom_tile do
         for x = left_tile, right_tile do
-            action(y,x)
+            if x <= self.mapWidth and y <= self.mapHeight then
+                action(y,x)
+            end
         end
     end
 end
@@ -140,5 +159,13 @@ function Tilemap:render()
                 love.graphics.draw(gTextures[self.tiles[y][x].image], (x-1)*TILE_SIZE, (y-1)*TILE_SIZE)
             end
         end
+    end
+
+    if DEBUG_MODE then
+        self:toAllTiles(function(tile)
+            if tile.x ~= nil then
+                tile:render()
+            end
+        end)
     end
 end

@@ -45,4 +45,7 @@ end
 function Player:render()
     self:animate()
     self.tool:render()
+    if DEBUG_MODE then
+        self:renderHitboxes()
+    end
 end

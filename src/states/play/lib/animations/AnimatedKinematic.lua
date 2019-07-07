@@ -52,6 +52,7 @@ function AnimatedKinematic:updateAnimation(dt)
 end
 
 function AnimatedKinematic:animate()
+    love.graphics.setColor(1,1,1)
     love.graphics.draw(self.sheet, self.quads[self.animation:get()], 
 
     -- X and Y we draw at need to be shifted by half our width and height because we're setting the origin
