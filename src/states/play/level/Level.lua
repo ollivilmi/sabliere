@@ -21,7 +21,7 @@ function Level:gravity()
         -- with ground
         object.grounded = false
 
-        self.tilemap:toTilesNearObject(object, function(y,x)
+        self.tilemap:toTilesNearRectangle(object, function(y,x)
             if self.tilemap:hasTile(y,x) and object:collides(self.tilemap.tiles[y][x]) then
                 object:applyCollision(self.tilemap.tiles[y][x])   
             end

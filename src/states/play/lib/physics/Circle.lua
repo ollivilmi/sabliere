@@ -1,9 +1,12 @@
+require 'src/states/play/lib/physics/Rectangle'
+
 Circle = Class{}
 
 function Circle:init(x, y, radius)
     self.x = x
     self.y = y
     self.radius = radius
+    self.type = "circle"
 end
 
 function Circle:collides(target)
@@ -17,4 +20,8 @@ function Circle:collides(target)
     -- If the distance is less than the circle's radius, an intersection occurs
     distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
     return distanceSquared < (self.radius * self.radius);
+end
+
+function Circle:toRectangle()
+    return Rectangle(self.x - self.radius, self.y - self.radius, self.radius*2, self.radius*2)
 end

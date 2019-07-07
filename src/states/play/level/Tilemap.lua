@@ -25,7 +25,7 @@ function Tilemap:addTile(tile)
         return
     end
 
-    -- check furthest possible x and y in tile
+    -- furthest x and y (tilemap) in tile
     local fx = tile.map.x + tile.map.count
     local fy = tile.map.y + tile.map.count
 
@@ -34,8 +34,8 @@ function Tilemap:addTile(tile)
         log("map expanded, new dimensions: [" .. self.mapWidth .. "," .. self.mapHeight .. "]")
     end
 
-    for y = tile.map.y, tile.map.y + tile.map.count do
-        for x = tile.map.x, tile.map.x + tile.map.count do
+    for y = tile.map.y, fy do
+        for x = tile.map.x, fx do
             self.tiles[y][x] = tile   
         end
     end
@@ -90,21 +90,25 @@ function Tilemap:toAllTiles(action)
     end
 end
 
-function Tilemap:removeTiles(pos)
+function Tilemap:removeTiles(area)
     local toDestroy = {}
     local toAdd = {}
 
-    for y = 1, self.mapHeight do
-        for x = 1, self.mapWidth do
-            if self.tiles[y][x].x ~= nil and pos:collides(self.tiles[y][x]) then
-                table.insert(toDestroy, self.tiles[y][x])
-                self.tiles[y][x] = {}
-            end
+    -- turn circle to rectangle for the convenience of checking adjacent tiles
+    areaToCheck = area.type == "rectangle" and area or area:toRectangle()
+
+    self:toTilesNearRectangle(areaToCheck, function(y,x)
+        if self.tiles[y][x].x ~= nil and area:collides(self.tiles[y][x]) then
+            -- toString provides us a unique key to avoid duplicates
+            local tilekey = self.tiles[y][x]:toString()
+
+            toDestroy[tilekey] = self.tiles[y][x]
+            self.tiles[y][x] = {}
         end
-    end
+    end)
 
     for k, tile in pairs(toDestroy) do
-        for i, t in pairs(tile:destroy(pos)) do
+        for i, t in pairs(tile:destroy(area)) do
             table.insert(toAdd, t)
         end
     end
@@ -115,11 +119,11 @@ function Tilemap:removeTiles(pos)
 end
 
 -- Used for eg. collision detection
-function Tilemap:toTilesNearObject(object, action)
-    left_tile = math.floor(object.x / TILE_SIZE) + 1
-    right_tile = math.floor((object.x + object.width) / TILE_SIZE) + 1
-    top_tile = math.floor(object.y / TILE_SIZE) + 1
-    bottom_tile = math.floor((object.y + object.height) / TILE_SIZE) + 1
+function Tilemap:toTilesNearRectangle(rectangle, action)
+    left_tile = math.floor(rectangle.x / TILE_SIZE) + 1
+    right_tile = math.floor((rectangle.x + rectangle.width) / TILE_SIZE) + 1
+    top_tile = math.floor(rectangle.y / TILE_SIZE) + 1
+    bottom_tile = math.floor((rectangle.y + rectangle.height) / TILE_SIZE) + 1
 
     for y = top_tile, bottom_tile do
         for x = left_tile, right_tile do

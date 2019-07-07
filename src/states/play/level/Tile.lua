@@ -15,7 +15,7 @@ function Tile:init(x, y, length, image)
     self.image = image or "sand"
 end
 
-function Tile:destroy(circle)
+function Tile:destroy(area)
     local segments = {}
     local width = self.width/2
     local height = self.height/2
@@ -30,8 +30,8 @@ function Tile:destroy(circle)
         end
 
         for k, brick in pairs(bricks) do 
-            if circle:collides(brick) then
-                for i,v in pairs(brick:destroy(circle)) do
+            if area:collides(brick) then
+                for i,v in pairs(brick:destroy(area)) do
                     table.insert(segments, v)
                 end
                 brick = nil
@@ -78,4 +78,8 @@ function Tile:rectangle(x, y, width, height, image)
     end
 
     return rectangle
+end
+
+function Tile:toString()
+    return self.map.x .. "," .. self.map.y .. ";" .. self.map.count
 end

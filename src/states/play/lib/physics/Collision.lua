@@ -1,6 +1,7 @@
 require 'src/states/play/lib/physics/Hitbox'
+require 'src/states/play/lib/physics/Rectangle'
 
-Collision = Class{}
+Collision = Class{__includes = Rectangle}
 
 function Collision:collides(target)
     if self.x > target.x + target.width or target.x > self.x + self.width then
