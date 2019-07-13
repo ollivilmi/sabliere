@@ -1,12 +1,14 @@
 require 'src/states/play/player/Player'
 require 'src/states/play/level/Level'
 require 'src/states/play/level/Camera'
+require 'src/states/play/player/interface/Toolbar'
 
 PlayState = Class{__includes = BaseState}
 
 function PlayState:enter(params)
     self.player = Player(self)
     self.level = Level(self)
+    self.toolbar = Toolbar()
     gCamera = Camera(0.01, self.player, 150)
 end
 
@@ -18,8 +20,10 @@ end
 
 function PlayState:render()
     gCamera:render()
+
     self.level:render()
     self.player:render()
+    self.toolbar:render()
 
     love.graphics.setFont(gFonts['small'])
     love.graphics.print('grounded: ' .. (self.player.grounded and 1 or 0), VIRTUAL_WIDTH - 60, 5)

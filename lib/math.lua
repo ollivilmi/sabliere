@@ -27,6 +27,24 @@ function math.testSnap(oldValues, newValues)
     end
 end
 
+-- the idea of this function is to get the nearest possible tile
+-- eg. 50 pixels -> 40 pixels, 100 pixels -> 80 pixels
+function math.nearestTile(value)
+    local previous = TILE_SIZE
+    local next = TILE_SIZE
+
+    while value >= next do
+        previous = next
+        next = previous * 2
+    end
+
+    return previous
+end
+
+function math.isTile(value)
+    return math.nearestTile(value) == value
+end
+
 -- Basically just pythagoras theorem
 function math.distance(ax, ay, bx, by)
     return math.sqrt((ax - bx)^2 + (ay - by)^2)
@@ -37,4 +55,10 @@ end
 -- basically returns the angle in radians
 function math.direction(ax, ay, bx, by)
     return math.atan2(by-ay,bx-ax)
+end
+
+function table.addTable(t, toAdd)
+    for k, v in pairs(toAdd) do
+        table.insert(t, v)
+    end
 end

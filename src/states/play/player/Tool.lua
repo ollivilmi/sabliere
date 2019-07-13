@@ -18,8 +18,6 @@ function Tool:init(playState)
         ),
         buildRectangle = RectangleCursor(
             function()
-                r = self.current:getPosition()
-                print(r.x,r.y,r.width,r.height)
                 playState.level.tilemap:addTiles(self.current:getPosition())
             end
         )

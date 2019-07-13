@@ -19,8 +19,8 @@ function Tilemap:init()
     self:addTiles(Rectangle(0, MAP_HEIGHT-TILE_SIZE, MAP_WIDTH, TILE_SIZE))
 end
 
-function Tilemap:addTiles(rectangle, image)
-    for k,tile in pairs(Tile:fromRectangle(rectangle, image)) do
+function Tilemap:addTiles(rectangle)
+    for k,tile in pairs(Tile:rectangle(rectangle)) do
         self:addTile(tile, true)
     end
 end

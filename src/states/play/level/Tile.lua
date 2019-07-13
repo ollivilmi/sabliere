@@ -1,3 +1,5 @@
+require 'src/states/play/lib/physics/Rectangle'
+
 Tile = Class{__includes = Collision}
 
 -- Tiles are squares with min length TILE_SIZE
@@ -45,48 +47,107 @@ function Tile:destroy(area)
 end
 
 -- sadly there is no function overloading in lua
-function Tile:fromRectangle(rectangle, image)
-    return self:rectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height, image)
+function Tile:fromRectangle(x,y,width,height)
+    return self:rectangle(Rectangle(x,y,width,height))
+end
+
+--- Translates squares to fit tiles (eg. 30x30 pixels cannot be a tile)
+function Tile:squareToTiles(rectangle)
+    local tiles = {}
+
+    if math.isTile(rectangle.width) then
+        table.insert(tiles, Tile(rectangle.x,rectangle.y,rectangle.width))
+    else
+        local xRemainder = rectangle.width - math.nearestTile(rectangle.width)
+        local yRemainder = rectangle.height - math.nearestTile(rectangle.height)
+
+        table.insert(tiles, Tile(
+            rectangle.x,
+            rectangle.y,
+            rectangle.width - xRemainder
+        ))
+        table.addTable(tiles, Tile:fromRectangle(
+            rectangle.x + rectangle.width - xRemainder,
+            rectangle.y,
+            xRemainder,
+            rectangle.height - yRemainder
+        ))
+        table.addTable(tiles, Tile:fromRectangle(
+            rectangle.x,
+            rectangle.y + rectangle.height - yRemainder,
+            rectangle.width,
+            yRemainder
+        ))
+    end
+
+    return tiles
 end
 
 -- From rectangle to squares (tiles) - return as table
-function Tile:rectangle(x, y, width, height, image)
-    local rectangle = {}
-    if width == height then
-        table.insert(rectangle, Tile(x,y,width,image))
-        return rectangle
-    end
-    local remainder = 0
-    local wider = width > height
+function Tile:rectangle(rectangle)
+    local tiles = {}
 
-    if wider then
-        remainder = width % height
-        -- looping rectangle by:    width / (width/height)
-        -- which equals width incremented by height for each iteration
-        for x = x, x + width, height do
-            table.insert(rectangle, Tile(x,y,height,image))
-        end
-    else
-        remainder = height % width
-        for y = y, y + height, width do
-            table.insert(rectangle, Tile(x,y,width,image))
-        end
+    if rectangle.width == rectangle.height then
+        table.addTable(tiles, self:squareToTiles(rectangle))
+        return tiles
     end
+
+    local tileSize = math.nearestTile(rectangle.height)
+    local yRemainder = rectangle.height % tileSize
+    print(yRemainder)
+    local xRemainder = rectangle.width % (rectangle.height - yRemainder)
+    print(xRemainder)
+
+    table.insert(tiles, Tile(
+        rectangle.x,
+        rectangle.y,
+        tileSize
+    ))
+    table.addTable(tiles, Tile:fromRectangle(
+        rectangle.x + rectangle.width - xRemainder,
+        rectangle.y,
+        xRemainder,
+        rectangle.height - yRemainder
+    ))
+    table.addTable(tiles, Tile:fromRectangle(
+        rectangle.x,
+        rectangle.y + rectangle.height - yRemainder,
+        rectangle.width,
+        yRemainder
+    ))
+
+    -- if wider then
+    --     remainder = rectangle.width % rectangle.height
+    --     -- -1 because for loop is inclusive
+    --     area = rectangle.x + rectangle.width - remainder - 1
+    --     -- looping rectangle by:    width / (width/height)
+    --     -- which equals width incremented by height for each iteration
+    --     for x = rectangle.x, area, rectangle.height do
+    --         table.insert(tiles, Tile(x,rectangle.y,rectangle.height))
+    --     end
+    -- else
+    --     remainder = rectangle.height % rectangle.width
+    --     area = rectangle.y + rectangle.height - remainder - 1
+
+    --     for y = rectangle.y, area, rectangle.width do
+    --         table.insert(tiles, Tile(rectangle.x,y,rectangle.width))
+    --     end
+    -- end
     
-    -- handle leftovers recursively (while width/height has a remainder)
-    if remainder ~= 0 then
-        for k, brick in pairs(Tile:rectangle(
-            wider and x + width - remainder or x, 
-            wider and y or y + height - remainder, 
-            wider and remainder or width, 
-            wider and height or remainder
-        ))
-        do
-            table.insert(rectangle, brick)
-        end
-    end
+    -- -- handle leftovers recursively (while width/height has a remainder)
+    -- if remainder ~= 0 then
+    --     for k, brick in pairs(Tile:fromRectangle(
+    --         wider and rectangle.x + rectangle.width - remainder or rectangle.x, 
+    --         wider and rectangle.y or rectangle.y + rectangle.height - remainder, 
+    --         wider and remainder or rectangle.width, 
+    --         wider and rectangle.height or remainder
+    --     ))
+    --     do
+    --         table.insert(tiles, brick)
+    --     end
+    -- end
 
-    return rectangle
+    return tiles
 end
 
 -- bandaid solution to change collision to reuse a method
