@@ -1,6 +1,7 @@
 require 'src/states/play/lib/physics/Rectangle'
+require 'src/states/play/level/TileRectangle'
 
-Tile = Class{__includes = Collision}
+Tile = Class{__includes = Collision, TileRectangle}
 
 -- Tiles are squares with min length TILE_SIZE
 function Tile:init(x, y, length, image)
@@ -51,6 +52,23 @@ function Tile:fromRectangle(x,y,width,height)
     return self:rectangle(Rectangle(x,y,width,height))
 end
 
+-- From rectangle to squares (tiles) - return as table
+function Tile:rectangle(rectangle)
+    local tiles = {}
+    if rectangle.width == 0 or rectangle.height == 0 then
+        return tiles
+    end
+
+    if rectangle.width == rectangle.height then
+        table.addTable(tiles, self:squareToTiles(rectangle))
+        return tiles
+    end
+
+    table.addTable(tiles, self:rectangleToTiles(rectangle))
+
+    return tiles
+end
+
 --- Translates squares to fit tiles (eg. 30x30 pixels cannot be a tile)
 function Tile:squareToTiles(rectangle)
     local tiles = {}
@@ -83,26 +101,50 @@ function Tile:squareToTiles(rectangle)
     return tiles
 end
 
--- From rectangle to squares (tiles) - return as table
-function Tile:rectangle(rectangle)
+function Tile:rectangleToTiles(rectangle)
     local tiles = {}
+    local yRemainder = 0
+    local xRemainder = 0
+    local tileSize = 10
 
-    if rectangle.width == rectangle.height then
-        table.addTable(tiles, self:squareToTiles(rectangle))
-        return tiles
+    -- if wider
+    if rectangle.width > rectangle.height then
+        -- get largest possible tile that fits by height
+        tileSize = math.nearestTile(rectangle.height)
+        -- use as many of the largest possible tile as we can fit
+        yRemainder = rectangle.height % tileSize
+        xRemainder = rectangle.width % (rectangle.height - yRemainder)
+    
+        -- remainder is removed to make sure tiles fit, -1 is subtracted
+        -- because for loop needs to be exclusive
+        local width = rectangle.x + rectangle.width - xRemainder - 1
+    
+        for x = rectangle.x, width, tileSize do
+            table.insert(tiles, Tile(
+                x,
+                rectangle.y,
+                tileSize
+            ))
+        end
+    else 
+        -- exactly the same idea as above but in reverse
+        -- largest possible tile that fits by width etc.
+        tileSize = math.nearestTile(rectangle.width)
+        xRemainder = rectangle.width % tileSize
+        yRemainder = rectangle.height % (rectangle.width - xRemainder)
+    
+        local height = rectangle.y + rectangle.height - yRemainder - 1
+    
+        for y = rectangle.y, height, tileSize do
+            table.insert(tiles, Tile(
+                rectangle.x,
+                y,
+                tileSize
+            ))
+        end
     end
 
-    local tileSize = math.nearestTile(rectangle.height)
-    local yRemainder = rectangle.height % tileSize
-    print(yRemainder)
-    local xRemainder = rectangle.width % (rectangle.height - yRemainder)
-    print(xRemainder)
-
-    table.insert(tiles, Tile(
-        rectangle.x,
-        rectangle.y,
-        tileSize
-    ))
+    -- remainders are handled recursively
     table.addTable(tiles, Tile:fromRectangle(
         rectangle.x + rectangle.width - xRemainder,
         rectangle.y,
@@ -116,38 +158,7 @@ function Tile:rectangle(rectangle)
         yRemainder
     ))
 
-    -- if wider then
-    --     remainder = rectangle.width % rectangle.height
-    --     -- -1 because for loop is inclusive
-    --     area = rectangle.x + rectangle.width - remainder - 1
-    --     -- looping rectangle by:    width / (width/height)
-    --     -- which equals width incremented by height for each iteration
-    --     for x = rectangle.x, area, rectangle.height do
-    --         table.insert(tiles, Tile(x,rectangle.y,rectangle.height))
-    --     end
-    -- else
-    --     remainder = rectangle.height % rectangle.width
-    --     area = rectangle.y + rectangle.height - remainder - 1
-
-    --     for y = rectangle.y, area, rectangle.width do
-    --         table.insert(tiles, Tile(rectangle.x,y,rectangle.width))
-    --     end
-    -- end
-    
-    -- -- handle leftovers recursively (while width/height has a remainder)
-    -- if remainder ~= 0 then
-    --     for k, brick in pairs(Tile:fromRectangle(
-    --         wider and rectangle.x + rectangle.width - remainder or rectangle.x, 
-    --         wider and rectangle.y or rectangle.y + rectangle.height - remainder, 
-    --         wider and remainder or rectangle.width, 
-    --         wider and rectangle.height or remainder
-    --     ))
-    --     do
-    --         table.insert(tiles, brick)
-    --     end
-    -- end
-
-    return tiles
+    return tiles;
 end
 
 -- bandaid solution to change collision to reuse a method
