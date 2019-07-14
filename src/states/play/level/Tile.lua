@@ -10,7 +10,7 @@ function Tile:init(x, y, length, image)
     self.map = {
         x = self.x / TILE_SIZE + 1, -- addition because tables are 1 indexed
         y = self.y / TILE_SIZE + 1,
-        count = length / TILE_SIZE -1 -- subtraction because coords are 0 indexed
+        size = length / TILE_SIZE -1 -- subtraction because coords are 0 indexed
     }
     self.width = length
     self.height = length
@@ -108,7 +108,6 @@ function Tile:rectangleToTiles(rectangle)
     local xRemainder = 0
     local tileSize = 10
 
-    -- if wider
     if rectangle.width > rectangle.height then
         -- get largest possible tile that fits by height
         tileSize = math.nearestTile(rectangle.height)
@@ -168,7 +167,7 @@ function Tile:collider()
 end
 
 function Tile:toString()
-    return self.map.x .. "," .. self.map.y .. ";" .. self.map.count
+    return self.map.x .. "," .. self.map.y .. ";" .. self.map.size
 end
 
 function Tile:render()

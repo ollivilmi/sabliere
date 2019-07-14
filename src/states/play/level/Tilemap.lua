@@ -31,8 +31,8 @@ function Tilemap:addTile(tile, destroy)
     end
 
     -- furthest x and y (tilemap) in tile to be added
-    local fx = tile.map.x + tile.map.count
-    local fy = tile.map.y + tile.map.count
+    local fx = tile.map.x + tile.map.size
+    local fy = tile.map.y + tile.map.size
 
     if not self:inBounds(fy, fx) then
         self:expand(fy, fx)
@@ -96,8 +96,8 @@ function Tilemap:expand(y,x)
 end
 
 function Tilemap:toTile(tile, action)
-    for y = tile.map.y, tile.map.y + tile.map.count do
-        for x = tile.map.x, tile.map.x + tile.map.count do
+    for y = tile.map.y, tile.map.y + tile.map.size do
+        for x = tile.map.x, tile.map.x + tile.map.size do
             action(self.tiles[y][x])            
         end
     end
@@ -151,6 +151,21 @@ function Tilemap:toTilesNear(area, action)
             end
         end
     end
+end
+
+function Tilemap:toAdjacentCorners(tile)
+    for y = -tile.map.size, tile.map.size, tile.map.size*2 do
+        for x = -tile.map.size, tile.map.size, tile.map.size*2 do
+            corner = self.tiles[y][x]
+            if self:hasTile(corner) and corner.map.size == tile.size then
+                tiles = corner:getAdjacentTiles(corner)
+                if table.size == 4 and table.allElementsEqual(tiles, function(t)
+                    t.map.size == tile.map.size
+                end) then
+                    self:repair(tiles)
+                    return
+                end
+            end
 end
 
 -- TODO: refactor for readability
