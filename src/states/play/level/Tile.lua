@@ -10,7 +10,7 @@ function Tile:init(x, y, length, image)
     self.map = {
         x = self.x / TILE_SIZE + 1, -- addition because tables are 1 indexed
         y = self.y / TILE_SIZE + 1,
-        size = length / TILE_SIZE -1 -- subtraction because coords are 0 indexed
+        size = (length / TILE_SIZE) -1 -- subtraction because coords are 0 indexed
     }
     self.width = length
     self.height = length
@@ -164,6 +164,10 @@ end
 -- bandaid solution to change collision to reuse a method
 function Tile:collider()
     return Collision(self.x+1, self.y+1, self.width-2, self.height-2)
+end
+
+function Tile:equals(tile)
+    return self.map.size == tile.map.size
 end
 
 function Tile:toString()

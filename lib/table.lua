@@ -5,7 +5,7 @@ function table.addTable(t, toAdd)
 end
 
 function table.allElementsEqual(t, comparator)
-    for k,v in pairs(t)
+    for k,v in pairs(t) do
         if compararator(v) == false then
             return false
         end

@@ -30,6 +30,8 @@ function Tilemap:addTile(tile, destroy)
         return
     end
 
+    log("added tile " .. tile:toString())
+
     -- furthest x and y (tilemap) in tile to be added
     local fx = tile.map.x + tile.map.size
     local fy = tile.map.y + tile.map.size
@@ -45,14 +47,6 @@ function Tilemap:addTile(tile, destroy)
     -- returned from tile:destroy(area)
     if destroy then
         self:removeTiles(tile:collider())
-    else
-    -- append mode
-    -- toTilesNeararea (newTile)
-    -- if newTile collides with existing tile, add to collisions
-    -- for each unique colliding tile, we have a list of collisions
-    -- then we apply the destroy method to each of these tiles
-    -- 
-    -- loop if collided:collides(newTiles) -> destroy -> newTiles
     end
 
     for y = tile.map.y, fy do
@@ -60,6 +54,7 @@ function Tilemap:addTile(tile, destroy)
             self.tiles[y][x] = tile   
         end
     end
+    self:combineAdjacent(tile)
 end
 
 function Tilemap:inBounds(y,x)
@@ -153,20 +148,56 @@ function Tilemap:toTilesNear(area, action)
     end
 end
 
-function Tilemap:toAdjacentCorners(tile)
-    for y = -tile.map.size, tile.map.size, tile.map.size*2 do
-        for x = -tile.map.size, tile.map.size, tile.map.size*2 do
-            corner = self.tiles[y][x]
-            if self:hasTile(corner) and corner.map.size == tile.size then
-                tiles = corner:getAdjacentTiles(corner)
-                if table.size == 4 and table.allElementsEqual(tiles, function(t)
-                    t.map.size == tile.map.size
-                end) then
-                    self:repair(tiles)
-                    return
+function Tilemap:combineAdjacent(tile)
+    local size = tile.map.size + 1
+    -- check adjacent corners only
+    for y = tile.map.y - size, tile.map.y + size, size*2 do
+        for x = tile.map.x - size, tile.map.x + size, size*2 do
+            if self:hasTile(y,x) then
+                corner = self.tiles[y][x]
+                if corner:equals(tile) then
+                    tiles = self:adjacentTiles(tile, corner)
+                    if table.getn(tiles) == 4 then 
+                        self:combine(tiles)
+                        return
+                    end
                 end
             end
+        end
+    end
 end
+
+-- Get tiles that are adjacent to both origin AND tile
+function Tilemap:adjacentTiles(tile1, tile2)
+    local tiles = { tile1, tile2 }
+    if self:hasTile(tile1.map.y, tile2.map.x) then
+        tile = self.tiles[tile1.map.y][tile2.map.x]
+        if tile:equals(tile1) then
+            table.insert(tiles, tile)
+        end
+    end
+    if self:hasTile(tile2.map.y, tile1.map.x) then
+        tile = self.tiles[tile2.map.y][tile1.map.x]
+        if tile:equals(tile1) then
+            table.insert(tiles, tile)
+        end
+    end
+
+    return tiles
+end
+
+function Tilemap:combine(tiles)
+    local x = tiles[1].x
+    local y = tiles[1].y
+    for k,t in pairs(tiles) do
+        x = math.min(t.x, x)
+        y = math.min(t.y, y)
+    end
+
+    -- true removes existing tiles
+    self:addTile(Tile(x, y, tiles[1].width*2, tiles[1].image), true)
+end
+
 
 -- TODO: refactor for readability
 function Tilemap:render()
