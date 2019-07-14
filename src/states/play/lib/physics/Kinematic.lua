@@ -17,7 +17,7 @@ end
 
 function Kinematic:jump()
     if self.grounded then
-        self.dy = -GRAVITY/4
+        self.dy = -GRAVITY/2
         self.y = self.y - 5
         self.grounded = false
         return true

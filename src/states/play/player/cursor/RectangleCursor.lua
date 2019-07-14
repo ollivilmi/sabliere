@@ -16,8 +16,11 @@ function RectangleCursor:reset()
 end
 
 -- for square cursor, we will snap to nearest block divisible by MINIMUM_TILE_SIZE
+-- needs to be updated for other directions
 function RectangleCursor:getPosition()
-    return Rectangle(self.x, self.y, self.width, self.height)
+    local x = self.width < 0 and self.x + self.width or self.x
+    local y = self.height < 0 and self.y + self.height or self.y
+    return Rectangle(x, y, math.abs(self.width), math.abs(self.height))
 end
 
 function RectangleCursor:update(dt)
