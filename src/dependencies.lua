@@ -2,6 +2,7 @@ push = require 'lib/push'
 Class = require 'lib/class'
 require 'lib/Util'
 require 'lib/math'
+require 'lib/table'
 
 require 'src/constants'
 require 'src/assets/dependencies'

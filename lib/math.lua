@@ -56,9 +56,3 @@ end
 function math.direction(ax, ay, bx, by)
     return math.atan2(by-ay,bx-ax)
 end
-
-function table.addTable(t, toAdd)
-    for k, v in pairs(toAdd) do
-        table.insert(t, v)
-    end
-end

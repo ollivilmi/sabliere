@@ -30,7 +30,7 @@ function Tilemap:addTile(tile, destroy)
         return
     end
 
-    -- furthest x and y (tilemap) in tile
+    -- furthest x and y (tilemap) in tile to be added
     local fx = tile.map.x + tile.map.count
     local fy = tile.map.y + tile.map.count
 
@@ -39,7 +39,10 @@ function Tilemap:addTile(tile, destroy)
         log("map expanded, new dimensions: [" .. self.mapWidth .. "," .. self.mapHeight .. "]")
     end
 
-    -- remove existing tiles
+    -- breaks existing tiles before placing new one (tile:destroy(area))
+    --
+    -- conditional is used to avoid recursion hell from tiles that are 
+    -- returned from tile:destroy(area)
     if destroy then
         self:removeTiles(tile:collider())
     else
@@ -123,9 +126,7 @@ function Tilemap:removeTiles(area)
     end)
 
     for k, tile in pairs(toDestroy) do
-        for i, t in pairs(tile:destroy(area)) do
-            table.insert(toAdd, t)
-        end
+        table.addTable(toAdd, tile:destroy(area))
     end
 
     for k, tile in pairs(toAdd) do

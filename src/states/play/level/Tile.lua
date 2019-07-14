@@ -1,9 +1,10 @@
 require 'src/states/play/lib/physics/Rectangle'
-require 'src/states/play/level/TileRectangle'
 
-Tile = Class{__includes = Collision, TileRectangle}
+Tile = Class{__includes = Collision}
 
 -- Tiles are squares with min length TILE_SIZE
+-- tiles size increases in binary increments (TILE_SIZE * 2^n) to ensure
+-- that they can be divided into 4 segments
 function Tile:init(x, y, length, image)
     self.x, self.y, length = math.snap(x, y, length)
     self.map = {
@@ -19,32 +20,30 @@ function Tile:init(x, y, length, image)
 end
 
 function Tile:destroy(area)
-    local segments = {}
+    local newTiles = {}
     local width = self.width/2
     local height = self.height/2
-    local bricks = {}
+    local tiles = {}
 
-    -- break into 4x4 smaller segments by dividing height & width by 2
+    -- break into 4x4 segments by dividing height & width by 2
     if width >= TILE_SIZE then
         for x = self.x, self.x + width, width do
             for y = self.y, self.y + height, height do
-                table.insert(bricks, Tile(x, y, width, self.image))
+                table.insert(tiles, Tile(x, y, width, self.image))
             end
         end
 
-        for k, brick in pairs(bricks) do 
-            if area:collides(brick) then
-                for i,v in pairs(brick:destroy(area)) do
-                    table.insert(segments, v)
-                end
-                brick = nil
+        for k, tile in pairs(tiles) do 
+            if area:collides(tile) then
+                table.addTable(newTiles, tile:destroy(area))
+                tile = nil
             else
-                table.insert(segments, brick)
+                table.insert(newTiles, tile)
             end
         end
     end
 
-    return segments 
+    return newTiles 
 end
 
 -- sadly there is no function overloading in lua
@@ -69,7 +68,9 @@ function Tile:rectangle(rectangle)
     return tiles
 end
 
---- Translates squares to fit tiles (eg. 30x30 pixels cannot be a tile)
+-- Translates squares to fit tiles
+-- tiles sizes are in binary increments (TILE_SIZE * 2^n) to ensure
+-- that they can be divided into 4 segments
 function Tile:squareToTiles(rectangle)
     local tiles = {}
 
