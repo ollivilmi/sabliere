@@ -1,5 +1,5 @@
 require 'src/states/play/player/cursor/Cursor'
-require 'src/states/play/lib/physics/Rectangle'
+require 'src/states/play/lib/physics/Collision'
 
 RectangleCursor = Class{__includes = Cursor, Rectangle}
 
@@ -20,13 +20,13 @@ end
 function RectangleCursor:getPosition()
     local x = self.width < 0 and self.x + self.width or self.x
     local y = self.height < 0 and self.y + self.height or self.y
-    return Rectangle(x, y, math.abs(self.width), math.abs(self.height))
+    return Collision(x, y, math.abs(self.width), math.abs(self.height))
 end
 
 function RectangleCursor:update(dt)
     if love.mouse.wasPressed(1) then
         self:updateCoordinates()
-        self.x, self.y = math.snap(self.x, self.y)
+        self.x, self.y = tilemath.snap(self.x, self.y)
     end
 
     if love.mouse.wasReleased(1) then
@@ -35,13 +35,13 @@ function RectangleCursor:update(dt)
 
     if love.mouse.isDown(1) then
         local x, y = self:currentCoordinates()
-        x, y = math.snap(x, y)
+        x, y = tilemath.snap(x, y)
 
         self.width = math.floor(x - self.x)
         self.height = math.floor(y - self.y)
     else
         self:updateCoordinates()
-        self.x, self.y = math.snap(self.x, self.y)
+        self.x, self.y = tilemath.snap(self.x, self.y)
         self.width = 2
         self.height = 2
     end

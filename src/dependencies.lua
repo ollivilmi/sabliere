@@ -1,8 +1,9 @@
 push = require 'lib/push'
 Class = require 'lib/class'
-require 'lib/Util'
+require 'lib/util'
 require 'lib/math'
 require 'lib/table'
+require 'lib/tilemath'
 
 require 'src/constants'
 require 'src/assets/dependencies'

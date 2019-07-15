@@ -27,9 +27,9 @@ function Player:update(dt)
 end
 
 function Player:updateControls()
-    if love.keyboard.isDown('left') then
+    if love.keyboard.isDown('a') then
         self.dx = -self.speed
-    elseif love.keyboard.isDown('right') then
+    elseif love.keyboard.isDown('d') then
         self.dx = self.speed
     else
         self.dx = 0

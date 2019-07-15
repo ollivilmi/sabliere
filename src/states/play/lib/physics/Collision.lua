@@ -63,6 +63,11 @@ function Collision:updateHitboxes(x, y)
     end
 end
 
+-- bandaid solution to change collision to reuse a method
+function Collision:mapCollider()
+    return Collision(self.x+1, self.y+1, self.width-2, self.height-2)
+end
+
 function Collision:collidesRight(target)
     return self.hitBoxes.right:collides(target)
 end
