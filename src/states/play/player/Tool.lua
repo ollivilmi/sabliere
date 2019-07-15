@@ -13,9 +13,7 @@ function Tool:init(playState)
         ),
         build = SquareCursor(
             TILE_SIZE, function()
-                tile = self.current:getPosition()
-                playState.level.tilemap:removeTiles(tile:mapCollider())
-                playState.level.tilemap:addTile(tile)
+                playState.level.tilemap:overwrite(self.current:getPosition())
             end
         ),
         buildRectangle = RectangleCursor(
