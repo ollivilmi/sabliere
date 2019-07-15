@@ -17,7 +17,7 @@ end
 
 function SquareCursor:update(dt)
     self:updateCoordinates()
-    self.x, self.y = math.snap(self.x, self.y)
+    self.x, self.y = tilemath.snap(self.x, self.y)
 
     -- to properly split squares, the area must be in binary increments
     if love.mouse.wheelmoved ~= 0 then

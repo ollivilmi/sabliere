@@ -1,4 +1,4 @@
-require 'src/states/play/lib/physics/Rectangle'
+require 'src/states/play/level/TileRectangle'
 
 Tilemap = Class{}
 
@@ -16,21 +16,23 @@ function Tilemap:init()
         end
     end
 
-    self:addTiles(Rectangle(0, MAP_HEIGHT-TILE_SIZE, MAP_WIDTH, TILE_SIZE))
+    self:addTiles(Collision(0, MAP_HEIGHT-TILE_SIZE, MAP_WIDTH, TILE_SIZE))
 end
 
 function Tilemap:addTiles(rectangle)
-    for k,tile in pairs(Tile:rectangle(rectangle)) do
-        self:addTile(tile, true)
+    if self:inBounds(rectangle.map.y, rectangle.map.x) then
+        self:removeTiles(rectangle:mapCollider())
+    end
+    for k,tile in pairs(TileRectangle:toTiles(rectangle)) do
+        self:addTile(tile, false)
+        self:combineAdjacent(tile)
     end
 end
 
-function Tilemap:addTile(tile, destroy)
+function Tilemap:addTile(tile)
     if tile.x < 0 or tile.y < 0 then
         return
     end
-
-    log("added tile " .. tile:toString())
 
     -- furthest x and y (tilemap) in tile to be added
     local fx = tile.map.x + tile.map.size
@@ -41,20 +43,11 @@ function Tilemap:addTile(tile, destroy)
         log("map expanded, new dimensions: [" .. self.mapWidth .. "," .. self.mapHeight .. "]")
     end
 
-    -- breaks existing tiles before placing new one (tile:destroy(area))
-    --
-    -- conditional is used to avoid recursion hell from tiles that are 
-    -- returned from tile:destroy(area)
-    if destroy then
-        self:removeTiles(tile:collider())
-    end
-
     for y = tile.map.y, fy do
         for x = tile.map.x, fx do
             self.tiles[y][x] = tile   
         end
     end
-    self:combineAdjacent(tile)
 end
 
 function Tilemap:inBounds(y,x)
@@ -126,6 +119,8 @@ function Tilemap:removeTiles(area)
 
     for k, tile in pairs(toAdd) do
         self:addTile(tile)
+        -- why does this bug so much?
+        self:combineAdjacent(tile)
     end
 end
 
@@ -150,14 +145,16 @@ end
 
 function Tilemap:combineAdjacent(tile)
     local size = tile.map.size + 1
+
     -- check adjacent corners only
     for y = tile.map.y - size, tile.map.y + size, size*2 do
         for x = tile.map.x - size, tile.map.x + size, size*2 do
             if self:hasTile(y,x) then
                 corner = self.tiles[y][x]
                 if corner:equals(tile) then
+
                     tiles = self:adjacentTiles(tile, corner)
-                    if table.getn(tiles) == 4 then 
+                    if table.getn(tiles) == 4 then
                         self:combine(tiles)
                         return
                     end
@@ -195,9 +192,8 @@ function Tilemap:combine(tiles)
     end
 
     -- true removes existing tiles
-    self:addTile(Tile(x, y, tiles[1].width*2, tiles[1].image), true)
+    self:addTile(Tile(x, y, tiles[1].width*2, tiles[1].image))
 end
-
 
 -- TODO: refactor for readability
 function Tilemap:render()
