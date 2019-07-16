@@ -1,3 +1,4 @@
+require 'src/states/play/lib/settings/Keymap'
 require 'src/states/play/player/Player'
 require 'src/states/play/level/Level'
 require 'src/states/play/level/Camera'

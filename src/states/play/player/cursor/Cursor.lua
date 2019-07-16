@@ -14,3 +14,5 @@ function Cursor:currentCoordinates()
 
     return x,y
 end
+
+-- on hovering ui, change cursor to clicking cursor
