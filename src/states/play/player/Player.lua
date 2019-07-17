@@ -15,15 +15,12 @@ function Player:init(playState)
     self.grounded = false
     self.speed = 200
     self:initHitboxes()
-
-    self.tool = Tool(playState)
 end
 
 function Player:update(dt)
     self:applyDeltas(dt)
     self:updateControls()
     self:updateAnimation(dt)
-    self.tool:update(dt)
 end
 
 function Player:updateControls()
@@ -44,7 +41,6 @@ end
 
 function Player:render()
     self:animate()
-    self.tool:render()
     if DEBUG_MODE then
         self:renderHitboxes()
     end

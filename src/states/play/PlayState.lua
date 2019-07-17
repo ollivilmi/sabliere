@@ -7,9 +7,9 @@ require 'src/states/play/player/interface/Toolbar'
 PlayState = Class{__includes = BaseState}
 
 function PlayState:enter(params)
+    self.toolbar = Toolbar(self)
     self.player = Player(self)
     self.level = Level(self)
-    self.toolbar = Toolbar()
     gCamera = Camera(0.01, self.player, 150)
 end
 
@@ -17,6 +17,7 @@ function PlayState:update(dt)
     self.player:update(dt)
     gCamera:update(dt)
     self.level:update(dt)
+    self.toolbar:update(dt)    
 end
 
 function PlayState:render()

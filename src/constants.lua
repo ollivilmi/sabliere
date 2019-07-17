@@ -22,4 +22,4 @@ TILE_TYPE = {
     dynamic = 2
 }
 
-DEBUG_MODE = true
+DEBUG_MODE = false
