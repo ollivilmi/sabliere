@@ -16,10 +16,9 @@ GRAVITY = 8
 TILE_SIZE = 10
 SNAP = TILE_SIZE
 
-TILE_TYPE = {
-    empty = 0,
-    static = 1,
-    dynamic = 2
-}
+-- interface
+TOOLBAR_SCALE = 1
+TOOLBAR_SIZE = 50 * TOOLBAR_SCALE
+TOOL_SIZE = 40 * TOOLBAR_SCALE
 
-DEBUG_MODE = false
+DEBUG_MODE = true

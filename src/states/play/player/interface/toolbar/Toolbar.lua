@@ -1,12 +1,8 @@
-require 'src/states/play/player/interface/Frames'
+require 'src/states/play/player/interface/hud/Frames'
 
 Toolbar = Class{}
 
-TOOLBAR_SCALE = 1
-TOOLBAR_SIZE = 50 * TOOLBAR_SCALE
-TOOL_SIZE = 40 * TOOLBAR_SCALE
-
-function Toolbar:init(playState)
+function Toolbar:init()
     self.fps = Frames()
     self.tools = {
         gTools.destroy.circle,
@@ -15,6 +11,7 @@ function Toolbar:init(playState)
     }
     self.current = self.tools[1]
     self.toolCount = table.getn(gKeymap.tools.main)
+
     self.x = VIRTUAL_WIDTH / 2 - ((self.toolCount * TOOLBAR_SIZE)/2)
     self.y = VIRTUAL_HEIGHT - TOOLBAR_SIZE - 10
 end
@@ -22,14 +19,6 @@ end
 function Toolbar:switch(tool)
 	assert(self.tools[tool])
     self.current = self.tools[tool]
-end
-
-function Toolbar:update(dt)
-    for i = 1, self.toolCount do
-        if love.keyboard.wasPressed(gKeymap.tools.main[i]) then
-            self:switch(i)
-        end
-    end
 end
 
 function Toolbar:render()

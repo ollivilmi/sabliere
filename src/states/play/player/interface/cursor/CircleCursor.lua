@@ -1,4 +1,4 @@
-require 'src/states/play/player/cursor/Cursor'
+require 'src/states/play/player/interface/cursor/Cursor'
 require 'src/states/play/lib/physics/Circle'
 
 CircleCursor = Class{__includes = Cursor}
@@ -27,10 +27,11 @@ function CircleCursor:update(dt)
     -- mouse click checks for colliding bricks, which are then destroyed
     -- each destroyed brick should be added to your "ammo" for building
     if love.mouse.wasPressed(1) then
-        self.action()
+        self.action(self:getPosition())
     end
 end
 
 function CircleCursor:render()
+    love.graphics.setColor(0,0,0)
     love.graphics.circle('line', self.x, self.y, self.radius)
 end

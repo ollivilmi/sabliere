@@ -1,4 +1,4 @@
-require 'src/states/play/player/cursor/Cursor'
+require 'src/states/play/player/interface/cursor/Cursor'
 require 'src/states/play/lib/physics/Collision'
 
 RectangleCursor = Class{__includes = Cursor, Rectangle}
@@ -30,7 +30,7 @@ function RectangleCursor:update(dt)
     end
 
     if love.mouse.wasReleased(1) then
-        self.action()
+        self.action(self:getPosition())
     end
 
     if love.mouse.isDown(1) then
@@ -48,5 +48,6 @@ function RectangleCursor:update(dt)
 end
 
 function RectangleCursor:render()
+    love.graphics.setColor(0,0,0)
     love.graphics.rectangle('line', self.x, self.y, self.width, self.height)
 end

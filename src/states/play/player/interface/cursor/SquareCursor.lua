@@ -1,4 +1,4 @@
-require 'src/states/play/player/cursor/Cursor'
+require 'src/states/play/player/interface/cursor/Cursor'
 
 SquareCursor = Class{__includes = Cursor}
 
@@ -27,10 +27,11 @@ function SquareCursor:update(dt)
     end
 
     if love.mouse.wasPressed(1) then
-        self.action()
+        self.action(self:getPosition())
     end
 end
 
 function SquareCursor:render()
+    love.graphics.setColor(0,0,0)
     love.graphics.rectangle('line', self.x, self.y, self.length, self.length)
 end
