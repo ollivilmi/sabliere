@@ -1,5 +1,5 @@
 require 'src/states/play/lib/animations/AnimatedKinematic'
-require 'src/states/play/player/Tool'
+require 'src/states/play/player/interface/Tool'
 
 Player = Class{__includes = AnimatedKinematic}
 
@@ -15,9 +15,17 @@ function Player:init(playState)
     self.grounded = false
     self.speed = 200
     self:initHitboxes()
+    self.toolbar = Toolbar(self)
+    self:switchCursor(self.toolbar.current.cursor)
+end
+
+function Player:switchCursor(cursor)
+    self.cursor = cursor
+    self.cursor.action = self.toolbar.current.action(self.cursor:getPosition())
 end
 
 function Player:update(dt)
+    self.cursor:update(dt)
     self:applyDeltas(dt)
     self:updateControls()
     self:updateAnimation(dt)

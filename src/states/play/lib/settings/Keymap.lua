@@ -13,8 +13,6 @@ gKeymap = {
             '3'
         }
     }
-
-
 }
 
 -- keymap.save = function()

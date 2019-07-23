@@ -1,30 +1,22 @@
 require 'src/states/play/player/interface/Frames'
-require 'src/states/play/player/cursor/RectangleCursor'
 
 Toolbar = Class{}
 
+TOOLBAR_SCALE = 1
+TOOLBAR_SIZE = 50 * TOOLBAR_SCALE
+TOOL_SIZE = 40 * TOOLBAR_SCALE
+
 function Toolbar:init(playState)
     self.fps = Frames()
-    self.toolImages = GenerateQuads(gTextures.ui.tools, 40, 40)
     self.tools = {
-        CircleCursor(
-            TILE_SIZE, 2, function()
-                playState.level.tilemap:removeTiles(self.current:getPosition())
-            end
-        ),
-        SquareCursor(
-            TILE_SIZE, function()
-                playState.level.tilemap:overwrite(self.current:getPosition())
-            end
-        ),
-        RectangleCursor(
-            function()
-                playState.level.tilemap:addTiles(self.current:getPosition())
-            end
-        )
+        gTools.destroy.circle,
+        gTools.build.tile,
+        gTools.build.rectangle
     }
     self.current = self.tools[1]
     self.toolCount = table.getn(gKeymap.tools.main)
+    self.x = VIRTUAL_WIDTH / 2 - ((self.toolCount * TOOLBAR_SIZE)/2)
+    self.y = VIRTUAL_HEIGHT - TOOLBAR_SIZE - 10
 end
 
 function Toolbar:switch(tool)
@@ -33,7 +25,6 @@ function Toolbar:switch(tool)
 end
 
 function Toolbar:update(dt)
-    self.current:update(dt)
     for i = 1, self.toolCount do
         if love.keyboard.wasPressed(gKeymap.tools.main[i]) then
             self:switch(i)
@@ -43,19 +34,25 @@ end
 
 function Toolbar:render()
     self.fps:render()
-    local x = gCamera.x + VIRTUAL_WIDTH / 2 - 187.5
-    local y = gCamera.y + VIRTUAL_HEIGHT - 50
+    local x = gCamera.x + self.x
+    local y = gCamera.y + self.y
 
-    love.graphics.setColor(0,0,0,0.9)
-    love.graphics.rectangle('fill', x-6.75, y-5, 390, 45)
-    love.graphics.setColor(0.5,0.7,0.7)
+    love.graphics.setColor(1,1,1)
+    for i = 1,self.toolCount do
+        love.graphics.draw(gTextures.ui.toolbar, x, y, 0, TOOLBAR_SCALE, TOOLBAR_SCALE)
 
-    for i = 1,10 do
-        love.graphics.draw(gTextures.ui.toolbar, x,y, 0, 0.75, 0.75)
-        x = x + 37.5
+        if self.tools[i] ~= nil then
+            if self.tools[i] == self.current then
+                love.graphics.setColor(0,0,0,0.3)
+                love.graphics.rectangle('fill', x+5, y+5, TOOL_SIZE, TOOL_SIZE)
+                love.graphics.setColor(1,1,1)            
+            end
+            self.tools[i]:render(x+TOOLBAR_SIZE/2,y+TOOLBAR_SIZE/2)
+            --love.graphics.draw(gTextures.ui.tools, self.toolImages[i], x+TOOLBAR_SIZE/2, y+TOOLBAR_SIZE/2, 0, TOOLBAR_SCALE, TOOLBAR_SCALE, TOOL_SIZE/2, TOOL_SIZE/2)
+        end
+        x = x + TOOLBAR_SIZE
     end
 
     love.graphics.setColor(0,0,0)
-    self.current:render()
 end
 
