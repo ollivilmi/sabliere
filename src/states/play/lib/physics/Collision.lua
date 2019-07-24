@@ -15,6 +15,10 @@ function Collision:collides(target)
     return true
 end
 
+function Collision:hasPoint(x,y)
+    return x >= self.x and x <= self.x + self.width and y >= self.y and y <= self.y + self.height
+end
+
 -- Hitboxes are used to check which side is currently colliding with target
 -- when AABB collision is not enough
 --

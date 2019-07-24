@@ -33,5 +33,9 @@ end
 
 function SquareCursor:render()
     love.graphics.setColor(0,0,0)
-    love.graphics.rectangle('line', self.x, self.y, self.length, self.length)
+    if self.hoveringComponent ~= nil then
+        self.hoveringComponent:renderEdges(0,0,0)
+    else
+        love.graphics.rectangle('line', self.x, self.y, self.length, self.length)
+    end
 end

@@ -1,46 +1,46 @@
 require 'src/states/play/player/interface/hud/Frames'
+require 'src/states/play/lib/physics/Rectangle'
 
-Toolbar = Class{}
+Toolbar = Class{__includes = Component}
 
-function Toolbar:init()
+function Toolbar:init(def)
     self.fps = Frames()
-    self.tools = {
-        gTools.destroy.circle,
-        gTools.build.tile,
-        gTools.build.rectangle
-    }
-    self.current = self.tools[1]
-    self.toolCount = table.getn(gKeymap.tools.main)
 
-    self.x = VIRTUAL_WIDTH / 2 - ((self.toolCount * TOOLBAR_SIZE)/2)
-    self.y = VIRTUAL_HEIGHT - TOOLBAR_SIZE - 10
+    self.visible = true
+    self.components = def.tools
+    self.current = self.components[1]
+    self.toolCount = table.getn(self.components)
+
+    self.area = Collision(
+        def.x,
+        def.y,
+        self.toolCount * TOOLBAR_SIZE,
+        TOOLBAR_SIZE
+    )
 end
 
 function Toolbar:switch(tool)
-	assert(self.tools[tool])
-    self.current = self.tools[tool]
+	assert(self.components[tool])
+    self.current = self.components[tool]
 end
 
 function Toolbar:render()
     self.fps:render()
-    local x = gCamera.x + self.x
-    local y = gCamera.y + self.y
+    local x = gCamera.x + self.area.x
+    local y = gCamera.y + self.area.y
 
     love.graphics.setColor(1,1,1)
-    for i = 1,self.toolCount do
+    for i = 1, self.toolCount do
         love.graphics.draw(gTextures.ui.toolbar, x, y, 0, TOOLBAR_SCALE, TOOLBAR_SCALE)
-
-        if self.tools[i] ~= nil then
-            if self.tools[i] == self.current then
-                love.graphics.setColor(0,0,0,0.3)
-                love.graphics.rectangle('fill', x+5, y+5, TOOL_SIZE, TOOL_SIZE)
-                love.graphics.setColor(1,1,1)            
-            end
-            self.tools[i]:render(x+TOOLBAR_SIZE/2,y+TOOLBAR_SIZE/2)
-            --love.graphics.draw(gTextures.ui.tools, self.toolImages[i], x+TOOLBAR_SIZE/2, y+TOOLBAR_SIZE/2, 0, TOOLBAR_SCALE, TOOLBAR_SCALE, TOOL_SIZE/2, TOOL_SIZE/2)
-        end
         x = x + TOOLBAR_SIZE
     end
+
+    for k,component in pairs(self.components) do
+        component:render()
+    end
+
+    -- highlight active tool
+    self.current:renderMask(0.2)
 
     love.graphics.setColor(0,0,0)
 end

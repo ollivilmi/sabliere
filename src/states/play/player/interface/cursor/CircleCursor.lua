@@ -33,5 +33,9 @@ end
 
 function CircleCursor:render()
     love.graphics.setColor(0,0,0)
-    love.graphics.circle('line', self.x, self.y, self.radius)
+    if self.hoveringComponent ~= nil then
+        self.hoveringComponent:renderEdges(0,0,0)
+    else
+        love.graphics.circle('line', self.x, self.y, self.radius)
+    end
 end

@@ -1,5 +1,4 @@
 require 'src/states/play/lib/animations/AnimatedKinematic'
-require 'src/states/play/player/interface/Interface'
 
 Player = Class{__includes = AnimatedKinematic}
 
@@ -15,12 +14,9 @@ function Player:init(playState)
     self.grounded = false
     self.speed = 200
     self:initHitboxes()
-    self.interface = Interface(playState)
 end
 
 function Player:update(dt)
-    -- create class = playerInterface -> add these there
-    self.interface:update(dt)
     self:applyDeltas(dt)
     self:updateControls()
     self:updateAnimation(dt)
@@ -43,7 +39,6 @@ function Player:updateControls()
 end
 
 function Player:render()
-    self.interface:render()
     self:animate()
     if DEBUG_MODE then
         self:renderHitboxes()
