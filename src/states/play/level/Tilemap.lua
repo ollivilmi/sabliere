@@ -17,7 +17,7 @@ function Tilemap:init()
         end
     end
 
-    self:addTiles(Collision(0, MAP_HEIGHT-TILE_SIZE*8, MAP_WIDTH, TILE_SIZE*8))
+    self:addTiles(BoxCollider(0, MAP_HEIGHT-TILE_SIZE*8, MAP_WIDTH, TILE_SIZE*8))
 end
 
 function Tilemap:addTiles(rectangle)

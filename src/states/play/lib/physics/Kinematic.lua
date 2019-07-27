@@ -1,6 +1,6 @@
-require 'src/states/play/lib/physics/Collision'
+require 'src/states/play/lib/physics/BoxCollider'
 
-Kinematic = Class{__includes = Collision}
+Kinematic = Class{__includes = BoxCollider}
 
 function Kinematic:applyDeltas(dt)
     if not self.grounded then

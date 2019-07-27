@@ -21,7 +21,7 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-    -- should be wrapped in Game class
+    -- should be wrapped in World class
     gCamera:translate()
     self.level:render()
     self.player:render()

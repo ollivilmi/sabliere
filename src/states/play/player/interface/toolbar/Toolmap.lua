@@ -14,7 +14,7 @@ gToolmap.load = function()
     local y = VIRTUAL_HEIGHT - TOOLBAR_SIZE - 10
 
     for k,tool in pairs(gToolmap.main) do
-            tool.area = Collision(
+            tool.area = BoxCollider(
                 x+5,
                 y+5,
                 TOOL_SIZE,

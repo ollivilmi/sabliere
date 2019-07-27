@@ -11,7 +11,7 @@ function Toolbar:init(def)
     self.current = self.components[1]
     self.toolCount = table.getn(self.components)
 
-    self.area = Collision(
+    self.area = BoxCollider(
         def.x,
         def.y,
         self.toolCount * TOOLBAR_SIZE,

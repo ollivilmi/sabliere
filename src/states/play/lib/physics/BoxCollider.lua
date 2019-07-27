@@ -1,9 +1,9 @@
 require 'src/states/play/lib/physics/Hitbox'
 require 'src/states/play/lib/physics/Rectangle'
 
-Collision = Class{__includes = Rectangle}
+BoxCollider = Class{__includes = Rectangle}
 
-function Collision:collides(target)
+function BoxCollider:collides(target)
     if self.x > target.x + target.width or target.x > self.x + self.width then
         return false
     end
@@ -15,7 +15,7 @@ function Collision:collides(target)
     return true
 end
 
-function Collision:hasPoint(x,y)
+function BoxCollider:hasPoint(x,y)
     return x >= self.x and x <= self.x + self.width and y >= self.y and y <= self.y + self.height
 end
 
@@ -29,7 +29,7 @@ end
 --                __
 --               |  |
 --                ‾‾
-function Collision:initHitboxes(target)
+function BoxCollider:initHitboxes(target)
     local HITBOX_SIZE = 6
 
     self.hitBoxes = {
@@ -60,7 +60,7 @@ function Collision:initHitboxes(target)
     }
 end
 
-function Collision:updateHitboxes(x, y)
+function BoxCollider:updateHitboxes(x, y)
     for k, hitbox in pairs(self.hitBoxes) do
         hitbox.x = hitbox.x + x
         hitbox.y = hitbox.y + y
@@ -68,33 +68,33 @@ function Collision:updateHitboxes(x, y)
 end
 
 -- bandaid solution to change collision to reuse a method
-function Collision:mapCollider()
-    return Collision(self.x+1, self.y+1, self.width-2, self.height-2)
+function BoxCollider:mapCollider()
+    return BoxCollider(self.x+1, self.y+1, self.width-2, self.height-2)
 end
 
-function Collision:collidesRight(target)
+function BoxCollider:collidesRight(target)
     return self.hitBoxes.right:collides(target)
 end
 
-function Collision:collidesLeft(target)
+function BoxCollider:collidesLeft(target)
     return self.hitBoxes.left:collides(target)
 end
 
-function Collision:collidesBottom(target)
+function BoxCollider:collidesBottom(target)
     return self.hitBoxes.bottom:collides(target)
 end
 
-function Collision:collidesTop(target)
+function BoxCollider:collidesTop(target)
     return self.hitBoxes.top:collides(target)
 end
 
-function Collision:getCenter()
+function BoxCollider:getCenter()
     local x = self.x - (VIRTUAL_WIDTH / 2) + (self.width / 2)
     local y = self.y - (VIRTUAL_HEIGHT / 2) + (self.height / 2)
     return x,y
 end
 
-function Collision:renderHitboxes()
+function BoxCollider:renderHitboxes()
     for k,hitbox in pairs(self.hitBoxes) do
         hitbox:render()
     end

@@ -23,8 +23,7 @@ function Camera:update(dt)
     -- basically we take the vector of camera (x,y) -> target (x,y)
     -- and then adjust speed
     if math.floor(math.distance(x,y,self.x,self.y)) > self.offset then
-        self.dx = math.floor((x - self.x)*self.speed)
-        self.dy = math.floor((y - self.y)*self.speed)
+        self.dx, self.dy = self:vector(x, y, self.speed)
     else
         self.dx = 0
         self.dy = 0
@@ -39,6 +38,24 @@ function Camera:reverse()
     love.graphics.translate(self.x, self.y)
 end
 
+function Camera:coordinates()
+    return self.x, self.y
+end
+
 function Camera:worldCoordinates(x,y)
     return x + self.x, y + self.y
+end
+
+function Camera:vector(x, y, speed)
+    local speed = speed or 1
+
+    -- if equal, return a zero vector
+    if x == self.x and y == self.y then
+        return 0,0
+    end
+
+    local x = math.floor((x - self.x) * speed)
+    local y = math.floor((y - self.y) * speed)
+
+    return x, y
 end

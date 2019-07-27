@@ -13,7 +13,11 @@ end
 
 function Cursor:updateCoordinates(snap)
     self.world.x, self.world.y = self:worldCoordinates(snap)
-    -- not using coordinates() because tile snapping is needed
+    self:uiCoordinates()
+end
+
+function Cursor:uiCoordinates()
+    -- used when tile snapping is needed
     self.ui.x = self.world.x - gCamera.x
     self.ui.y = self.world.y - gCamera.y
 end
@@ -55,6 +59,7 @@ function Cursor:render()
     love.graphics.setColor(0,0,0)
     if self.hoveringComponent ~= nil then
         self.hoveringComponent:renderEdges(0,0,0)
+        -- todo render hovering cursor
     else
         self:cursor()
     end
