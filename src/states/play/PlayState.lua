@@ -21,14 +21,12 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-    gCamera:render()
+    -- should be wrapped in Game class
+    gCamera:translate()
     self.level:render()
     self.player:render()
 
-    love.graphics.translate(0,0)
+    -- should be wrapped in Interface class
+    gCamera:reverse()
     self.interface:render()
-
-    love.graphics.setFont(gFonts['small'])
-    love.graphics.print('grounded: ' .. (self.player.grounded and 1 or 0), VIRTUAL_WIDTH - 60, 5)
-    love.graphics.print('grounded: ' .. (self.player.grounded and 1 or 0), VIRTUAL_WIDTH - 60, 5)
 end

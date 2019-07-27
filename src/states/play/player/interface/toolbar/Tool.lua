@@ -17,6 +17,6 @@ function Tool:init(def)
 end
 
 function Tool:render()
-    love.graphics.draw(gTextures.ui.tools, self.quad, self.area.x + gCamera.x, self.area.y
-     + gCamera.y, 0, TOOLBAR_SCALE, TOOLBAR_SCALE)
+    love.graphics.draw(gTextures.ui.tools, self.quad, self.area.x, self.area.y, 
+    0, TOOLBAR_SCALE, TOOLBAR_SCALE)
 end

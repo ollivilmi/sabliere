@@ -26,8 +26,8 @@ end
 
 function Toolbar:render()
     self.fps:render()
-    local x = gCamera.x + self.area.x
-    local y = gCamera.y + self.area.y
+    local x = self.area.x
+    local y = self.area.y
 
     love.graphics.setColor(1,1,1)
     for i = 1, self.toolCount do

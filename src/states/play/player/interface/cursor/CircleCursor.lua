@@ -4,16 +4,18 @@ require 'src/states/play/lib/physics/Circle'
 CircleCursor = Class{__includes = Cursor}
 
 function CircleCursor:init(radius, increment, action)
+    Cursor:init(self)
     self.radius = radius
     self.minRadius = radius
     self.increment = increment
-    self.x = 0
-    self.y = 0
     self.action = action
+    self.cursor = function()
+        love.graphics.circle('line', self.ui.x, self.ui.y, self.radius)
+    end
 end
 
 function CircleCursor:getPosition()
-    return Circle(self.x, self.y, self.radius)
+    return Circle(self.world.x, self.world.y, self.radius)
 end
 
 function CircleCursor:update(dt)
@@ -28,14 +30,5 @@ function CircleCursor:update(dt)
     -- each destroyed brick should be added to your "ammo" for building
     if love.mouse.wasPressed(1) then
         self.action(self:getPosition())
-    end
-end
-
-function CircleCursor:render()
-    love.graphics.setColor(0,0,0)
-    if self.hoveringComponent ~= nil then
-        self.hoveringComponent:renderEdges(0,0,0)
-    else
-        love.graphics.circle('line', self.x, self.y, self.radius)
     end
 end

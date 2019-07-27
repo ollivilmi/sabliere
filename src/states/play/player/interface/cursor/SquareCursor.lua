@@ -3,21 +3,22 @@ require 'src/states/play/player/interface/cursor/Cursor'
 SquareCursor = Class{__includes = Cursor}
 
 function SquareCursor:init(length, action)
+    Cursor:init(self)
     self.length = length
     self.increment = 1
-    self.x = 0
-    self.y = 0
     self.action = action
+    self.cursor = function()
+        love.graphics.rectangle('line', self.ui.x, self.ui.y, self.length, self.length)
+    end
 end
 
 -- for square cursor, we will snap to nearest block divisible by MINIMUM_TILE_SIZE
 function SquareCursor:getPosition()
-    return Tile(self.x, self.y, self.length)
+    return Tile(self.world.x, self.world.y, self.length)
 end
 
 function SquareCursor:update(dt)
-    self:updateCoordinates()
-    self.x, self.y = tilemath.snap(self.x, self.y)
+    self:updateCoordinates(true)
 
     -- to properly split squares, the area must be in binary increments
     if love.mouse.wheelmoved ~= 0 then
@@ -28,14 +29,5 @@ function SquareCursor:update(dt)
 
     if love.mouse.wasPressed(1) then
         self.action(self:getPosition())
-    end
-end
-
-function SquareCursor:render()
-    love.graphics.setColor(0,0,0)
-    if self.hoveringComponent ~= nil then
-        self.hoveringComponent:renderEdges(0,0,0)
-    else
-        love.graphics.rectangle('line', self.x, self.y, self.length, self.length)
     end
 end

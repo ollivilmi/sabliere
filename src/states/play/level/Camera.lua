@@ -31,6 +31,14 @@ function Camera:update(dt)
     end
 end
 
-function Camera:render()
+function Camera:translate()
     love.graphics.translate(-self.x, -self.y)
+end
+
+function Camera:reverse()
+    love.graphics.translate(self.x, self.y)
+end
+
+function Camera:worldCoordinates(x,y)
+    return x + self.x, y + self.y
 end
