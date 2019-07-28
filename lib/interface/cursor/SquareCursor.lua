@@ -2,14 +2,12 @@ require 'lib/interface/cursor/Cursor'
 
 SquareCursor = Class{__includes = Cursor}
 
-function SquareCursor:init(length, action)
-    Cursor:init(self)
-    self.length = length
-    self.increment = 1
-    self.action = action
-    self.cursor = function()
-        love.graphics.rectangle('line', self.ui.x, self.ui.y, self.length, self.length)
-    end
+function SquareCursor:init(def)
+    def.snap = true
+    Cursor:init(self, def)
+
+    self.length = def.length
+    self.increment = def.increment or 1
 end
 
 -- for square cursor, we will snap to nearest block divisible by MINIMUM_TILE_SIZE
@@ -18,7 +16,7 @@ function SquareCursor:getPosition()
 end
 
 function SquareCursor:update(dt)
-    self:updateCoordinates(true)
+    Cursor:update(self)
 
     -- to properly split squares, the area must be in binary increments
     if love.mouse.wheelmoved ~= 0 then
@@ -30,4 +28,10 @@ function SquareCursor:update(dt)
     if love.mouse.wasPressed(1) then
         self.action(self:getPosition())
     end
+end
+
+function SquareCursor:render()
+    Cursor:render(self, function()
+        love.graphics.rectangle('line', self.ui.x, self.ui.y, self.length, self.length)
+    end)
 end

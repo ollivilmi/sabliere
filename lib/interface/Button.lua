@@ -3,19 +3,15 @@ require 'lib/interface/Component'
 
 Button = Class{__includes = Component}
 
--- def
---
--- quad
--- cooldown
--- gcd
 function Button:init(self, def)
     Component:init(self, def)
     self.quad = def.quad
     self.action = def.action
+    self.onClick = def.onClick
 end
 
 function Button:onClick()
-    self:action()
+    self:onClick()
 end
 
 function Button:render()

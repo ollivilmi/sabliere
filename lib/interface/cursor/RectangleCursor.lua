@@ -3,16 +3,12 @@ require 'lib/physics/BoxCollider'
 
 RectangleCursor = Class{__includes = Cursor, Rectangle}
 
-function RectangleCursor:init(action)
-    Cursor:init(self)
+function RectangleCursor:init(def)
+    def.snap = true
+    Cursor:init(self, def)
+
     self:reset()
-    self.action = action
     self.camera = { x = 0, y = 0 }
-    self.cursor = function()
-        -- vector is used to move the drawn rectangle if the camera moves while mouse(1) is down
-        local x, y = gCamera:vector(self.camera.x, self.camera.y)
-        love.graphics.rectangle('line', self.ui.x + x, self.ui.y + y, self.width, self.height)
-    end
 end
 
 function RectangleCursor:reset()
@@ -29,7 +25,7 @@ end
 function RectangleCursor:update(dt)
     -- take snapshot of initial coordinates for mouse & camera
     if love.mouse.wasPressed(1) then
-        self:updateCoordinates(true)
+        Cursor:update(self)
         self.camera.x, self.camera.y = gCamera:coordinates()
     end
 
@@ -43,9 +39,17 @@ function RectangleCursor:update(dt)
         self.width = math.floor(x - self.world.x)
         self.height = math.floor(y - self.world.y)
     else
-        self:updateCoordinates(true)
+        Cursor:update(self)
         self.camera.x, self.camera.y = gCamera:coordinates()
         self.width = 2
         self.height = 2
     end
+end
+
+function RectangleCursor:render()
+    Cursor:render(self, function()
+        -- vector is used to move the drawn rectangle if the camera moves while mouse(1) is down
+        local x, y = gCamera:vector(self.camera.x, self.camera.y)
+        love.graphics.rectangle('line', self.ui.x + x, self.ui.y + y, self.width, self.height)
+    end)
 end

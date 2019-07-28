@@ -1,21 +1,9 @@
-require 'lib/interface/Buttonbar'
+require 'lib/interface/Bar'
 
-Menubar = Class{__includes = Buttonbar}
+Menubar = Class{__includes = Bar}
 
 function Menubar:init(def)
-    Buttonbar:init(self, def)
-    self.current = self.components[1]
+    Bar:init(self, def)
+    def.columns = 1
+    def.rows = table.getn(def.components)
 end
-
-function Menubar:switch(tool)
-	assert(self.components[tool])
-    self.current = self.components[tool]
-end
-
-function Menubar:render()
-    Buttonbar:render(self)
-
-    -- highlight active tool
-    self.current:renderMask(0.2)
-end
-

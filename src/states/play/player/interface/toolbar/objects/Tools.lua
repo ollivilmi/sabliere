@@ -11,6 +11,9 @@ gTools.load = function(playState)
                 cursor = gCursors.tile,
                 action = function(pos)
                     playState.level.tilemap:overwrite(pos)
+                end,
+                onClick = function()
+                    playState.interface:switchTool(2)
                 end
             }
         ),
@@ -20,6 +23,9 @@ gTools.load = function(playState)
                 cursor = gCursors.rectangle,
                 action = function(pos)
                     playState.level.tilemap:addTiles(pos)
+                end,
+                onClick = function()
+                    playState.interface:switchTool(3)
                 end
             }
         )
@@ -31,6 +37,9 @@ gTools.load = function(playState)
                 cursor = gCursors.circle,
                 action = function(pos)
                     playState.level.tilemap:removeTiles(pos)
+                end,
+                onClick = function()
+                    playState.interface:switchTool(1)
                 end
             }
         )

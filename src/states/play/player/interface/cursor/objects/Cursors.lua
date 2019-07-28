@@ -3,7 +3,7 @@ require 'lib/interface/cursor/SquareCursor'
 require 'lib/interface/cursor/RectangleCursor'
 
 gCursors = {
-    tile = SquareCursor(TILE_SIZE),
-    rectangle = RectangleCursor(),
-    circle = CircleCursor(TILE_SIZE, 2)
+    tile = SquareCursor({ length = TILE_SIZE }),
+    rectangle = RectangleCursor({}),
+    circle = CircleCursor({ radius = TILE_SIZE, increment = 2})
 }

@@ -6,14 +6,21 @@ Cursor = Class{}
 function Cursor:getPosition() end
 function Cursor:update(dt) end
 
-function Cursor:init(self)
+function Cursor:init(self, def)
     self.ui = { x = 0, y = 0 }
     self.world = { x = 0, y = 0 }
+    self.snap = def.snap or false
+    self.action = def.action or function() end
+    self.cursor = def.cursor    
 end
 
-function Cursor:updateCoordinates(snap)
-    self.world.x, self.world.y = self:worldCoordinates(snap)
+function Cursor:update(self)
+    self.world.x, self.world.y = self:worldCoordinates(self.snap)
     self:uiCoordinates()
+
+    if self.hoveringComponent ~= nil and love.mouse.wasPressed(1) then
+        self.hoveringComponent.onClick()
+    end
 end
 
 function Cursor:uiCoordinates()
@@ -55,12 +62,16 @@ function Cursor:hoversComponent(component)
     end
 end
 
-function Cursor:render()
+function Cursor:isHovering()
+    return self.hoveringComponent ~= nil and not love.mouse.isDown(1)
+end
+
+function Cursor:render(self, cursor)
     love.graphics.setColor(0,0,0)
-    if self.hoveringComponent ~= nil then
+    if self:isHovering() then
         self.hoveringComponent:renderEdges(0,0,0)
         -- todo render hovering cursor
     else
-        self:cursor()
+        cursor()
     end
 end
