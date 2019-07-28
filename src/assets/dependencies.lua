@@ -14,7 +14,7 @@ gTextures = {
     player = love.graphics.newImage(dir .. '/textures/dude.png'),
     background = love.graphics.newImage(dir .. '/textures/mountain.png'),
     ui = {
-        toolbar = love.graphics.newImage(dir .. '/textures/toolbar.png'),
+        bar = love.graphics.newImage(dir .. '/textures/toolbar.png'),
         tools = love.graphics.newImage(dir .. '/textures/tools.png')
     }
 }

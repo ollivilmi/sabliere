@@ -7,6 +7,7 @@ function Component:init(self, def)
     self.area = def.area
     self.components = def.components
     self.count = def.components ~= nil and table.getn(self.components) or 0
+    self.scale = def.scale or 1
 end
 
 function Component:toggleVisibility()

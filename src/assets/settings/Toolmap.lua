@@ -10,8 +10,8 @@ gToolmap.load = function()
         gTools.build.rectangle
     }
 
-    local x = VIRTUAL_WIDTH / 2 - ((table.getn(gToolmap.main) * BUTTONBAR_SIZE)/2)
-    local y = VIRTUAL_HEIGHT - BUTTONBAR_SIZE - 10
+    local x = VIRTUAL_WIDTH / 2 - ((table.getn(gToolmap.main) * BAR_SIZE)/2)
+    local y = VIRTUAL_HEIGHT - BAR_SIZE - 10
 
     for k,tool in pairs(gToolmap.main) do
             tool.area = BoxCollider(
@@ -20,7 +20,7 @@ gToolmap.load = function()
                 BUTTON_SIZE,
                 BUTTON_SIZE
             )
-        x = x + BUTTONBAR_SIZE
+        x = x + BAR_SIZE
     end
 end
 

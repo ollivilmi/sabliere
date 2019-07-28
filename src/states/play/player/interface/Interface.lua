@@ -11,10 +11,10 @@ function Interface:init(playState)
     self.components = { 
         toolbar = Toolbar({
             components = gToolmap.main,
-            -- center
-            x = VIRTUAL_WIDTH / 2 - ((table.getn(gToolmap.main) * BUTTONBAR_SIZE)/2),
+            -- centering
+            x = VIRTUAL_WIDTH / 2 - ((table.getn(gToolmap.main) * BAR_SIZE)/2),
             -- 10 pixels from bottom
-            y = VIRTUAL_HEIGHT - BUTTONBAR_SIZE - 10
+            y = VIRTUAL_HEIGHT - BAR_SIZE - 10
         })
     }
     self:switchTool(1)
