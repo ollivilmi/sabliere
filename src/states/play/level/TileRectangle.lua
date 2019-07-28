@@ -1,4 +1,4 @@
-require 'src/states/play/lib/physics/Rectangle'
+require 'lib/physics/Rectangle'
 require 'src/states/play/level/Tile'
 
 TileRectangle = Class{__includes = Tile}

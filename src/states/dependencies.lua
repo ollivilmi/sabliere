@@ -2,7 +2,7 @@ require 'src/states/BaseState'
 require 'src/states/StateMachine'
 
 -- Libraries
-require 'src/states/play/lib/settings/Keymap'
+require 'src/assets/settings/Keymap'
 require 'src/states/play/player/interface/cursor/objects/Cursors'
 require 'src/states/play/player/interface/toolbar/objects/Tools'
 

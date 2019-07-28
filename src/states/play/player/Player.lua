@@ -1,4 +1,4 @@
-require 'src/states/play/lib/animations/AnimatedKinematic'
+require 'lib/animations/AnimatedKinematic'
 
 Player = Class{__includes = AnimatedKinematic}
 

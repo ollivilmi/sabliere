@@ -1,6 +1,6 @@
-Frames = Class{}
+Text = Class{}
 
-function Frames:render()
+function Text:render()
     if DEBUG_MODE then
         love.graphics.setFont(gFonts['medium'])
         love.graphics.setColor(0, 1, 0, 1)

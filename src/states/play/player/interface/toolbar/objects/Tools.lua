@@ -1,4 +1,4 @@
-require 'src/states/play/player/interface/toolbar/Tool'
+require 'lib/interface/toolbar/Tool'
 
 gTools = {}
 

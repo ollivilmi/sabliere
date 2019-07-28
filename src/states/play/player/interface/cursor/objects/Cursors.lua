@@ -1,6 +1,6 @@
-require 'src/states/play/player/interface/cursor/CircleCursor'
-require 'src/states/play/player/interface/cursor/SquareCursor'
-require 'src/states/play/player/interface/cursor/RectangleCursor'
+require 'lib/interface/cursor/CircleCursor'
+require 'lib/interface/cursor/SquareCursor'
+require 'lib/interface/cursor/RectangleCursor'
 
 gCursors = {
     tile = SquareCursor(TILE_SIZE),

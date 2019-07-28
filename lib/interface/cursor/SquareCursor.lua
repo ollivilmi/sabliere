@@ -1,4 +1,4 @@
-require 'src/states/play/player/interface/cursor/Cursor'
+require 'lib/interface/cursor/Cursor'
 
 SquareCursor = Class{__includes = Cursor}
 

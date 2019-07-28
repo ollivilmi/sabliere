@@ -1,5 +1,5 @@
-require 'src/states/play/lib/physics/Hitbox'
-require 'src/states/play/lib/physics/Rectangle'
+require 'lib/physics/Hitbox'
+require 'lib/physics/Rectangle'
 
 BoxCollider = Class{__includes = Rectangle}
 

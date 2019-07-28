@@ -1,8 +1,12 @@
+-- Superclass
+
 Component = Class{}
 
-function Component:init(def)
+function Component:init(self, def)
+    self.visible = true
     self.area = def.area
     self.components = def.components
+    self.count = def.components ~= nil and table.getn(self.components) or 0
 end
 
 function Component:toggleVisibility()

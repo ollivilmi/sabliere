@@ -1,6 +1,6 @@
-require 'src/states/play/player/interface/Component'
-require 'src/states/play/player/interface/toolbar/Toolmap'
-require 'src/states/play/player/interface/toolbar/Toolbar'
+require 'lib/interface/Component'
+require 'src/assets/settings/Toolmap'
+require 'lib/interface/toolbar/Toolbar'
 
 Interface = Class{__includes = AnimatedKinematic}
 
@@ -10,11 +10,11 @@ function Interface:init(playState)
 
     self.components = { 
         toolbar = Toolbar({
-            tools = gToolmap.main,
+            components = gToolmap.main,
             -- center
-            x = VIRTUAL_WIDTH / 2 - ((table.getn(gToolmap.main) * TOOLBAR_SIZE)/2),
+            x = VIRTUAL_WIDTH / 2 - ((table.getn(gToolmap.main) * BUTTONBAR_SIZE)/2),
             -- 10 pixels from bottom
-            y = VIRTUAL_HEIGHT - TOOLBAR_SIZE - 10
+            y = VIRTUAL_HEIGHT - BUTTONBAR_SIZE - 10
         })
     }
     self:switchTool(1)

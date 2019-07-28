@@ -1,4 +1,4 @@
-require 'src/states/play/lib/physics/BoxCollider'
+require 'lib/physics/BoxCollider'
 
 Kinematic = Class{__includes = BoxCollider}
 

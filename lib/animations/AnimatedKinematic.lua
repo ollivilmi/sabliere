@@ -1,5 +1,5 @@
-require 'src/states/play/lib/physics/Kinematic'
-require 'src/states/play/lib/animations/Animation'
+require 'lib/physics/Kinematic'
+require 'lib/animations/Animation'
 
 AnimatedKinematic = Class{__includes = Kinematic}
 
