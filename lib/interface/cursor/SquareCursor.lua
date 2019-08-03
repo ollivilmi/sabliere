@@ -17,7 +17,9 @@ end
 
 function SquareCursor:update(dt)
     Cursor:update(self)
+end
 
+function SquareCursor:input()
     -- to properly split squares, the area must be in binary increments
     if love.mouse.wheelmoved ~= 0 then
         self.increment = math.max(0, love.mouse.wheelmoved > 0 and self.increment + 1 

@@ -34,7 +34,7 @@ function Interface:update(dt)
     end
 
     self.cursor:update(dt)
-    self.cursor:hoversComponent(self:visibleComponents())
+    self.cursor:mouseover(self:visibleComponents())
 end
 
 function Interface:visibleComponents()

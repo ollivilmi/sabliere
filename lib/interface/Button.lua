@@ -8,6 +8,7 @@ function Button:init(self, def)
     self.quad = def.quad
     self.action = def.action
     self.onClick = def.onClick
+    self.onHover = function() self:renderEdges(0,0,0) end
 end
 
 function Button:onClick()

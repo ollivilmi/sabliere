@@ -15,8 +15,8 @@ function BoxCollider:collides(target)
     return true
 end
 
-function BoxCollider:hasPoint(x,y)
-    return x >= self.x and x <= self.x + self.width and y >= self.y and y <= self.y + self.height
+function BoxCollider:hasPoint(c)
+    return c.x >= self.x and c.x <= self.x + self.width and c.y >= self.y and c.y <= self.y + self.height
 end
 
 -- Hitboxes are used to check which side is currently colliding with target

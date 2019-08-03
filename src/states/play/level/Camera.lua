@@ -38,8 +38,8 @@ function Camera:reverse()
     love.graphics.translate(self.x, self.y)
 end
 
-function Camera:coordinates()
-    return self.x, self.y
+function Camera:coordinate()
+    return Coordinates(self.x, self.y)
 end
 
 function Camera:worldCoordinates(x,y)

@@ -8,41 +8,47 @@ function RectangleCursor:init(def)
     Cursor:init(self, def)
 
     self:reset()
-    self.camera = { x = 0, y = 0 }
+    -- used to handle camera movement while mouse is held down
+    self.camera = Coordinates()
+    self.start = Coordinates()
 end
 
 function RectangleCursor:reset()
-    self.width = 0
-    self.height = 0
+    self.width = 2
+    self.height = 2
 end
 
 function RectangleCursor:getPosition()
+    -- translate x,y to the top left corner of the rectangle
     local x = self.width < 0 and self.world.x + self.width or self.world.x
     local y = self.height < 0 and self.world.y + self.height or self.world.y
     return BoxCollider(x, y, math.abs(self.width), math.abs(self.height))
 end
 
 function RectangleCursor:update(dt)
+    Cursor:update(self)
+end
+
+function RectangleCursor:input()
     -- take snapshot of initial coordinates for mouse & camera
     if love.mouse.wasPressed(1) then
-        Cursor:update(self)
-        self.camera.x, self.camera.y = gCamera:coordinates()
+        self.ignoringUi = true
+        self.start = self:worldCoordinates(true)
+        self.camera = gCamera:coordinate()
     end
 
     if love.mouse.wasReleased(1) then
+        self.ignoringUi = false
         self.action(self:getPosition())
     end
 
     if love.mouse.isDown(1) then
-        local x, y = self:worldCoordinates(true)
-
-        self.width = math.floor(x - self.world.x)
-        self.height = math.floor(y - self.world.y)
+        self.width = math.floor(self.start.x - self.world.x)
+        self.height = math.floor(self.start.y - self.world.y)
     else
-        Cursor:update(self)
-        self.camera.x, self.camera.y = gCamera:coordinates()
-        self.width = 2
-        self.height = 2
+        Cursor:updateCoordinates(self)
+        self.camera = gCamera:coordinate()
+        self:reset()
     end
 end
 
