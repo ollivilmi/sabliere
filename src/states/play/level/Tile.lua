@@ -1,4 +1,4 @@
-Tile = Class{__includes = Collision}
+Tile = Class{__includes = BoxCollider}
 
 -- Tiles are squares with min length TILE_SIZE
 -- tiles size increases in binary increments (TILE_SIZE * 2^n) to ensure

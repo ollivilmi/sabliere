@@ -8,9 +8,15 @@ gFonts = {
 }
 
 gTextures = {
-    sand = love.graphics.newImage(dir .. '/textures/sand.png'),
+    tiles = {
+        sand = love.graphics.newImage(dir .. '/textures/sand.png')
+    },
     player = love.graphics.newImage(dir .. '/textures/dude.png'),
-    background = love.graphics.newImage(dir .. '/textures/mountain.png')
+    background = love.graphics.newImage(dir .. '/textures/mountain.png'),
+    ui = {
+        bar = love.graphics.newImage(dir .. '/textures/toolbar.png'),
+        tools = love.graphics.newImage(dir .. '/textures/tools.png')
+    }
 }
 
 gSounds = {

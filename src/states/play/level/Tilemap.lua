@@ -17,7 +17,7 @@ function Tilemap:init()
         end
     end
 
-    self:addTiles(Collision(0, MAP_HEIGHT-TILE_SIZE, MAP_WIDTH, TILE_SIZE))
+    self:addTiles(BoxCollider(0, MAP_HEIGHT-TILE_SIZE*8, MAP_WIDTH, TILE_SIZE*8))
 end
 
 function Tilemap:addTiles(rectangle)
@@ -96,7 +96,7 @@ function Tilemap:render()
     for y = 1, self.mapHeight do
         for x = 1, self.mapWidth do
             if self.tiles[y][x].image ~= nil then
-                love.graphics.draw(gTextures[self.tiles[y][x].image], (x-1)*TILE_SIZE, (y-1)*TILE_SIZE)
+                love.graphics.draw(gTextures.tiles[self.tiles[y][x].image], (x-1)*TILE_SIZE, (y-1)*TILE_SIZE)
             end
         end
     end

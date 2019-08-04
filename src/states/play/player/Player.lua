@@ -1,5 +1,4 @@
-require 'src/states/play/lib/animations/AnimatedKinematic'
-require 'src/states/play/player/Tool'
+require 'lib/animations/AnimatedKinematic'
 
 Player = Class{__includes = AnimatedKinematic}
 
@@ -15,27 +14,24 @@ function Player:init(playState)
     self.grounded = false
     self.speed = 200
     self:initHitboxes()
-
-    self.tool = Tool(playState)
 end
 
 function Player:update(dt)
     self:applyDeltas(dt)
     self:updateControls()
     self:updateAnimation(dt)
-    self.tool:update(dt)
 end
 
 function Player:updateControls()
-    if love.keyboard.isDown('a') then
+    if love.keyboard.isDown(gKeymap.move.left) then
         self.dx = -self.speed
-    elseif love.keyboard.isDown('d') then
+    elseif love.keyboard.isDown(gKeymap.move.right) then
         self.dx = self.speed
     else
         self.dx = 0
     end
 
-    if love.keyboard.isDown('space') then
+    if love.keyboard.isDown(gKeymap.move.jump) then
         if self:jump() then
             gSounds.player.jump:play()
         end
@@ -44,7 +40,6 @@ end
 
 function Player:render()
     self:animate()
-    self.tool:render()
     if DEBUG_MODE then
         self:renderHitboxes()
     end

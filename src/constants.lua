@@ -16,10 +16,9 @@ GRAVITY = 8
 TILE_SIZE = 10
 SNAP = TILE_SIZE
 
-TILE_TYPE = {
-    empty = 0,
-    static = 1,
-    dynamic = 2
-}
+-- interface
+BUTTON_SCALE = 1
+BAR_SIZE = 50 * BUTTON_SCALE
+BUTTON_SIZE = 40 * BUTTON_SCALE
 
 DEBUG_MODE = true
