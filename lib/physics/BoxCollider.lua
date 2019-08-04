@@ -1,28 +1,11 @@
-require 'lib/physics/Hitbox'
-require 'lib/physics/Rectangle'
+require 'lib/physics/AABB'
 
-BoxCollider = Class{__includes = Rectangle}
-
-function BoxCollider:collides(target)
-    if self.x > target.x + target.width or target.x > self.x + self.width then
-        return false
-    end
-
-    if self.y > target.y + target.height or target.y > self.y + self.height then
-        return false
-    end
-
-    return true
-end
-
-function BoxCollider:hasPoint(c)
-    return c.x >= self.x and c.x <= self.x + self.width and c.y >= self.y and c.y <= self.y + self.height
-end
+BoxCollider = Class{__includes = AABB}
 
 -- Hitboxes are used to check which side is currently colliding with target
 -- when AABB collision is not enough
 --
--- HITBOX_SIZE is an offset to make left+right hitboxes not collide horizontally
+-- self.size is an offset to make left+right hitboxes not collide horizontally
 -- top+bottom hitboxes not collide vertically
 --
 -- Basically creates the hitboxes for a rectangular object like this:
@@ -30,41 +13,48 @@ end
 --               |  |
 --                ‾‾
 function BoxCollider:initHitboxes(target)
-    local HITBOX_SIZE = 6
+    self.size = 8
 
     self.hitBoxes = {
-        right = Hitbox(
-            self.x + self.width - HITBOX_SIZE, 
-            self.y + HITBOX_SIZE, 
-            HITBOX_SIZE, 
-            self.height - HITBOX_SIZE*2
+        right = AABB(
+            self.x + self.width - self.size, 
+            self.y + self.size, 
+            self.size, 
+            self.height - self.size * 2
         ),
-        left = Hitbox(
+        left = AABB(
             self.x,
-            self.y + HITBOX_SIZE,
-            HITBOX_SIZE,
-            self.height - HITBOX_SIZE*2
+            self.y + self.size,
+            self.size,
+            self.height - self.size * 2
         ),
-        top = Hitbox(
-            self.x + HITBOX_SIZE,
+        top = AABB(
+            self.x + self.size,
             self.y,
-            self.width - HITBOX_SIZE*2,
-            HITBOX_SIZE
+            self.width - self.size * 2,
+            self.size
         ),
-        bottom = Hitbox(
-            self.x + HITBOX_SIZE,
-            self.y + self.height - HITBOX_SIZE,
-            self.width - HITBOX_SIZE*2,
-            HITBOX_SIZE
+        bottom = AABB(
+            self.x + self.size,
+            self.y + self.height - self.size,
+            self.width - self.size * 2,
+            self.size
         )
     }
 end
 
 function BoxCollider:updateHitboxes(x, y)
-    for k, hitbox in pairs(self.hitBoxes) do
-        hitbox.x = hitbox.x + x
-        hitbox.y = hitbox.y + y
-    end
+        self.hitBoxes.right.x = x + self.width - self.size
+        self.hitBoxes.right.y = y + self.size
+
+        self.hitBoxes.left.x = x
+        self.hitBoxes.left.y = y + self.size
+
+        self.hitBoxes.top.x = x + self.size
+        self.hitBoxes.top.y = y
+
+        self.hitBoxes.bottom.x = x + self.size
+        self.hitBoxes.bottom.y = y + self.height - self.size
 end
 
 -- bandaid solution to change collision to reuse a method
@@ -86,12 +76,6 @@ end
 
 function BoxCollider:collidesTop(target)
     return self.hitBoxes.top:collides(target)
-end
-
-function BoxCollider:getCenter()
-    local x = self.x - (VIRTUAL_WIDTH / 2) + (self.width / 2)
-    local y = self.y - (VIRTUAL_HEIGHT / 2) + (self.height / 2)
-    return x,y
 end
 
 function BoxCollider:renderHitboxes()

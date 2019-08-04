@@ -22,11 +22,8 @@ end
 
 function PlayState:render()
     -- should be wrapped in World class
-    gCamera:translate()
     self.level:render()
     self.player:render()
 
-    -- should be wrapped in Interface class
-    gCamera:reverse()
     self.interface:render()
 end

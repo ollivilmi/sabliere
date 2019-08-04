@@ -1,5 +1,4 @@
-require 'src/states/play/level/Tile'
-require 'src/states/play/level/Tilemap'
+require 'src/states/play/level/tilemap/Tilemap'
 
 Level = Class{}
 
@@ -30,6 +29,9 @@ function Level:gravity()
 end
 
 function Level:render()
+    -- using world coordinates from camera
+    gCamera:translate()
+
     love.graphics.setColor(0.6,0.6,0.6)
     love.graphics.clear(0.5, 0.4, 0.3, 255)
     love.graphics.draw(gTextures.background, 0, 0)

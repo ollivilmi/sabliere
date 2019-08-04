@@ -1,6 +1,3 @@
-require 'lib/physics/Rectangle'
-require 'src/states/play/level/Tile'
-
 TileRectangle = Class{__includes = Tile}
 
 -- sadly there is no function overloading in lua

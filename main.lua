@@ -8,7 +8,7 @@ function love.load()
     math.randomseed(os.time())
     initStateMachine()
 
-    love.window.setTitle('2D game test')
+    love.window.setTitle('Sabliere')
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         vsync = true,
         fullscreen = false,

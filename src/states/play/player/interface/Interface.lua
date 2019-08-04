@@ -63,6 +63,9 @@ function Interface:getVisibleComponents()
 end
 
 function Interface:render()
+    -- using ui coordinates for interface - reverse the effect of camera
+    gCamera:reverse()
+
     for k,component in pairs(self.visibleComponents) do
         component:render()
     end

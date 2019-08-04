@@ -1,5 +1,6 @@
-require 'src/states/play/level/TileRectangle'
-require 'src/states/play/level/TilemapLogic'
+require 'src/states/play/level/tilemap/Tile'
+require 'src/states/play/level/tilemap/TileRectangle'
+require 'src/states/play/level/tilemap/TilemapLogic'
 
 Tilemap = Class{__includes = TilemapLogic}
 

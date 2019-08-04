@@ -3,16 +3,21 @@ require 'lib/physics/BoxCollider'
 Kinematic = Class{__includes = BoxCollider}
 
 function Kinematic:applyDeltas(dt)
+    local y = self.dy + GRAVITY * dt
+    local x = self.dx * dt
+
     if not self.grounded then
-        self.dy = self.dy + GRAVITY * dt
+        self.dy = y
         self.y = self.y + self.dy
+    else
+        y = 0
     end
 
     if self.dx ~= 0 then
-        self.x = self.x + self.dx * dt
+        self.x = self.x + x
     end
 
-    self:initHitboxes()
+    self:updateHitboxes(self.x, self.y)
 end
 
 function Kinematic:jump()
