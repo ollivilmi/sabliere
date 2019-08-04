@@ -5,6 +5,7 @@ require 'lib/math'
 require 'lib/table'
 require 'lib/tilemath'
 require 'lib/Coordinates'
+require 'src/assets/settings/Settings'
 
 require 'src/constants'
 require 'src/assets/dependencies'

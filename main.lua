@@ -2,6 +2,8 @@ require 'src/dependencies'
 
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
+    love.filesystem.setIdentity('sabliere')
+    settings.loadAll()
 
     math.randomseed(os.time())
     initStateMachine()

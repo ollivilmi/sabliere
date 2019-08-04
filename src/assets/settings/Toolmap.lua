@@ -23,5 +23,3 @@ gToolmap.load = function()
         x = x + BAR_SIZE
     end
 end
-
--- gToolmap.save = function ()

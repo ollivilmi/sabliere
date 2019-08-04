@@ -18,11 +18,3 @@ gKeymap = {
         toggle = "-"
     }
 }
-
--- keymap.save = function()
--- -- todo
--- end
-
--- keymap.load = function()
--- -- todo
--- end
