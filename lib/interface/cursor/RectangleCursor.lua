@@ -30,25 +30,28 @@ function RectangleCursor:update(dt)
 end
 
 function RectangleCursor:input()
-    -- take snapshot of initial coordinates for mouse & camera
     if love.mouse.wasPressed(1) then
         self.ignoringUi = true
-        self.start = self:worldCoordinates(true)
-        self.camera = gCamera:coordinate()
+        -- stop updating coordinates for a snapshot of initial coordinates
+        -- (point where rectangle is dragged from + camera location)
+        self.updatingCoordinates = false
+        self.camera = gCamera:coordinates()
     end
 
     if love.mouse.wasReleased(1) then
         self.ignoringUi = false
+        self.updatingCoordinates = true
         self.action(self:getPosition())
+        self:reset()
     end
 
     if love.mouse.isDown(1) then
-        self.width = math.floor(self.start.x - self.world.x)
-        self.height = math.floor(self.start.y - self.world.y)
+        local coords = self:worldCoordinates(true)
+
+        self.width = math.floor(coords.x - self.world.x)
+        self.height = math.floor(coords.y - self.world.y)
     else
-        Cursor:updateCoordinates(self)
-        self.camera = gCamera:coordinate()
-        self:reset()
+        self.camera = gCamera:coordinates()
     end
 end
 

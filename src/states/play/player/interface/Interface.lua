@@ -17,6 +17,7 @@ function Interface:init(playState)
             y = VIRTUAL_HEIGHT - BAR_SIZE - 10
         })
     }
+    self.visibleComponents = self:getVisibleComponents()
     self:switchTool(1)
 end
 
@@ -33,11 +34,23 @@ function Interface:update(dt)
         end
     end
 
+    if love.keyboard.wasPressed(gKeymap.interface.toggle) then
+        self:toggle()
+    end
+
     self.cursor:update(dt)
-    self.cursor:mouseover(self:visibleComponents())
+    self.cursor:mouseover(self.visibleComponents)
 end
 
-function Interface:visibleComponents()
+function Interface:toggle()
+    if table.getn(self.visibleComponents) > 0 then
+        self.visibleComponents = {}
+    else
+        self.visibleComponents = self:getVisibleComponents()
+    end
+end
+
+function Interface:getVisibleComponents()
     local components = {}
 
     for k,component in pairs(self.components) do
@@ -50,7 +63,7 @@ function Interface:visibleComponents()
 end
 
 function Interface:render()
-    for k,component in pairs(self:visibleComponents()) do
+    for k,component in pairs(self.visibleComponents) do
         component:render()
     end
 

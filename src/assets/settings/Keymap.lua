@@ -12,6 +12,10 @@ gKeymap = {
             '2',
             '3'
         }
+    },
+
+    interface = {
+        toggle = "-"
     }
 }
 

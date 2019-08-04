@@ -12,10 +12,13 @@ function Cursor:init(self, def)
     self.snap = def.snap or false
     self.action = def.action or function() end
     self.ignoringUi = def.ignoringUi or false
+    self.updatingCoordinates = def.updatingCoordinates or true
 end
 
 function Cursor:update(self)
-    self:updateCoordinates(self)
+    if self.updatingCoordinates then
+        self:updateCoordinates(self)
+    end
 
     if self:uiActive() then
         self:uiInput()
