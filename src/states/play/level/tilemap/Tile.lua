@@ -15,6 +15,7 @@ function Tile:init(x, y, length, image)
 
     self.health = 1
     self.image = image or "sand"
+    self.solid = true
 end
 
 function Tile:destroy(area)

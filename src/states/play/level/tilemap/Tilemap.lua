@@ -23,7 +23,7 @@ end
 
 function Tilemap:addTiles(rectangle)
     -- remove existing tiles to avoid side effects of combining new tiles
-    if self:inBounds(rectangle.map.y, rectangle.map.x) then
+    if self:inBounds(rectangle.map.x, rectangle.map.y) then
         self:removeTiles(rectangle:mapCollider())
     end
     for k,tile in pairs(TileRectangle:toTiles(rectangle)) do
@@ -41,7 +41,7 @@ function Tilemap:addTile(tile)
     local fx = tile.map.x + tile.map.size
     local fy = tile.map.y + tile.map.size
 
-    if not self:inBounds(fy, fx) then
+    if not self:inBounds(fx, fy) then
         self:expand(fy, fx)
         log("map expanded, new dimensions: [" .. self.mapWidth .. "," .. self.mapHeight .. "]")
     end

@@ -1,11 +1,24 @@
 TilemapLogic = Class{}
 
-function TilemapLogic:inBounds(y,x)
+function TilemapLogic:inBounds(x,y)
     return y > 0 and x > 0 and y <= self.mapHeight and x <= self.mapWidth
 end
 
-function TilemapLogic:hasTile(y,x)
-    return self:inBounds(y,x) and self.tiles[y][x].x ~= nil
+function TilemapLogic:hasTile(x,y)
+    return self:inBounds(x,y) and self.tiles[y][x].x ~= nil
+end
+
+function TilemapLogic:toMapCoordinates(x,y)
+    return math.floor(x / TILE_SIZE) + 1, math.floor(y / TILE_SIZE) + 1
+end
+
+function TilemapLogic:pointToTile(x,y)
+    x,y = self:toMapCoordinates(x,y)
+    if not self:inBounds(x,y) then
+        return nil
+    end
+    
+    return self.tiles[y][x]
 end
 
 function TilemapLogic:toTile(tile, action)
@@ -79,7 +92,7 @@ function TilemapLogic:combineAdjacent(tile)
     --
     for y = tile.map.y - size, tile.map.y + size, size*2 do
         for x = tile.map.x - size, tile.map.x + size, size*2 do
-            if self:hasTile(y,x) then
+            if self:hasTile(x,y) then
                 corner = self.tiles[y][x]
                 -- validate y,x to make sure it is aligned (y,x are top left corner of tile)
                 if corner.map.y == y and corner.map.x == x and corner:equals(tile) then
@@ -102,13 +115,13 @@ end
 --
 function TilemapLogic:adjacentTiles(tile1, tile2)
     local tiles = { tile1, tile2 }
-    if self:hasTile(tile1.map.y, tile2.map.x) then
+    if self:hasTile(tile2.map.x, tile1.map.y) then
         tile = self.tiles[tile1.map.y][tile2.map.x]
         if tile:equals(tile1) then
             table.insert(tiles, tile)
         end
     end
-    if self:hasTile(tile2.map.y, tile1.map.x) then
+    if self:hasTile(tile1.map.x, tile2.map.y) then
         tile = self.tiles[tile2.map.y][tile1.map.x]
         if tile:equals(tile1) then
             table.insert(tiles, tile)

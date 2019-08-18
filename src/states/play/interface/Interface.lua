@@ -2,7 +2,7 @@ require 'lib/interface/Component'
 require 'src/assets/settings/Toolmap'
 require 'lib/interface/toolbar/Toolbar'
 
-Interface = Class{__includes = AnimatedKinematic}
+Interface = Class{__includes = AnimatedEntity}
 
 function Interface:init(playState)
     gTools.load(playState)

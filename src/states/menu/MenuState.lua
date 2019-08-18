@@ -1,4 +1,4 @@
-MenuState = Class{__includes = BaseState}
+MenuState = Class{__includes = State}
 
 function MenuState:enter(params)
     self.options = Menubar()

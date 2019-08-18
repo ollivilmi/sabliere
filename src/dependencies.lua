@@ -1,10 +1,11 @@
-push = require 'lib/push'
-Class = require 'lib/class'
-require 'lib/util'
-require 'lib/math'
-require 'lib/table'
-require 'lib/tilemath'
-require 'lib/Coordinates'
+push = require 'lib/util/push'
+Class = require 'lib/util/class'
+
+require 'lib/util/util'
+require 'lib/util/math'
+require 'lib/util/table'
+require 'lib/util/tilemath'
+require 'lib/util/Coordinates'
 require 'src/assets/settings/Settings'
 
 require 'src/constants'

@@ -4,36 +4,32 @@ Level = Class{}
 
 function Level:init(playState)
     self.tilemap = Tilemap()
+    self.entities = { Player(self) }
+    gCamera = Camera(0.01, self.entities[1], 150)
+end
 
-    self.kinematicObjects = { 
-        player = playState.player 
-    }
+function Level:addEntity(entity)
+    table.insert(self.entities, entity)
 end
 
 function Level:update(dt)
-    self:gravity()
-end
+    gCamera:update(dt)
 
-function Level:gravity()
-    for i, object in pairs(self.kinematicObjects) do
-        -- should have conditional to check whether or not object is colliding
-        -- with ground
-        object.grounded = false
-
-        self.tilemap:toTilesNear(object, function(y,x)
-            if self.tilemap:hasTile(y,x) and object:collides(self.tilemap.tiles[y][x]) then
-                object:applyCollision(self.tilemap.tiles[y][x])   
-            end
-        end)
+    for k, entity in pairs(self.entities) do
+        entity:update(dt)
+        -- entity:collides()
     end
 end
 
 function Level:render()
     -- using world coordinates from camera
     gCamera:translate()
-
     love.graphics.setColor(0.6,0.6,0.6)
     love.graphics.clear(0.5, 0.4, 0.3, 255)
     love.graphics.draw(gTextures.background, 0, 0)
     self.tilemap:render()
+
+    for k, entity in pairs(self.entities) do
+        entity:render()
+    end
 end

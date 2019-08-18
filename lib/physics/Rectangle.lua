@@ -1,6 +1,6 @@
 Rectangle = Class{}
 
-function Rectangle:init(x, y, width, height)
+function Rectangle:init(x, y, width, height, collidable)
     self.x = x
     self.y = y
     self.width = width
