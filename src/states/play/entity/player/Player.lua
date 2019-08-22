@@ -17,7 +17,7 @@ function Player:init(level)
         height = 100,
         speed = 200,
         level = level,
-        stateMachine = StateMachine {
+        movementState = StateMachine {
             idle = PlayerIdleState(self),
             moving = PlayerMovingState(self),
             jumping = PlayerJumpingState(self),

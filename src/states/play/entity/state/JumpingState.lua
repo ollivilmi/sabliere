@@ -10,18 +10,18 @@ function JumpingState:enter(params)
 end
 
 function JumpingState:update(dt)
-    self.entity:gravity(dt)
+    self.entity.dy = self.entity.dy + GRAVITY
 
-    if self.entity.dy >= 0 or self.entity:collidesTop() then
+    if self.entity.dy >= 0 or self.entity.collider:collidesTop() then
         self.entity.dy = 0
         self.entity:changeState('falling')
     else
         self:input()
 
         if self.entity.dx > 0 then
-            self.entity:collidesRight()
+            self.entity.collider:collidesRight()
         else
-            self.entity:collidesLeft()
+            self.entity.collider:collidesLeft()
         end
     end
 end

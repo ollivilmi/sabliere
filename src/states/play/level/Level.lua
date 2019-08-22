@@ -5,7 +5,7 @@ Level = Class{}
 function Level:init(playState)
     self.tilemap = Tilemap()
     self.entities = { Player(self) }
-    gCamera = Camera(0.01, self.entities[1], 150)
+    gCamera = Camera(0.01, self.entities[1].collider, 150)
 end
 
 function Level:addEntity(entity)

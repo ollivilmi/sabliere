@@ -1,6 +1,6 @@
 require 'lib/physics/TileCollider'
 
-Entity = Class{__includes = TileCollider}
+Entity = Class{}
 
 -- Entities are rectangular objects which implement gravity and
 -- optionally different states of movement:
@@ -9,39 +9,33 @@ Entity = Class{__includes = TileCollider}
 -- * idling
 -- * jumping
 function Entity:init(self, def)
-    self.x = def.x
-    self.y = def.y
+    self.collider = TileCollider(def.x, def.y, def.width, def.height, def.scale)
+    -- map is needed for collision logic, cannot be included in constructor
+    self.collider.tilemap = def.level.tilemap
+    
     self.dy = 0
     self.dx = 0
     -- affects dx
     self.speed = def.speed
+    -- could be a class
     self.sounds = def.sounds
 
-    self.width = def.width
-    self.height = def.height
-
-    -- map is needed for collision logic
-    self.tilemap = def.level.tilemap
-
     -- jumping - falling - moving - idle
-    self.stateMachine = def.stateMachine
+    self.movementState = def.movementState
+    self.direction = 'right'
 end
 
 function Entity:changeState(state)
-    self.stateMachine:change(state)
+    self.movementState:change(state)
 end
 
 function Entity:update(self, dt)
-    self.x = self.x + self.dx * dt
-    self.stateMachine:update(dt)
-end
+    self.collider.x = self.collider.x + self.dx * dt
+    self.collider.y = self.collider.y + self.dy * dt
 
-function Entity:gravity(dt)
-    self.dy = self.dy + GRAVITY
-    self.y = self.y + (self.dy * dt)
+    self.movementState:update(dt)
 end
 
 function Entity:render(self)
-    love.graphics.setColor(0,0,0)
-    love.graphics.rectangle('line', self.x, self.y, self.width, self.height)
+    self.collider:render()
 end

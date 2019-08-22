@@ -5,9 +5,8 @@ AnimatedEntity = Class{__includes = Entity}
 function AnimatedEntity:init(self, def)
     Entity:init(self, def)
     self.sheet = def.sheet
-    self.quads = GenerateQuads(self.sheet, 50, 100)
+    self.quads = GenerateQuads(self.sheet, def.width, def.height)
     self.animationState = def.animationState
-    self.direction = 'right'
     self:changeState('falling')
 end
 
@@ -17,7 +16,7 @@ function AnimatedEntity:update(dt)
 end
 
 function AnimatedEntity:changeState(state)
-    self.stateMachine:change(state)
+    self.movementState:change(state)
     self.animationState:change(state)
 end
 

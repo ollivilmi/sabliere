@@ -5,7 +5,7 @@ function MovingState:init(entity)
 end
 
 function MovingState:update(dt)
-    if not self.entity:grounded() then
+    if not self.entity.collider:grounded() then
         self.entity:changeState('falling')
     end
 
@@ -13,10 +13,10 @@ function MovingState:update(dt)
 
     if self.entity.dx > 0 then
         self.entity.direction = 'right'
-        self.entity:collidesRight()
+        self.entity.collider:collidesRight()
     else
         self.entity.direction = 'left'
-        self.entity:collidesLeft()
+        self.entity.collider:collidesLeft()
     end
 
 
