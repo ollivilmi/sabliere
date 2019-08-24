@@ -17,8 +17,9 @@ settings.load = function(fileName, setting)
 end
 
 settings.loadAll = function()
-    local all = { keymap = gKeymap,
-        -- 'toolmap' = gToolmap
+    local all = {
+        keymap = gKeymap,
+        toolmap = gToolmap
     }
 
     for k,v in pairs(all) do

@@ -5,32 +5,23 @@ require 'src/states/play/interface/toolbar/Toolbar'
 Interface = Class{__includes = AnimatedEntity}
 
 function Interface:init(playState)
-    gTools.load(playState)
-    gToolmap.load()
-
     self.components = { 
         toolbar = Toolbar({
             components = gToolmap.main,
             -- centering
             x = VIRTUAL_WIDTH / 2 - ((table.getn(gToolmap.main) * BAR_SIZE)/2),
             -- 10 pixels from top
-            y = 10
+            y = 10,
+            interface = self
         })
     }
     self.visibleComponents = self:getVisibleComponents()
-    self:switchTool(1)
-end
-
-function Interface:switchTool(toolId)
-    self.components.toolbar:switch(toolId)
-    self.cursor = self.components.toolbar.current.cursor
-    self.cursor.action = self.components.toolbar.current.action
 end
 
 function Interface:update(dt)
     for i = 1, table.getn(gToolmap.main) do
         if love.keyboard.wasPressed(gKeymap.tools.main[i]) then
-            self:switchTool(i)
+            self.components.toolbar:switch(i)
         end
     end
 

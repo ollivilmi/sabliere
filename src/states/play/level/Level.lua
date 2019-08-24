@@ -3,7 +3,7 @@ require 'src/states/play/level/tilemap/Tilemap'
 Level = Class{}
 
 function Level:init(playState)
-    self.tilemap = Tilemap()
+    gTilemap = Tilemap()
     self.entities = { Player(self) }
     gCamera = Camera(0.01, self.entities[1].collider, 150)
 end
@@ -27,7 +27,7 @@ function Level:render()
     love.graphics.setColor(0.6,0.6,0.6)
     love.graphics.clear(0.5, 0.4, 0.3, 255)
     love.graphics.draw(gTextures.background, 0, 0)
-    self.tilemap:render()
+    gTilemap:render()
 
     for k, entity in pairs(self.entities) do
         entity:render()

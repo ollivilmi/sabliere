@@ -4,29 +4,36 @@ Toolbar = Class{__includes = Bar}
 
 function Toolbar:init(def)
     def.columns = table.getn(def.components)
-    
+    self.interface = def.interface
+
     local x = def.x
     local y = def.y
 
-    for k,button in pairs(def.components) do
-            button.area = BoxCollider(
+    -- map tools on toolbar
+    for k,tool in pairs(def.components) do
+        tool.area = BoxCollider(
                 x+5,
                 y+5,
                 BUTTON_SIZE,
                 BUTTON_SIZE
             )
         x = x + BAR_SIZE
-    end
     
+        tool.onClick = function()
+            self:switch(k)
+        end
+    end
+
     def.rows = 1
     def.scale = BUTTON_SCALE
     Bar:init(self, def)
-    self.current = self.components[1]
+    self:switch(1)
 end
 
 function Toolbar:switch(tool)
-	assert(self.components[tool])
     self.current = self.components[tool]
+    self.interface.cursor = self.current.cursor
+    self.interface.cursor.action = self.current.action
 end
 
 function Toolbar:render()

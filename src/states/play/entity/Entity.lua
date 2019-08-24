@@ -10,8 +10,6 @@ Entity = Class{}
 -- * jumping
 function Entity:init(self, def)
     self.collider = TileCollider(def.x, def.y, def.width, def.height, def.scale)
-    -- map is needed for collision logic, cannot be included in constructor
-    self.collider.tilemap = def.level.tilemap
     
     self.dy = 0
     self.dx = 0
