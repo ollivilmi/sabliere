@@ -9,6 +9,7 @@ function Component:init(self, def)
     self.count = def.components ~= nil and table.getn(self.components) or 0
     self.scale = def.scale or 1
     self.onHover = def.onHover or function() end
+    self.onClick = def.onClick or function() end
 end
 
 function Component:toggleVisibility()

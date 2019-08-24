@@ -4,7 +4,7 @@ require 'src/states/play/interface/toolbar/Toolbar'
 
 Interface = Class{__includes = AnimatedEntity}
 
-function Interface:init(playState)
+function Interface:init()
     self.components = { 
         toolbar = Toolbar({
             components = gToolmap.main,

@@ -10,7 +10,6 @@ function Button:init(self, def)
     Component:init(self, def)
     self.icon = def.icon or EmptyIcon(0.5, 0.5, 0.5)
     self.action = def.action 
-    self.onClick = def.onClick or function() end
     self.onHover = function() self:renderEdges(0,0,0) end
 end
 
