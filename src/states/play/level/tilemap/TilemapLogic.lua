@@ -14,7 +14,7 @@ end
 
 function TilemapLogic:pointToTile(x,y)
     x,y = self:toMapCoordinates(x,y)
-    if not self:inBounds(x,y) then
+    if not self:hasTile(x,y) then
         return nil
     end
     

@@ -1,6 +1,6 @@
 require 'lib/interface/Component'
 require 'src/assets/settings/Toolmap'
-require 'lib/interface/toolbar/Toolbar'
+require 'src/states/play/interface/toolbar/Toolbar'
 
 Interface = Class{__includes = AnimatedEntity}
 
@@ -13,8 +13,8 @@ function Interface:init(playState)
             components = gToolmap.main,
             -- centering
             x = VIRTUAL_WIDTH / 2 - ((table.getn(gToolmap.main) * BAR_SIZE)/2),
-            -- 10 pixels from bottom
-            y = VIRTUAL_HEIGHT - BAR_SIZE - 10
+            -- 10 pixels from top
+            y = 10
         })
     }
     self.visibleComponents = self:getVisibleComponents()

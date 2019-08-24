@@ -1,4 +1,5 @@
-require 'lib/interface/toolbar/Tool'
+require 'src/states/play/interface/toolbar/Tool'
+require 'lib/interface/Icon'
 
 gTools = {}
 
@@ -7,7 +8,7 @@ gTools.load = function(playState)
     gTools.build = {
         tile = Tool(
             {
-                quad = toolQuads[1],
+                icon = Icon(gTextures.ui.tools, toolQuads[1], BUTTON_SCALE),
                 cursor = gCursors.tile,
                 action = function(pos)
                     playState.level.tilemap:overwrite(pos)
@@ -19,7 +20,7 @@ gTools.load = function(playState)
         ),
         rectangle = Tool(
             {
-                quad = toolQuads[2],
+                icon = Icon(gTextures.ui.tools, toolQuads[2], BUTTON_SCALE),
                 cursor = gCursors.rectangle,
                 action = function(pos)
                     playState.level.tilemap:addTiles(pos)
@@ -33,7 +34,7 @@ gTools.load = function(playState)
     gTools.destroy = {
         circle = Tool(
             {
-                quad = toolQuads[3],
+                icon = Icon(gTextures.ui.tools, toolQuads[3], BUTTON_SCALE),
                 cursor = gCursors.circle,
                 action = function(pos)
                     playState.level.tilemap:removeTiles(pos)
