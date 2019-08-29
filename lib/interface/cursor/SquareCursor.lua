@@ -27,7 +27,7 @@ function SquareCursor:input()
         self.length = TILE_SIZE * (2 ^ self.increment)
     end
 
-    if love.mouse.wasPressed(1) then
+    if self.inRange and love.mouse.wasPressed(1) then
         self.action(self:getPosition())
     end
 end

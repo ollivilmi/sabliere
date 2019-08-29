@@ -7,12 +7,26 @@ function Cursor:getPosition() end
 function Cursor:update(dt) end
 
 function Cursor:init(self, def)
+    -- coordinates
     self.ui = Coordinates()
     self.world = Coordinates()
+
+    -- snap to tilemap
     self.snap = def.snap or false
     self.action = def.action or function() end
+    
+    -- we do not want to trigger mouseover ui
     self.ignoringUi = def.ignoringUi or false
+
+    -- we do not want to update coordinates in edge cases such as
+    -- drawing rectangles
     self.updatingCoordinates = def.updatingCoordinates or true
+    
+    -- set to false if we want to prevent input
+    self.inRange = def.inRange or true
+
+    -- 0 == range check disabled
+    self.range = def.range  or 0
 end
 
 function Cursor:update(self)
@@ -23,8 +37,14 @@ function Cursor:update(self)
     if self:uiActive() then
         self:uiInput()
     else
+        self.inRange = self:inRangeOfPlayer()
         self:input()
     end
+end
+
+function Cursor:inRangeOfPlayer()
+    if self.range == 0 then return true end
+    return math.floor(math.distance(gPlayer.collider.x,gPlayer.collider.y,self.world.x,self.world.y)) < self.range
 end
 
 function Cursor:updateCoordinates(child)
@@ -97,7 +117,11 @@ function Cursor:uiActive()
 end
 
 function Cursor:render(self, cursor)
-    love.graphics.setColor(0,0,0)
+    if self.active then
+        love.graphics.setColor(0,0,0)
+    else
+        love.graphics.setColor(0,0,0,0.3)
+    end
     if self:uiActive() then
         self.uiComponent.onHover()
         -- todo render hovering cursor

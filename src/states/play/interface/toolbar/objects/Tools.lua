@@ -11,6 +11,7 @@ gTools.load = function()
             {
                 icon = Icon(gTextures.ui.tools, toolQuads[1], BUTTON_SCALE),
                 cursor = gCursors.tile,
+                range = 250,
                 action = function(pos)
                     gTilemap:overwrite(pos)
                 end
@@ -20,6 +21,7 @@ gTools.load = function()
             {
                 icon = Icon(gTextures.ui.tools, toolQuads[2], BUTTON_SCALE),
                 cursor = gCursors.rectangle,
+                range = 300,
                 action = function(pos)
                     gTilemap:addTiles(pos)
                 end
@@ -31,6 +33,7 @@ gTools.load = function()
             {
                 icon = Icon(gTextures.ui.tools, toolQuads[3], BUTTON_SCALE),
                 cursor = gCursors.circle,
+                range = 250,
                 action = function(pos)
                     gTilemap:removeTiles(pos)
                 end

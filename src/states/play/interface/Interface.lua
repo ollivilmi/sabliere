@@ -19,12 +19,14 @@ function Interface:init()
 end
 
 function Interface:update(dt)
+    -- switch Tool
     for i = 1, table.getn(gToolmap.main) do
         if love.keyboard.wasPressed(gKeymap.tools.main[i]) then
             self.components.toolbar:switch(i)
         end
     end
 
+    -- hide/show Toolbar
     if love.keyboard.wasPressed(gKeymap.interface.toggle) then
         self:toggle()
     end

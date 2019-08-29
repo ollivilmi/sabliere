@@ -1,6 +1,5 @@
 require 'lib/state/State'
 
-require 'src/states/play/entity/player/Player'
 require 'src/states/play/level/Level'
 require 'src/states/play/level/Camera'
 require 'src/states/play/interface/Interface'

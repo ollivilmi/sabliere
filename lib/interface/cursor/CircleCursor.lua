@@ -26,7 +26,7 @@ function CircleCursor:input()
 
     -- mouse click checks for colliding bricks, which are then destroyed
     -- each destroyed brick should be added to your "ammo" for building
-    if love.mouse.wasPressed(1) then
+    if self.inRange and love.mouse.wasPressed(1) then
         self.action(self:getPosition())
     end
 end

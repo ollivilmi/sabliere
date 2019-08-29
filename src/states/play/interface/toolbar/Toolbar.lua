@@ -9,8 +9,8 @@ function Toolbar:init(def)
     local x = def.x
     local y = def.y
 
-    -- map tools on toolbar
-    for k,tool in pairs(def.components) do
+    -- map tool icons on toolbar
+    for key,tool in pairs(def.components) do
         tool.area = BoxCollider(
                 x+5,
                 y+5,
@@ -19,8 +19,9 @@ function Toolbar:init(def)
             )
         x = x + BAR_SIZE
     
+        -- map onClick ui switch to this tool
         tool.onClick = function()
-            self:switch(k)
+            self:switch(key)
         end
     end
 

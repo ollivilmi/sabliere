@@ -1,11 +1,13 @@
 require 'src/states/play/level/tilemap/Tilemap'
+require 'src/states/play/entity/player/Player'
 
 Level = Class{}
 
 function Level:init(playState)
     gTilemap = Tilemap()
-    self.entities = { Player(self) }
-    gCamera = Camera(0.01, self.entities[1].collider, 150)
+    gPlayer = Player(self)
+    self.entities = { gPlayer }
+    gCamera = Camera(0.01, gPlayer.collider, 150)
 end
 
 function Level:addEntity(entity)

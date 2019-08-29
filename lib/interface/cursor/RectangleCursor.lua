@@ -30,7 +30,7 @@ function RectangleCursor:update(dt)
 end
 
 function RectangleCursor:input()
-    if love.mouse.wasPressed(1) then
+    if self.inRange and love.mouse.wasPressed(1) then
         self.ignoringUi = true
         -- stop updating coordinates for a snapshot of initial coordinates
         -- (point where rectangle is dragged from + camera location)
