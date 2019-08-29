@@ -9,12 +9,9 @@ end
 function FallingState:update(dt)
     self.entity.dy = self.entity.dy + GRAVITY
 
-    local tile = self.entity.collider:bottomTile()
+    self.entity:bottomCollision()
 
-    if tile ~= nil then
-        self.entity.dy = 0
-        self.entity.collider.y = tile.y - 1 - self.entity.collider.height
-
+    if self.entity.dy == 0 then
         if self.entity.dx ~= 0 then
             self.entity:changeState('moving')
         else
@@ -22,11 +19,6 @@ function FallingState:update(dt)
         end
     else
         self:input()
-
-        if self.entity.dx > 0 then
-            self.entity.collider:collidesRight()
-        else
-            self.entity.collider:collidesLeft()
-        end
+        self.entity:horizontalCollision()
     end
 end

@@ -40,3 +40,19 @@ end
 tilemath.isTile = function(value)
     return tilemath.nearestTile(value) == value
 end
+
+tilemath.diffTop = function(tile, collider)
+    return (tile.y + tile.height) - (collider.y)
+end
+
+tilemath.diffBottom = function(tile, collider)
+    return (tile.y) - (collider.y + collider.height)
+end
+
+tilemath.diffLeft = function(tile, collider)
+    return (tile.x + tile.width) - (collider.x)
+end
+
+tilemath.diffRight = function(tile, collider)
+    return (tile.x) - (collider.x + collider.width)
+end

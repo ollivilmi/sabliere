@@ -10,14 +10,5 @@ function MovingState:update(dt)
     end
 
     self:input()
-
-    if self.entity.dx > 0 then
-        self.entity.direction = 'right'
-        self.entity.collider:collidesRight()
-    else
-        self.entity.direction = 'left'
-        self.entity.collider:collidesLeft()
-    end
-
-
+    self.entity:horizontalCollision()
 end

@@ -26,7 +26,7 @@ function Cursor:init(self, def)
     self.inRange = def.inRange or true
 
     -- 0 == range check disabled
-    self.range = def.range  or 0
+    self.range = Circle(def.range)  or 0
 end
 
 function Cursor:update(self)
@@ -117,10 +117,10 @@ function Cursor:uiActive()
 end
 
 function Cursor:render(self, cursor)
-    if self.active then
-        love.graphics.setColor(0,0,0)
+    if self.inRange then
+        love.graphics.setColor(0,0,0,0.6)
     else
-        love.graphics.setColor(0,0,0,0.3)
+        love.graphics.setColor(0,0,0,0.1)
     end
     if self:uiActive() then
         self.uiComponent.onHover()
