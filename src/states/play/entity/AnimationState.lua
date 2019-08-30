@@ -29,11 +29,11 @@ function AnimationState:render()
 
     -- X and Y we draw at need to be shifted by half our width and height because we're setting the origin
     -- to that amount for proper scaling, which reverse-shifts rendering
-    math.floor(self.entity.collider.x) + self.entity.collider.width / 2, math.floor(self.entity.collider.y) + self.entity.collider.height / 2, 
+    math.floor(self.entity.x) + self.entity.width / 2, math.floor(self.entity.y) + self.entity.height / 2, 
 
     -- 0 rotation, then the X and Y scales
     0, self.entity.direction == 'left' and -1 or 1, 1,
 
     -- lastly, the origin offsets relative to 0,0 on the sprite (set here to the sprite's center)
-    self.entity.collider.width / 2, self.entity.collider.height / 2)
+    self.entity.width / 2, self.entity.height / 2)
 end

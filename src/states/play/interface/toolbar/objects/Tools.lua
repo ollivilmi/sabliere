@@ -21,7 +21,7 @@ gTools.load = function()
             {
                 icon = Icon(gTextures.ui.tools, toolQuads[2], BUTTON_SCALE),
                 cursor = gCursors.rectangle,
-                range = 300,
+                range = 600,
                 action = function(pos)
                     gTilemap:addTiles(pos)
                 end

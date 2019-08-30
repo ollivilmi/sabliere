@@ -10,5 +10,6 @@ Tool = Class{__includes = Button}
 function Tool:init(def)
     Button:init(self, def)
     self.cursor = def.cursor
-    self.cursor.range = def.range or 0
+    self.range = def.range or 0
+    self.cursor.range = self.range
 end

@@ -24,9 +24,6 @@ function Cursor:init(self, def)
     
     -- set to false if we want to prevent input
     self.inRange = def.inRange or true
-
-    -- 0 == range check disabled
-    self.range = Circle(def.range)  or 0
 end
 
 function Cursor:update(self)
@@ -43,8 +40,7 @@ function Cursor:update(self)
 end
 
 function Cursor:inRangeOfPlayer()
-    if self.range == 0 then return true end
-    return math.floor(math.distance(gPlayer.collider.x,gPlayer.collider.y,self.world.x,self.world.y)) < self.range
+    return gPlayer.toolRange:hasPoint(self.world.x, self.world.y)
 end
 
 function Cursor:updateCoordinates(child)

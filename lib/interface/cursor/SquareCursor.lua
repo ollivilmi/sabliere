@@ -28,7 +28,10 @@ function SquareCursor:input()
     end
 
     if self.inRange and love.mouse.wasPressed(1) then
-        self.action(self:getPosition())
+        local square = self:getPosition()
+        if math.circleContainsRectangle(gPlayer.toolRange, square) then
+            self.action(square)
+        end
     end
 end
 

@@ -28,13 +28,16 @@ function Toolbar:init(def)
     def.rows = 1
     def.scale = BUTTON_SCALE
     Bar:init(self, def)
+
     self:switch(1)
 end
 
 function Toolbar:switch(tool)
     self.current = self.components[tool]
+    
     self.interface.cursor = self.current.cursor
     self.interface.cursor.action = self.current.action
+    gPlayer.toolRange.radius = self.current.range
 end
 
 function Toolbar:render()

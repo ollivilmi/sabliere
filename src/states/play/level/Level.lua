@@ -7,7 +7,7 @@ function Level:init(playState)
     gTilemap = Tilemap()
     gPlayer = Player(self)
     self.entities = { gPlayer }
-    gCamera = Camera(0.01, gPlayer.collider, 150)
+    gCamera = Camera(0.01, gPlayer, 150)
 end
 
 function Level:addEntity(entity)
@@ -33,5 +33,9 @@ function Level:render()
 
     for k, entity in pairs(self.entities) do
         entity:render()
+    end
+
+    if DEBUG_MODE then
+        gPlayer.toolRange:render()
     end
 end

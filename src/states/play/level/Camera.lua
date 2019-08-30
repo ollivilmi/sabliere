@@ -4,7 +4,7 @@ function Camera:init(speed, objectToFollow, offset)
     self.speed = speed
     self.objectToFollow = objectToFollow
     self.offset = offset
-    self.x, self.y = objectToFollow:getCenter()
+    self.x, self.y = math.rectangleCenter(self.objectToFollow)
     self.dx = 0
     self.dy = 0
     self.maxWidth = MAP_WIDTH - VIRTUAL_WIDTH
@@ -15,10 +15,10 @@ function Camera:update(dt)
     self.x = math.min(self.maxWidth, math.max(0, self.x + self.dx))
     self.y = math.min(self.maxHeight, math.max(0,self.y + self.dy))
 
-    local x, y = self.objectToFollow:getCenter()
-    
-    x = math.floor(x)
-    y = math.floor(y)
+    local x, y = math.rectangleCenter(self.objectToFollow)
+    -- adjust to center of screen
+    x = x - VIRTUAL_WIDTH / 2
+    y = y - VIRTUAL_HEIGHT / 2
 
     -- basically we take the vector of camera (x,y) -> target (x,y)
     -- and then adjust speed

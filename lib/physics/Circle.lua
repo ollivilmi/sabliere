@@ -5,22 +5,21 @@ Circle = Class{}
 function Circle:init(x, y, radius)
     self.x = x
     self.y = y
-    self.radius = radius
+    self.radius = radius or 0
 end
 
-function Circle:collides(target)
-    -- closest x and y to circle
-    closestX = math.clamp(self.x, target.x, target.x + target.width)
-    closestY = math.clamp(self.y, target.y, target.y + target.height)
+function Circle:collides(rectangle)
+    return math.circleCollidesRectangle(self, rectangle)
+end
 
-    distanceX = self.x - closestX
-    distanceY = self.y - closestY
-
-    -- If the distance is less than the circle's radius, an intersection occurs
-    distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
-    return distanceSquared < (self.radius * self.radius);
+function Circle:hasPoint(x,y)
+    return math.distance(self.x, self.y, x, y) <= self.radius
 end
 
 function Circle:toRectangle()
     return Rectangle(self.x - self.radius, self.y - self.radius, self.radius*2, self.radius*2)
+end
+
+function Circle:render()
+    love.graphics.circle('line', self.x, self.y, self.radius)
 end

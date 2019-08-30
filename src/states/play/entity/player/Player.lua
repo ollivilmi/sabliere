@@ -33,6 +33,8 @@ function Player:init(level)
         sounds = {
             jump = gSounds.player.jump
         }
-    }
-)
+    })
+    local x, y = self.collider:getCenter()
+    self.toolRange = Circle(x, y, 0)
+    table.insert(self.components, self.toolRange)
 end

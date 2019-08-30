@@ -11,7 +11,10 @@ Entity = Class{}
 function Entity:init(self, def)
     self.collider = TileCollider(def.x, def.y, def.width, def.height, def.scale)
     -- table is used as other components may be added which also need x,y to be updated
-    self.coordinateComponents = { self, self.collider }
+    self.components = { 
+        self, 
+        self.collider, 
+    }
     
     self.x = def.x
     self.y = def.y
@@ -36,13 +39,13 @@ function Entity:changeState(state)
 end
 
 function Entity:addX(x)
-    for k,component in ipairs(self.coordinateComponents) do
+    for k,component in ipairs(self.components) do
         component.x = component.x + x
     end
 end
 
 function Entity:addY(y)
-    for k,component in ipairs(self.coordinateComponents) do
+    for k,component in ipairs(self.components) do
         component.y = component.y + y
     end
 end
@@ -51,7 +54,7 @@ function Entity:update(self, dt)
     local vx = self.dx * dt
     local vy = self.dy * dt
 
-    for k,component in ipairs(self.coordinateComponents) do
+    for k,component in ipairs(self.components) do
         component.x = component.x + vx
         component.y = component.y + vy
     end
