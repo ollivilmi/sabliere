@@ -15,19 +15,6 @@ function math.direction(ax, ay, bx, by)
     return math.atan2(by-ay,bx-ax)
 end
 
-function math.circleCollidesRectangle(circle, rectangle)
-    -- closest x and y to circle
-    closestX = math.clamp(circle.x, rectangle.x, rectangle.x + rectangle.width)
-    closestY = math.clamp(circle.y, rectangle.y, rectangle.y + rectangle.height)
-
-    distanceX = circle.x - closestX
-    distanceY = circle.y - closestY
-
-    -- If the distance is less than the circle's radius, an intersection occurs
-    distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
-    return distanceSquared < (circle.radius * circle.radius);
-end
-
 -- AABB collision
 function math.rectangleCollidesRectangle(rectangleA, rectangleB)
     if rectangleA.x > rectangleB.x + rectangleB.width or rectangleB.x > rectangleA.x + rectangleA.width then
@@ -45,6 +32,19 @@ function math.rectangleCenter(rectangle)
     local x = math.floor(rectangle.x + (rectangle.width / 2))
     local y = math.floor(rectangle.y + (rectangle.height / 2))
     return x,y
+end
+
+function math.circleCollidesRectangle(circle, rectangle)
+    -- closest x and y to circle
+    closestX = math.clamp(circle.x, rectangle.x, rectangle.x + rectangle.width)
+    closestY = math.clamp(circle.y, rectangle.y, rectangle.y + rectangle.height)
+
+    distanceX = circle.x - closestX
+    distanceY = circle.y - closestY
+
+    -- If the distance is less than the circle's radius, an intersection occurs
+    distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
+    return distanceSquared < (circle.radius * circle.radius);
 end
 
 function math.circleContainsRectangle(circle, rectangle)

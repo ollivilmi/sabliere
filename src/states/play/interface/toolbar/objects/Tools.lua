@@ -12,8 +12,9 @@ gTools.load = function()
                 icon = Icon(gTextures.ui.tools, toolQuads[1], BUTTON_SCALE),
                 cursor = gCursors.tile,
                 range = 250,
-                action = function(pos)
-                    gTilemap:overwrite(pos)
+                action = function(tile)
+                    local tiles = tile:destroyNotInArea(gPlayer.toolRange)
+                    gTilemap:overwriteTiles(tiles)
                 end
             }
         ),
@@ -22,8 +23,10 @@ gTools.load = function()
                 icon = Icon(gTextures.ui.tools, toolQuads[2], BUTTON_SCALE),
                 cursor = gCursors.rectangle,
                 range = 600,
-                action = function(pos)
-                    gTilemap:addTiles(pos)
+                action = function(rectangle)
+                    if math.circleContainsRectangle(gPlayer.toolRange, rectangle) then
+                        gTilemap:addRectangle(rectangle)
+                    end
                 end
             }
         )

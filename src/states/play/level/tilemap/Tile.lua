@@ -19,30 +19,48 @@ function Tile:init(x, y, length, image)
 end
 
 function Tile:destroy(area)
+    return self:remove(area, function(tile) return area:collides(tile) end)
+end
+
+function Tile:destroyNotInArea(area)
+    return self:remove(area, function(tile) return not area:contains(tile) end)
+end
+
+function Tile:remove(area, removeCondition)
     local newTiles = {}
+
+    -- if tile is min size just return it
+    if self.width == TILE_SIZE and not removeCondition(self) then
+        table.insert(newTiles, self)
+        return newTiles
+    end
+
     local width = self.width/2
     local height = self.height/2
     local tiles = {}
 
-    -- break into 4x4 segments by dividing height & width by 2
+    -- break tile into 4x4 segments, then check if they should be removed
     if width >= TILE_SIZE then
         for x = self.x, self.x + width, width do
             for y = self.y, self.y + height, height do
+                -- create temporary tile to check
                 table.insert(tiles, Tile(x, y, width, self.image))
             end
         end
 
-        for k, tile in pairs(tiles) do 
-            if area:collides(tile) then
-                table.addTable(newTiles, tile:destroy(area))
+        for k, tile in ipairs(tiles) do 
+            if removeCondition(tile) then
+                -- recursion: temp tile into 4x4 segments, check which of those to remove
+                table.addTable(newTiles, tile:remove(area, removeCondition))
                 tile = nil
             else
+                -- tile did not need to be removed
                 table.insert(newTiles, tile)
             end
         end
     end
 
-    return newTiles 
+    return newTiles
 end
 
 function Tile:equals(tile)

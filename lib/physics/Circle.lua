@@ -12,6 +12,10 @@ function Circle:collides(rectangle)
     return math.circleCollidesRectangle(self, rectangle)
 end
 
+function Circle:contains(rectangle)
+    return math.circleContainsRectangle(self, rectangle)
+end
+
 function Circle:hasPoint(x,y)
     return math.distance(self.x, self.y, x, y) <= self.radius
 end
