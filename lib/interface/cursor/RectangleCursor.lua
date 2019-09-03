@@ -58,7 +58,7 @@ end
 function RectangleCursor:render()
     Cursor:render(self, function()
         -- vector is used to move the drawn rectangle if the camera moves while mouse(1) is down
-        local x, y = gCamera:vector(self.camera.x, self.camera.y)
+        local x, y = math.vector(gCamera.x, gCamera.y, self.camera.x, self.camera.y)
         love.graphics.rectangle('line', self.ui.x + x, self.ui.y + y, self.width, self.height)
     end)
 end

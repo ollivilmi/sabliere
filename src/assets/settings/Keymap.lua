@@ -16,5 +16,9 @@ gKeymap = {
 
     interface = {
         toggle = "-"
+    },
+
+    ability = {
+        shoot = 'f'
     }
 }

@@ -8,15 +8,14 @@ require 'src/states/play/entity/player/state/PlayerMovingState'
 
 Player = Class{__includes = AnimatedEntity}
 
-function Player:init(level)
+function Player:init(x, y)
     AnimatedEntity:init(self,
     { 
-        x = MAP_WIDTH / 2,
-        y = MAP_HEIGHT - 300,
+        x = x,
+        y = y,
         width = 50,
         height = 100,
         speed = 200,
-        level = level,
         movementState = StateMachine {
             idle = PlayerIdleState(self),
             moving = PlayerMovingState(self),
@@ -34,7 +33,20 @@ function Player:init(level)
             jump = gSounds.player.jump
         }
     })
-    local x, y = self.collider:getCenter()
+    local x, y = math.rectangleCenter(self.collider)
     self.toolRange = Circle(x, y, 0)
     table.insert(self.components, self.toolRange)
+
+    self.canShoot = true
+end
+
+-- rest of input is state based
+function Player:input()
+    if love.keyboard.isDown(gKeymap.ability.shoot) then
+        if self.canShoot then
+            self.canShoot = false
+            gLevel:spawnBullet(self)
+            Timer.after(0.2, function() self.canShoot = true end)
+        end
+    end
 end

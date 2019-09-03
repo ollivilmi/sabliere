@@ -31,7 +31,8 @@ end
 function math.rectangleCenter(rectangle)
     local x = math.floor(rectangle.x + (rectangle.width / 2))
     local y = math.floor(rectangle.y + (rectangle.height / 2))
-    return x,y
+
+    return x, y
 end
 
 function math.circleCollidesRectangle(circle, rectangle)
@@ -56,4 +57,18 @@ function math.circleContainsRectangle(circle, rectangle)
         end
     end
     return true
+end
+
+function math.vector(ax, ay, bx, by, speed)
+    local speed = speed or 1
+
+    -- if equal, return a zero vector
+    if ax == bx and ay == by then
+        return 0,0
+    end
+
+    local x = math.floor((bx - ax) * speed)
+    local y = math.floor((by - ay) * speed)
+
+    return x, y
 end

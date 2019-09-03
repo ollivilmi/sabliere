@@ -9,7 +9,11 @@ Entity = Class{}
 -- * idling
 -- * jumping
 function Entity:init(self, def)
-    self.collider = TileCollider(def.x, def.y, def.width, def.height, def.scale)
+    local scale = def.colliderScale or 1.0
+    -- adjust offset of x,y when collider is larger or smaller than entity
+    local cx = def.x - ((scale - 1.0) * def.width / 2)
+    local cy = def.y - ((scale - 1.0) * def.height / 2)
+    self.collider = TileCollider(cx, cy, def.width, def.height, scale)
     -- table is used as other components may be added which also need x,y to be updated
     self.components = { 
         self, 
@@ -50,7 +54,7 @@ function Entity:addY(y)
     end
 end
 
-function Entity:update(self, dt)
+function Entity:updateMovement(dt)
     local vx = self.dx * dt
     local vy = self.dy * dt
 
@@ -58,8 +62,15 @@ function Entity:update(self, dt)
         component.x = component.x + vx
         component.y = component.y + vy
     end
+end
 
+function Entity:update(self, dt)
+    self:updateMovement(dt)
+    self:input()
     self.movementState:update(dt)
+end
+
+function Entity:input()
 end
 
 function Entity:topCollision()
@@ -108,6 +119,28 @@ function Entity:horizontalCollision()
     end
 end
 
+function Entity:collidesTile()
+    local tile = nil
+
+    if self.dy > 0 then
+        tile = self.collider:bottomTile()
+    elseif self.dy < 0 then
+        tile = self.collider:topTile()
+    end
+
+    if tile ~= nil then return true end
+
+    if self.dx > 0 then
+        tile = self.collider:rightTile()
+    elseif self.dx < 0 then
+        tile = self.collider:leftTile()
+    end
+
+    return tile ~= nil
+end
+
 function Entity:render(self)
-    self.collider:render()
+    if DEBUG_MODE then
+        self.collider:render()
+    end
 end
