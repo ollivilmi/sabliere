@@ -6,22 +6,19 @@ function Bullet:init(x, y, direction, collidables)
     Entity:init(self, { 
         x = x,
         y = y,
-        width = 10,
-        height = 10,
-        speed = 500
+        width = BULLET_WIDTH,
+        height = BULLET_HEIGHT,
+        speed = BULLET_SPEED
     })
-    self.direction = direction
     self.collidables = collidables
     self.toDestroy = false
+
+    self.dx = direction.x * self.speed
+    self.dy = direction.y * self.speed
 end
 
 function Bullet:update(dt)
     self:updateMovement(dt)
-    if self.direction == 'right' then
-        self.dx = self.dx + self.speed * dt
-    else
-        self.dx = self.dx - self.speed * dt
-    end
 
     if self:collidesTile() then
         self.toDestroy = true

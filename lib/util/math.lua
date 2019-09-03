@@ -77,9 +77,13 @@ end
 -- so we get the reciprocal of the vector's length
 -- and multiply dx dy by that value (resulting in a vector of length 1) 
 function math.unitVector(ax, ay, bx, by)
+    return math.vectorOfLength(ax, ay, bx, by, 1)
+end
+
+function math.vectorOfLength(ax, ay, bx, by, length)
     local x, y = math.vector(ax, ay, bx, by)
 
-    local d = 1 / math.distance(ax, ay, bx, by)
+    local d = length / math.distance(ax, ay, bx, by)
 
     return x * d, y * d
 end

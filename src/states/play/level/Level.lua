@@ -32,18 +32,19 @@ function Level:addEntity(entity)
     table.insert(self.entities, entity)
 end
 
-function Level:spawnBullet(entity)
+function Level:spawnBullet(entity, coordinates)
     -- todo: bullet owner
-    local y = entity.y + entity.height / 2
-    local x = entity.x
 
-    if entity.direction == 'right' then
-        x = entity.x + entity.width + 30
-    else
-        x = entity.x - 30
-    end
+    local x, y = math.rectangleCenter(entity.collider)
 
-    table.insert(self.bullets, Bullet(x, y, entity.direction, self.enemies))
+    -- direction from shooter to x,y (eg. where cursor was clicked)
+    local direction = Coordinates(math.unitVector(x, y, coordinates.x, coordinates.y))
+
+    -- spawn bullet away from the entity's collider
+    local spawnX = x + direction.x * (entity.collider.width / 2 + BULLET_WIDTH * 2)
+    local spawnY = y + direction.y * (entity.collider.height / 2 + BULLET_HEIGHT * 2)
+
+    table.insert(self.bullets, Bullet(spawnX, spawnY, direction, self.enemies))
 end
 
 function Level:update(dt)

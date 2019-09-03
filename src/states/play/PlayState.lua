@@ -9,16 +9,16 @@ PlayState = Class{__includes = State}
 
 function PlayState:enter(params)
     gLevel = Level(self)
-    self.interface = Interface(self)
+    gInterface = Interface(self)
 end
 
 function PlayState:update(dt)
     Timer.update(dt)
     gLevel:update(dt)
-    self.interface:update(dt)
+    gInterface:update(dt)
 end
 
 function PlayState:render()
     gLevel:render()
-    self.interface:render()
+    gInterface:render()
 end

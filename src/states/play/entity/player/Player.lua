@@ -45,7 +45,7 @@ function Player:input()
     if love.keyboard.isDown(gKeymap.ability.shoot) then
         if self.canShoot then
             self.canShoot = false
-            gLevel:spawnBullet(self)
+            gLevel:spawnBullet(self, gInterface.cursor:worldCoordinates())
             Timer.after(0.2, function() self.canShoot = true end)
         end
     end
