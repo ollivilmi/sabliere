@@ -2,6 +2,7 @@ require 'src/states/play/level/tilemap/Tilemap'
 require 'src/states/play/entity/player/Player'
 require 'src/states/play/entity/enemy/TargetDummy'
 require 'src/states/play/entity/projectile/Bullet'
+require 'src/states/play/level/Projectiles'
 
 Level = Class{}
 
@@ -12,57 +13,23 @@ function Level:init(playState)
     
     self.enemies = { targetDummy }
     self.entities = { gPlayer, targetDummy }
-    self.bullets = {}
     -- speed multiplier, offset
-    gCamera = Camera(1, gPlayer.collider, 150)
+    gCamera = Camera(1, gPlayer, 150)
 
-    Timer.every(10, function() 
-        local bullets = {}
-
-        for k,b in pairs(self.bullets) do
-            if not b.toDestroy then
-                table.insert(bullets, b)
-            end
-            self.bullets = bullets
-        end
-    end)
+    self.projectiles = Projectiles()
 end
 
 function Level:addEntity(entity)
     table.insert(self.entities, entity)
 end
 
-function Level:spawnBullet(entity, coordinates)
-    -- todo: bullet owner
-
-    local x, y = math.rectangleCenter(entity.collider)
-
-    -- direction from shooter to x,y (eg. where cursor was clicked)
-    local direction = Coordinates(math.unitVector(x, y, coordinates.x, coordinates.y))
-
-    -- spawn bullet away from the entity's collider
-    local spawnX = x + direction.x * (entity.collider.width / 2 + BULLET_WIDTH * 2)
-    local spawnY = y + direction.y * (entity.collider.height / 2 + BULLET_HEIGHT * 2)
-
-    table.insert(self.bullets, Bullet(spawnX, spawnY, direction, self.enemies))
-end
-
 function Level:update(dt)
     gCamera:update(dt)
 
-    bulletsToDestroy = {}
-
-    for k, bullet in pairs(self.bullets) do
-        if bullet ~= nil then
-            if not bullet.toDestroy then
-                bullet:update(dt)
-            end
-        end
-    end
+    self.projectiles:update(dt)
 
     for k, entity in ipairs(self.entities) do
         entity:update(dt)
-        -- entity:collides()
     end
 end
 
@@ -74,11 +41,7 @@ function Level:render()
     love.graphics.draw(gTextures.background, 0, 0)
     gTilemap:render()
 
-    for k, bullet in ipairs(self.bullets) do
-        if not bullet.toDestroy then
-            bullet:render()
-        end
-    end
+    self.projectiles:render()
 
     for k, entity in pairs(self.entities) do
         entity:render()

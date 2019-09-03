@@ -33,9 +33,9 @@ function Player:init(x, y)
             jump = gSounds.player.jump
         }
     })
-    local x, y = math.rectangleCenter(self.collider)
+    local x, y = math.rectangleCenter(self)
     self.toolRange = Circle(x, y, 0)
-    table.insert(self.components, self.toolRange)
+    table.insert(self.collider.components, self.toolRange)
 
     self.canShoot = true
 end
@@ -45,7 +45,7 @@ function Player:input()
     if love.keyboard.isDown(gKeymap.ability.shoot) then
         if self.canShoot then
             self.canShoot = false
-            gLevel:spawnBullet(self, gInterface.cursor:worldCoordinates())
+            gLevel.projectiles:spawnBullet(self, gInterface.cursor:worldCoordinates(), gLevel.enemies)
             Timer.after(0.2, function() self.canShoot = true end)
         end
     end

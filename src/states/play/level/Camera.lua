@@ -1,10 +1,10 @@
 Camera = Class{__includes = Kinematic}
 
-function Camera:init(speed, objectToFollow, offset)
+function Camera:init(speed, entity, offset)
     self.speed = speed
-    self.objectToFollow = objectToFollow
+    self.entity = entity.collider.tileCollider
     self.offset = offset
-    self.x, self.y = math.rectangleCenter(self.objectToFollow)
+    self.x, self.y = math.rectangleCenter(self.entity)
 
     self.dx = 0
     self.dy = 0
@@ -18,7 +18,7 @@ function Camera:update(dt)
     -- bound between 0 - maxHeight
     self.y = math.min(self.maxHeight, math.max(0, self.y + self.dy * dt))
 
-    local x, y = self.objectToFollow:getCenter()
+    local x, y = self.entity:getCenter()
     local distance = math.floor(math.distance(x, y, self.x, self.y))
 
     if distance > self.offset then

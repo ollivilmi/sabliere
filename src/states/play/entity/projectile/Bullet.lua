@@ -10,6 +10,7 @@ function Bullet:init(x, y, direction, collidables)
         height = BULLET_HEIGHT,
         speed = BULLET_SPEED
     })
+    self.damage = BULLET_DAMAGE
     self.collidables = collidables
     self.toDestroy = false
 
@@ -18,14 +19,16 @@ function Bullet:init(x, y, direction, collidables)
 end
 
 function Bullet:update(dt)
-    self:updateMovement(dt)
+    self.collider:updatePosition(self.dx * dt, self.dy * dt)
 
-    if self:collidesTile() then
+    if self.collider:collidesTile() then
         self.toDestroy = true
     end
 
     for k,entity in ipairs(self.collidables) do
-        if self.collider:collides(entity) then
+        if self.collider.tileCollider:collides(entity) then
+            -- entity:knockback(self.x, self.y)
+            entity.health = entity.health - self.damage
             self.toDestroy = true
         end
     end
