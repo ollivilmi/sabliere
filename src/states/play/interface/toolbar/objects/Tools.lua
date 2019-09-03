@@ -24,9 +24,13 @@ gTools.load = function()
                 cursor = gCursors.rectangle,
                 range = 600,
                 action = function(rectangle)
-                    if math.circleContainsRectangle(gPlayer.toolRange, rectangle) then
-                        gTilemap:addRectangle(rectangle)
+                    local tiles1 = TileRectangle:toTiles(rectangle)
+                    local tiles2 = {}
+
+                    for k,t in pairs(tiles1) do
+                        table.addTable(tiles2, t:destroyNotInArea(gPlayer.toolRange))
                     end
+                    gTilemap:overwriteTiles(tiles2)
                 end
             }
         )

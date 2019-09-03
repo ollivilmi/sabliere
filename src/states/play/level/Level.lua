@@ -14,7 +14,7 @@ function Level:init(playState)
     self.entities = { gPlayer, targetDummy }
     self.bullets = {}
     -- speed multiplier, offset
-    gCamera = Camera(0.03, gPlayer.collider, 150)
+    gCamera = Camera(1, gPlayer.collider, 150)
 
     Timer.every(10, function() 
         local bullets = {}

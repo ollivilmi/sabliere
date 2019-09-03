@@ -10,20 +10,23 @@ function Camera:init(speed, objectToFollow, offset)
     self.dy = 0
     self.maxWidth = MAP_WIDTH - VIRTUAL_WIDTH
     self.maxHeight = MAP_HEIGHT - VIRTUAL_HEIGHT
-    print("wat)")
 end
 
 function Camera:update(dt)
-    self.x = math.min(self.maxWidth, math.max(0, self.x + self.dx))
-    self.y = math.min(self.maxHeight, math.max(0, self.y + self.dy))
+    -- bound between 0 - maxWidth
+    self.x = math.min(self.maxWidth, math.max(0, self.x + self.dx * dt))
+    -- bound between 0 - maxHeight
+    self.y = math.min(self.maxHeight, math.max(0, self.y + self.dy * dt))
 
     local x, y = self.objectToFollow:getCenter()
     local distance = math.floor(math.distance(x, y, self.x, self.y))
 
     if distance > self.offset then
 
-    -- vector of camera (x,y) -> target (x,y) adjusted by speed
-        self.dx, self.dy = math.vector(self.x, self.y, x, y, self.speed)
+        -- vector of camera (x,y) -> target (x,y) adjusted by speed
+        self.dx, self.dy = math.vector(self.x, self.y, x, y)
+        self.dx = self.dx * self.speed
+        self.dy = self.dy * self.speed
     else
         self.dx = 0
         self.dy = 0
@@ -41,7 +44,6 @@ end
 function Camera:coordinates()
     return Coordinates(self.x, self.y)
 end
-
 
 function Camera:worldCoordinates(x,y)
     return x + self.x, y + self.y

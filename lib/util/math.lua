@@ -59,16 +59,27 @@ function math.circleContainsRectangle(circle, rectangle)
     return true
 end
 
-function math.vector(ax, ay, bx, by, speed)
-    local speed = speed or 1
-
+-- point a to point b
+function math.vector(ax, ay, bx, by)
     -- if equal, return a zero vector
     if ax == bx and ay == by then
         return 0,0
     end
 
-    local x = math.floor((bx - ax) * speed)
-    local y = math.floor((by - ay) * speed)
+    local x = math.floor(bx - ax)
+    local y = math.floor(by - ay)
 
     return x, y
+end
+
+-- unit vector is a vector which has the length of 1
+--
+-- so we get the reciprocal of the vector's length
+-- and multiply dx dy by that value (resulting in a vector of length 1) 
+function math.unitVector(ax, ay, bx, by)
+    local x, y = math.vector(ax, ay, bx, by)
+
+    local d = 1 / math.distance(ax, ay, bx, by)
+
+    return x * d, y * d
 end

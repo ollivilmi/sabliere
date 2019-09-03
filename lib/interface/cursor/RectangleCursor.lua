@@ -10,12 +10,15 @@ function RectangleCursor:init(def)
     self:reset()
     -- used to handle camera movement while mouse is held down
     self.camera = Coordinates()
+    self.cameraVector = Coordinates()
+
     self.start = Coordinates()
 end
 
 function RectangleCursor:reset()
     self.width = 2
     self.height = 2
+    self.cameraVector = Coordinates()
 end
 
 function RectangleCursor:getPosition()
@@ -27,6 +30,13 @@ end
 
 function RectangleCursor:update(dt)
     Cursor:update(self)
+end
+
+-- need to overload this function because world coordinates are not updated
+-- while mouse 1 is held down
+function RectangleCursor:inRangeOfPlayer()
+    local c = self:worldCoordinates(true)
+    return gPlayer.toolRange:hasPoint(c.x, c.y)
 end
 
 function RectangleCursor:input()
@@ -47,6 +57,7 @@ function RectangleCursor:input()
 
     if love.mouse.isDown(1) then
         local coords = self:worldCoordinates(true)
+        self.cameraVector = Coordinates(math.vector(gCamera.x, gCamera.y, self.camera.x, self.camera.y))
 
         self.width = math.floor(coords.x - self.world.x)
         self.height = math.floor(coords.y - self.world.y)
@@ -58,7 +69,6 @@ end
 function RectangleCursor:render()
     Cursor:render(self, function()
         -- vector is used to move the drawn rectangle if the camera moves while mouse(1) is down
-        local x, y = math.vector(gCamera.x, gCamera.y, self.camera.x, self.camera.y)
-        love.graphics.rectangle('line', self.ui.x + x, self.ui.y + y, self.width, self.height)
+        love.graphics.rectangle('line', self.ui.x + self.cameraVector.x, self.ui.y + self.cameraVector.y, self.width, self.height)
     end)
 end
