@@ -66,7 +66,7 @@ end
 function EntityPhysics:upwardMovement()
     local tile = self.collider:topTile()
 
-    if tile ~= nil then
+    if tile then
         self.dy = 0
         local y = tilemath.diffTop(tile, self.collider) + 1
         self:addY(y)
@@ -76,7 +76,7 @@ end
 function EntityPhysics:downwardMovement()
     local tile = self.collider:bottomTile()
 
-    if tile ~= nil then
+    if tile then
         self.dy = 0
         local y = tilemath.diffBottom(tile, self.collider) - 1
         self:addY(y)
@@ -90,7 +90,7 @@ function EntityPhysics:horizontalMovement()
         self.direction = 'right'
 
             tile = self.collider:rightTile()
-            if tile ~= nil then
+            if tile then
                 self.dx = 0
     
                 local x = tilemath.diffRight(tile, self.collider) - 1
@@ -100,7 +100,7 @@ function EntityPhysics:horizontalMovement()
         self.direction = 'left'
 
         tile = self.collider:leftTile()
-        if tile ~= nil then
+        if tile then
             self.dx = 0
 
             local x = tilemath.diffLeft(tile, self.collider) + 1
@@ -118,7 +118,7 @@ function EntityPhysics:collidesTile()
         tile = self.collider:topTile()
     end
 
-    if tile ~= nil then return true end
+    if tile then return true end
 
     if self.dx > 0 then
         tile = self.collider:rightTile()

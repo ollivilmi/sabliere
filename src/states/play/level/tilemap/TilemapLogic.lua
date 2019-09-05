@@ -5,7 +5,7 @@ function TilemapLogic:inBounds(x,y)
 end
 
 function TilemapLogic:hasTile(x,y)
-    return self:inBounds(x,y) and self.tiles[y][x].x ~= nil
+    return self:inBounds(x,y) and self.tiles[y][x].x
 end
 
 function TilemapLogic:toMapCoordinates(x,y)

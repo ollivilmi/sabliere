@@ -34,7 +34,7 @@ end
 
 function Projectiles:update(dt)
     for k, projectile in pairs(self.projectiles) do
-        if projectile ~= nil then
+        if projectile then
             if not projectile.toDestroy then
                 projectile:update(dt)
             end

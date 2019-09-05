@@ -8,7 +8,7 @@ settings.save = function(fileName, setting)
 end
 
 settings.load = function(fileName, setting)
-    if love.filesystem.getInfo(fileName) ~= nil then
+    if love.filesystem.getInfo(fileName) then
         s = love.filesystem.load(fileName)
         s()
     else

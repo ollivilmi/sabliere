@@ -64,7 +64,7 @@ function Tilemap:addTile(tile)
         return
     end
     local entity = gLevel:entityCollision(tile)
-    if entity ~= nil then
+    if entity then
         self:addTiles(tile:destroy(entity.collider))
         return
     end
@@ -96,7 +96,7 @@ function Tilemap:removeTiles(area)
     local toAdd = {}
 
     self:toTilesNear(area, function(y,x)
-        if self.tiles[y][x].x ~= nil and area:collides(self.tiles[y][x]) then
+        if self.tiles[y][x].x and area:collides(self.tiles[y][x]) then
             -- toString provides us a unique key to avoid duplicates
             local tile = self.tiles[y][x]
             local tilekey = tile:toString()
@@ -125,7 +125,7 @@ end
 function Tilemap:render()
     for y = 1, self.mapHeight do
         for x = 1, self.mapWidth do
-            if self.tiles[y][x].image ~= nil then
+            if self.tiles[y][x].image then
                 love.graphics.draw(gTextures.tiles[self.tiles[y][x].image], (x-1)*TILE_SIZE, (y-1)*TILE_SIZE)
             end
         end
@@ -133,7 +133,7 @@ function Tilemap:render()
 
     if DEBUG_MODE then
         self:toAllTiles(function(tile)
-            if tile.x ~= nil then
+            if tile.x then
                 tile:render()
             end
         end)

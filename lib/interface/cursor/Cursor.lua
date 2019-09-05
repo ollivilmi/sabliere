@@ -90,7 +90,7 @@ function Cursor:mouseover(component)
     for k,c in pairs(component) do
         if not self.ignoringUi and c.area:hasPoint(self:coordinates()) then
             -- check if hovers child components
-            if c.components ~= nil and table.getn(c.components) > 0 then
+            if c.components and table.getn(c.components) > 0 then
                 self:mouseover(c.components)
 
             -- no more children left, return
