@@ -1,42 +1,29 @@
-require 'src/states/play/entity/Entity'
+require 'src/states/play/entity/projectile/Projectile'
 
-Bullet = Class{__includes = Entity}
+Bullet = Class{__includes = Projectile}
 
 function Bullet:init(x, y, direction, collidables)
-    Entity:init(self, { 
+    Projectile:init(self, { 
         x = x,
         y = y,
         width = BULLET_WIDTH,
         height = BULLET_HEIGHT,
-        speed = BULLET_SPEED
+        speed = BULLET_SPEED,
+        collidables = collidables,
+        direction = direction
     })
-    self.damage = BULLET_DAMAGE
-    self.collidables = collidables
-    self.toDestroy = false
 
-    self.dx = direction.x * self.speed
-    self.dy = direction.y * self.speed
+    self.damage = BULLET_DAMAGE
 end
 
-function Bullet:update(dt)
-    EntityPhysics:update(self, dt)
+function Bullet:tileCollision()
+    self.toDestroy = true
+end
 
-    if self:collidesTile() then
-        self.toDestroy = true
-    end
-
-    for k,entity in ipairs(self.collidables) do
-        if self.collider:collides(entity) then
-            -- entity:knockback(self.x, self.y)
-            entity.health = entity.health - self.damage
-            self.toDestroy = true
-        end
-    end
-
-    -- if collides collidable entity
-    -- destroy
-    -- knockback entity (- dy, dx by direction)
-    -- lower entity health
+function Bullet:entityCollision(entity)
+    entity.health = entity.health - self.damage
+    self.toDestroy = true
+    -- todo knockback
 end
 
 function Bullet:render()
