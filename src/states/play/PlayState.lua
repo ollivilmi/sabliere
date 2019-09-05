@@ -1,23 +1,24 @@
 require 'lib/state/State'
 
-require 'src/states/play/entity/player/Player'
 require 'src/states/play/level/Level'
 require 'src/states/play/level/Camera'
 require 'src/states/play/interface/Interface'
+Timer = require 'lib/util/knife/timer'
 
 PlayState = Class{__includes = State}
 
 function PlayState:enter(params)
-    self.level = Level(self)
-    self.interface = Interface(self)
+    gLevel = Level(self)
+    gInterface = Interface(self)
 end
 
 function PlayState:update(dt)
-    self.level:update(dt)
-    self.interface:update(dt)
+    Timer.update(dt)
+    gLevel:update(dt)
+    gInterface:update(dt)
 end
 
 function PlayState:render()
-    self.level:render()
-    self.interface:render()
+    gLevel:render()
+    gInterface:render()
 end

@@ -50,35 +50,6 @@ function TileCollider:topTile()
     return nil
 end
 
-function TileCollider:collidesRight()
-    local tile = self:rightTile()
-    if tile ~= nil then
-        self.x = tile.x - 1 - self.width
-        self.dx = 0
-        return true
-    end
-    return false
-end
-
-function TileCollider:collidesLeft()
-    local tile = self:leftTile()
-    if tile ~= nil then
-        self.x = tile.x + 1 + tile.width
-        self.dx = 0
-        return true
-    end
-    return false
-end
-
-function TileCollider:collidesTop()
-    local tile = self:topTile()
-    if tile ~= nil then
-        self.y = tile.y + tile.height + 1
-        return true
-    end
-    return false
-end
-
 function TileCollider:grounded()
     self.y = self.y + 1
     local ground = self:bottomTile()

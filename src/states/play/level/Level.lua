@@ -1,11 +1,22 @@
 require 'src/states/play/level/tilemap/Tilemap'
+require 'src/states/play/entity/player/Player'
+require 'src/states/play/entity/enemy/TargetDummy'
+require 'src/states/play/entity/projectile/Bullet'
+require 'src/states/play/level/Projectiles'
 
 Level = Class{}
 
 function Level:init(playState)
     gTilemap = Tilemap()
-    self.entities = { Player(self) }
-    gCamera = Camera(0.01, self.entities[1].collider, 150)
+    gPlayer = Player(MAP_WIDTH / 2, MAP_HEIGHT - 300)
+    local targetDummy = TargetDummy(MAP_WIDTH / 4, MAP_HEIGHT - 300)
+    
+    self.enemies = { targetDummy }
+    self.entities = { gPlayer, targetDummy }
+    -- speed multiplier, offset
+    gCamera = Camera(1, gPlayer, 150)
+
+    self.projectiles = Projectiles()
 end
 
 function Level:addEntity(entity)
@@ -15,9 +26,10 @@ end
 function Level:update(dt)
     gCamera:update(dt)
 
-    for k, entity in pairs(self.entities) do
+    self.projectiles:update(dt)
+
+    for k, entity in ipairs(self.entities) do
         entity:update(dt)
-        -- entity:collides()
     end
 end
 
@@ -29,7 +41,13 @@ function Level:render()
     love.graphics.draw(gTextures.background, 0, 0)
     gTilemap:render()
 
+    self.projectiles:render()
+
     for k, entity in pairs(self.entities) do
         entity:render()
+    end
+
+    if DEBUG_MODE then
+        gPlayer.toolRange:render()
     end
 end

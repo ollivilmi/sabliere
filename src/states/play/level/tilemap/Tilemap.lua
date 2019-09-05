@@ -18,18 +18,31 @@ function Tilemap:init()
         end
     end
 
-    self:addTiles(BoxCollider(0, MAP_HEIGHT-TILE_SIZE*8, MAP_WIDTH, TILE_SIZE*8))
+    self:addRectangle(BoxCollider(0, MAP_HEIGHT-TILE_SIZE*8, MAP_WIDTH, TILE_SIZE*8))
 end
 
-function Tilemap:addTiles(rectangle)
+function Tilemap:addRectangle(rectangle)
     -- remove existing tiles to avoid side effects of combining new tiles
     if self:inBounds(rectangle.map.x, rectangle.map.y) then
         self:removeTiles(rectangle:mapCollider())
     end
-    for k,tile in pairs(TileRectangle:toTiles(rectangle)) do
-        self:addTile(tile, false)
+    self:addTiles(TileRectangle:toTiles(rectangle))
+end
+
+function Tilemap:addTiles(tiles)
+    for k, tile in ipairs(tiles) do
+        self:addTile(tile)
         self:combineAdjacent(tile)
     end
+end
+
+function Tilemap:overwriteTiles(tiles)
+    for k, tile in ipairs(tiles) do
+        if self:inBounds(tile.map.x, tile.map.y) then
+            self:removeTiles(tile:mapCollider())
+        end
+    end
+    self:addTiles(tiles)
 end
 
 function Tilemap:addTile(tile)
@@ -86,10 +99,7 @@ function Tilemap:removeTiles(area)
         table.addTable(toAdd, tile:destroy(area))
     end
 
-    for k, tile in pairs(toAdd) do
-        self:addTile(tile)
-        self:combineAdjacent(tile)
-    end
+    self:addTiles(toAdd)
 end
 
 -- TODO: refactor for readability

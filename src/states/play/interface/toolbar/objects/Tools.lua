@@ -11,8 +11,10 @@ gTools.load = function()
             {
                 icon = Icon(gTextures.ui.tools, toolQuads[1], BUTTON_SCALE),
                 cursor = gCursors.tile,
-                action = function(pos)
-                    gTilemap:overwrite(pos)
+                range = 250,
+                action = function(tile)
+                    local tiles = tile:destroyNotInArea(gPlayer.toolRange)
+                    gTilemap:overwriteTiles(tiles)
                 end
             }
         ),
@@ -20,8 +22,15 @@ gTools.load = function()
             {
                 icon = Icon(gTextures.ui.tools, toolQuads[2], BUTTON_SCALE),
                 cursor = gCursors.rectangle,
-                action = function(pos)
-                    gTilemap:addTiles(pos)
+                range = 600,
+                action = function(rectangle)
+                    local tiles1 = TileRectangle:toTiles(rectangle)
+                    local tiles2 = {}
+
+                    for k,t in pairs(tiles1) do
+                        table.addTable(tiles2, t:destroyNotInArea(gPlayer.toolRange))
+                    end
+                    gTilemap:overwriteTiles(tiles2)
                 end
             }
         )
@@ -31,6 +40,7 @@ gTools.load = function()
             {
                 icon = Icon(gTextures.ui.tools, toolQuads[3], BUTTON_SCALE),
                 cursor = gCursors.circle,
+                range = 250,
                 action = function(pos)
                     gTilemap:removeTiles(pos)
                 end

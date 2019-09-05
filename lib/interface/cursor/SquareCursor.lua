@@ -27,8 +27,9 @@ function SquareCursor:input()
         self.length = TILE_SIZE * (2 ^ self.increment)
     end
 
-    if love.mouse.wasPressed(1) then
-        self.action(self:getPosition())
+    if self.inRange and love.mouse.wasPressed(1) then
+        local square = self:getPosition()
+        self.action(square)
     end
 end
 

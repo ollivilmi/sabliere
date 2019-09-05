@@ -9,8 +9,8 @@ function Toolbar:init(def)
     local x = def.x
     local y = def.y
 
-    -- map tools on toolbar
-    for k,tool in pairs(def.components) do
+    -- map tool icons on toolbar
+    for key,tool in pairs(def.components) do
         tool.area = BoxCollider(
                 x+5,
                 y+5,
@@ -19,21 +19,25 @@ function Toolbar:init(def)
             )
         x = x + BAR_SIZE
     
+        -- map onClick ui switch to this tool
         tool.onClick = function()
-            self:switch(k)
+            self:switch(key)
         end
     end
 
     def.rows = 1
     def.scale = BUTTON_SCALE
     Bar:init(self, def)
+
     self:switch(1)
 end
 
 function Toolbar:switch(tool)
     self.current = self.components[tool]
+    
     self.interface.cursor = self.current.cursor
     self.interface.cursor.action = self.current.action
+    gPlayer.toolRange.radius = self.current.range
 end
 
 function Toolbar:render()

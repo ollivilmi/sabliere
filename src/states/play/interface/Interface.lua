@@ -2,7 +2,7 @@ require 'lib/interface/Component'
 require 'src/assets/settings/Toolmap'
 require 'src/states/play/interface/toolbar/Toolbar'
 
-Interface = Class{__includes = AnimatedEntity}
+Interface = Class{}
 
 function Interface:init()
     self.components = { 
@@ -19,12 +19,14 @@ function Interface:init()
 end
 
 function Interface:update(dt)
+    -- switch Tool
     for i = 1, table.getn(gToolmap.main) do
         if love.keyboard.wasPressed(gKeymap.tools.main[i]) then
             self.components.toolbar:switch(i)
         end
     end
 
+    -- hide/show Toolbar
     if love.keyboard.wasPressed(gKeymap.interface.toggle) then
         self:toggle()
     end
