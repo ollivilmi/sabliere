@@ -1,6 +1,6 @@
-require 'src/states/play/entity/EntityCollider'
+require 'src/states/play/entity/EntityPhysics'
 
-Entity = Class{}
+Entity = Class{__includes = EntityPhysics}
 
 -- Entities are rectangular objects which implement gravity and
 -- optionally different states of movement:
@@ -9,26 +9,17 @@ Entity = Class{}
 -- * idling
 -- * jumping
 function Entity:init(self, def)
-    self.x = def.x
-    self.y = def.y
-    self.width = def.width
-    self.height = def.height
+    EntityPhysics:init(self, def)
 
-    self.collider = EntityCollider(self, 1.0)
-
-    self.dy = 0
-    self.dx = 0
-    
-    -- affects dx
-    self.speed = def.speed
     -- could be a class
     self.sounds = def.sounds
 
+    -- stats (max, min is 0)
     self.health = def.health or 100
+    self.resources = def.resources or 100
 
     -- jumping - falling - moving - idle
     self.movementState = def.movementState
-    self.direction = 'right'
 end
 
 function Entity:changeState(state)
@@ -36,7 +27,7 @@ function Entity:changeState(state)
 end
 
 function Entity:update(self, dt)
-    self.collider:updatePosition(self.dx * dt, self.dy * dt)
+    EntityPhysics:update(self, dt)
     self:input()
     self.movementState:update(dt)
 end
@@ -47,6 +38,6 @@ end
 
 function Entity:render(self)
     if DEBUG_MODE then
-        self.collider.tileCollider:render()
+        self.collider:render()
     end
 end

@@ -5,10 +5,10 @@ function MovingState:init(entity)
 end
 
 function MovingState:update(dt)
-    if not self.entity.collider.tileCollider:grounded() then
+    if not self.entity.collider:grounded() then
         self.entity:changeState('falling')
     end
 
     self:input()
-    self.entity.collider:horizontalMovement()
+    self.entity:horizontalMovement()
 end

@@ -2,7 +2,7 @@ require 'lib/interface/Component'
 require 'src/assets/settings/Toolmap'
 require 'src/states/play/interface/toolbar/Toolbar'
 
-Interface = Class{__includes = AnimatedEntity}
+Interface = Class{}
 
 function Interface:init()
     self.components = { 

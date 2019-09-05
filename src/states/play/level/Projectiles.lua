@@ -20,14 +20,14 @@ end
 function Projectiles:spawnBullet(entity, coordinates, enemies)
     -- todo: bullet owner
 
-    local x, y = math.rectangleCenter(entity.collider.tileCollider)
+    local x, y = math.rectangleCenter(entity.collider)
 
     -- direction from shooter to x,y (eg. where cursor was clicked)
     local direction = Coordinates(math.unitVector(x, y, coordinates.x, coordinates.y))
 
     -- spawn bullet away from the entity's collider
-    local spawnX = x + direction.x * (entity.collider.tileCollider.width / 2 + BULLET_WIDTH * 2)
-    local spawnY = y + direction.y * (entity.collider.tileCollider.height / 2 + BULLET_HEIGHT * 2)
+    local spawnX = x + direction.x * (entity.collider.width / 2 + BULLET_WIDTH * 2)
+    local spawnY = y + direction.y * (entity.collider.height / 2 + BULLET_HEIGHT * 2)
 
     table.insert(self.bullets, Bullet(spawnX, spawnY, direction, enemies))
 end

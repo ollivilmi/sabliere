@@ -35,7 +35,7 @@ function Player:init(x, y)
     })
     local x, y = math.rectangleCenter(self)
     self.toolRange = Circle(x, y, 0)
-    table.insert(self.collider.components, self.toolRange)
+    table.insert(self.components, self.toolRange)
 
     self.canShoot = true
 end

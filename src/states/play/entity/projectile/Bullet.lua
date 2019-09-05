@@ -19,14 +19,14 @@ function Bullet:init(x, y, direction, collidables)
 end
 
 function Bullet:update(dt)
-    self.collider:updatePosition(self.dx * dt, self.dy * dt)
+    EntityPhysics:update(self, dt)
 
-    if self.collider:collidesTile() then
+    if self:collidesTile() then
         self.toDestroy = true
     end
 
     for k,entity in ipairs(self.collidables) do
-        if self.collider.tileCollider:collides(entity) then
+        if self.collider:collides(entity) then
             -- entity:knockback(self.x, self.y)
             entity.health = entity.health - self.damage
             self.toDestroy = true

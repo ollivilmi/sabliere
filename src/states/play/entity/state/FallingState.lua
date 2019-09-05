@@ -9,7 +9,7 @@ end
 function FallingState:update(dt)
     self.entity.dy = self.entity.dy + GRAVITY
 
-    self.entity.collider:downwardMovement()
+    self.entity:downwardMovement()
 
     if self.entity.dy == 0 then
         if self.entity.dx ~= 0 then
@@ -19,6 +19,6 @@ function FallingState:update(dt)
         end
     else
         self:input()
-        self.entity.collider:horizontalMovement()
+        self.entity:horizontalMovement()
     end
 end

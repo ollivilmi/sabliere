@@ -2,7 +2,7 @@ Camera = Class{__includes = Kinematic}
 
 function Camera:init(speed, entity, offset)
     self.speed = speed
-    self.entity = entity.collider.tileCollider
+    self.entity = entity.collider
     self.offset = offset
     self.x, self.y = math.rectangleCenter(self.entity)
 
