@@ -12,9 +12,8 @@ gTools.load = function()
                 icon = Icon(gTextures.ui.tools, toolQuads[1], BUTTON_SCALE),
                 cursor = gCursors.tile,
                 range = 250,
-                action = function(tile)
-                    local tiles = tile:destroyNotInArea(gPlayer.toolRange)
-                    gTilemap:overwriteTiles(tiles)
+                action = function(square)
+                    gTilemap:addSquareInRange(square, gPlayer.toolRange)
                 end
             }
         ),
@@ -24,13 +23,7 @@ gTools.load = function()
                 cursor = gCursors.rectangle,
                 range = 600,
                 action = function(rectangle)
-                    local tiles1 = TileRectangle:toTiles(rectangle)
-                    local tiles2 = {}
-
-                    for k,t in pairs(tiles1) do
-                        table.addTable(tiles2, t:destroyNotInArea(gPlayer.toolRange))
-                    end
-                    gTilemap:overwriteTiles(tiles2)
+                    gTilemap:addRectangleInRange(rectangle, gPlayer.toolRange)
                 end
             }
         )

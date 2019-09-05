@@ -17,8 +17,6 @@ function Tilemap:init()
             })
         end
     end
-
-    self:addRectangle(BoxCollider(0, MAP_HEIGHT-TILE_SIZE*8, MAP_WIDTH, TILE_SIZE*8))
 end
 
 function Tilemap:addRectangle(rectangle)
@@ -29,9 +27,25 @@ function Tilemap:addRectangle(rectangle)
     self:addTiles(TileRectangle:toTiles(rectangle))
 end
 
+function Tilemap:addSquareInRange(square, circle)
+    local tile = TileRectangle:fromSquare(square)
+    local tiles = tile:destroyNotInArea(circle)
+    self:overwriteTiles(tiles)  
+end
+
+function Tilemap:addRectangleInRange(rectangle, circle)
+    local beforeRange = TileRectangle:toTiles(rectangle)
+    local afterRange = {}
+
+    for k,tile in pairs(beforeRange) do
+        table.addTable(afterRange, tile:destroyNotInArea(circle))
+    end
+    self:overwriteTiles(afterRange)
+end
+
 function Tilemap:addTiles(tiles)
     for k, tile in ipairs(tiles) do
-        self:addTile(tile)
+        self:addTile(tile, ignoreEntities)
         self:combineAdjacent(tile)
     end
 end
@@ -47,6 +61,11 @@ end
 
 function Tilemap:addTile(tile)
     if tile.x < 0 or tile.y < 0 then
+        return
+    end
+    local entity = gLevel:entityCollision(tile)
+    if entity ~= nil then
+        self:addTiles(tile:destroy(entity.collider))
         return
     end
 
