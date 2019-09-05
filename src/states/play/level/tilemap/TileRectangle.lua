@@ -5,6 +5,10 @@ function TileRectangle:fromRectangle(x,y,width,height)
     return self:toTiles(Rectangle(x,y,width,height))
 end
 
+function TileRectangle:fromSquare(rectangle)
+    return Tile(rectangle.x, rectangle.y, rectangle.width)
+end
+
 -- From rectangle to tiles - return as table
 function TileRectangle:toTiles(rectangle)
     local tiles = {}

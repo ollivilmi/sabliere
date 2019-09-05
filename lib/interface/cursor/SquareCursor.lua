@@ -12,11 +12,15 @@ end
 
 -- for square cursor, we will snap to nearest block divisible by MINIMUM_TILE_SIZE
 function SquareCursor:getPosition()
-    return Tile(self.world.x, self.world.y, self.length)
+    return Rectangle(self.world.x, self.world.y, self.length, self.length)
 end
 
 function SquareCursor:update(dt)
     Cursor:update(self)
+end
+
+function SquareCursor:inRangeOfPlayer()
+    return math.circleCollidesRectangle(gPlayer.toolRange, self:getPosition())
 end
 
 function SquareCursor:input()

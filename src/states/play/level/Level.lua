@@ -8,6 +8,7 @@ Level = Class{}
 
 function Level:init(playState)
     gTilemap = Tilemap()
+
     gPlayer = Player(MAP_WIDTH / 2, MAP_HEIGHT - 300)
     local targetDummy = TargetDummy(MAP_WIDTH / 4, MAP_HEIGHT - 300)
     
@@ -21,6 +22,14 @@ end
 
 function Level:addEntity(entity)
     table.insert(self.entities, entity)
+end
+
+function Level:entityCollision(collider)
+    for k,entity in ipairs(self.entities) do
+        if collider:collides(entity.collider) then
+            return entity
+        end
+    end
 end
 
 function Level:update(dt)

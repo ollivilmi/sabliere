@@ -9,6 +9,8 @@ PlayState = Class{__includes = State}
 
 function PlayState:enter(params)
     gLevel = Level(self)
+    gTilemap:addRectangle(BoxCollider(0, MAP_HEIGHT-TILE_SIZE*8, MAP_WIDTH, TILE_SIZE*8))
+
     gInterface = Interface(self)
 end
 
