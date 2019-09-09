@@ -22,8 +22,9 @@ end
 function Projectile:update(dt)
     EntityPhysics:update(self, dt)
 
-    if self:collidesTile() then
-        self:tileCollision()
+    local tile = self:collidesTile()
+    if tile then
+        self:tileCollision(tile)
     end
 
     for k,entity in ipairs(self.collidables) do

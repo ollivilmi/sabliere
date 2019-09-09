@@ -16,8 +16,9 @@ function Bullet:init(x, y, direction, collidables)
     self.damage = BULLET_DAMAGE
 end
 
-function Bullet:tileCollision()
+function Bullet:tileCollision(tile)
     self.toDestroy = true
+    gTilemap:removeTiles(self.collider)
 end
 
 function Bullet:entityCollision(entity)

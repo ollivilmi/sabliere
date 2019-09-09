@@ -118,7 +118,7 @@ function EntityPhysics:collidesTile()
         tile = self.collider:topTile()
     end
 
-    if tile then return true end
+    if tile then return tile end
 
     if self.dx > 0 then
         tile = self.collider:rightTile()
@@ -126,5 +126,5 @@ function EntityPhysics:collidesTile()
         tile = self.collider:leftTile()
     end
 
-    return tile ~= nil
+    return tile
 end
