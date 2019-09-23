@@ -1,5 +1,6 @@
 push = require 'lib/util/push'
 Class = require 'lib/util/class'
+lovebird = require 'lib/util/debug/lovebird'
 
 require 'lib/util/util'
 require 'lib/util/math'

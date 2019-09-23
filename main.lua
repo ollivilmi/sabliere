@@ -37,9 +37,8 @@ function love.load()
     
     entity = tostring(math.random(99999))
 
-    local datagram = string.format("%s %s %d %d", entity, 'at', 320, 240)
+    local datagram = string.format("%s %s %d %d", entity, 'connect', 320, 240)
     local work, msg = udp:send(datagram)
-    print(work)
 
     t = 0
 end
@@ -49,6 +48,10 @@ function love.resize(w,h)
 end
 
 function love.update(dt)
+    if DEBUG_MODE then
+        lovebird.update()
+    end
+
     t = t + dt -- increase t by the deltatime
  
 	if t > updaterate then
