@@ -1,7 +1,7 @@
 require 'lib/physics/TileCollider'
 
--- Entity can have multiple separate colliders attached
--- this class is a component of Entity
+-- Entity can have multiple separate colliders attached for different purposes
+-- this class is a parent of Entity
 EntityPhysics = Class{}
 
 function EntityPhysics:init(self, def)

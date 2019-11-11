@@ -1,3 +1,5 @@
+require 'lib/physics/BoxCollider'
+
 Tile = Class{__includes = BoxCollider}
 
 -- Tiles are squares with min length TILE_SIZE

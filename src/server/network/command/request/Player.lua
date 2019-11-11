@@ -11,7 +11,7 @@ function Player.move(data)
 end
 
 function Player.connect(data)
-    local x, y = data.x, data.y
+    local x, y = data.parameters.x, data.parameters.y
     assert(x and y)
     x, y = tonumber(x), tonumber(y)
     gState.level[data.client] = {x=x, y=y}

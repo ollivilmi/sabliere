@@ -1,3 +1,5 @@
+require 'lib/physics/Rectangle'
+
 BoxCollider = Class{__includes = Rectangle}
 
 function BoxCollider:collides(target)

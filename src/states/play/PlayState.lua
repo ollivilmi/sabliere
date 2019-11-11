@@ -3,6 +3,11 @@ require 'lib/state/State'
 require 'src/states/play/level/Level'
 require 'src/states/play/level/Camera'
 require 'src/states/play/interface/Interface'
+
+-- ground is created here for now, need some class to initialize ground that
+-- cannot be destroyed in the future
+require 'lib/physics/BoxCollider'
+
 Timer = require 'lib/util/knife/timer'
 
 PlayState = Class{__includes = State}

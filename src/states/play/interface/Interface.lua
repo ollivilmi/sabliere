@@ -1,5 +1,5 @@
 require 'lib/interface/Component'
-require 'src/assets/settings/Toolmap'
+require 'src/settings/player/Toolmap'
 require 'src/states/play/interface/toolbar/Toolbar'
 
 Interface = Class{}
