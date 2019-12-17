@@ -1,12 +1,11 @@
 require 'src/dependencies'
 
-local settings
+local settings = require 'src/settings/Settings'
 -- for now
 gWorld = {}
 
 function love.load()
     love.filesystem.setIdentity('sabliere')
-    settings = require 'src/settings/Settings'
     settings:loadAll()
 
     math.randomseed(os.time())
@@ -18,8 +17,8 @@ function love.load()
     client = Client{
         address = '127.0.0.1',
         port = 12345,
-        updaterate = 0.1,
-        commands = require 'src/client/network/Commands'
+        updaterate = 0.05,
+        requests = require 'src/client/network/Requests'
     }
 end
 

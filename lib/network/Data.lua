@@ -1,17 +1,12 @@
 Data = Class{}
+local json = require 'lib/util/json'
 
-function Data:init(client, command, parameters)
+function Data:init(client, request, parameters)
     self.client = client
-    self.command = command
+    self.request = request
     self.parameters = parameters
 end
 
 function Data:toString()
-    -- table.concat does not work with string indices
-    local params = {}
-    for __,v in pairs(self.parameters) do
-        table.insert(params, v)
-    end
-
-    return string.format("%s %s %s", self.client, self.command, table.concat(params, " "))
+    return string.format("%s %s %s", self.client, self.request, json.encode(self.parameters))
 end

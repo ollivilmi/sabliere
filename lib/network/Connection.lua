@@ -8,15 +8,11 @@ Connection = Class{}
 -- 
 -- String 1: entity   String 2: command
 --
--- Remainders: parameters for the command
-local MESSAGE_FORMAT = '^(%S*) (%S*) (.*)'
-
+-- Remainders: optional parameters for the command (JSON)
 function Connection:init(self, def)
-    -- Commands is a list of possible messages server may receive or send
-    assert(def.commands)
-    self.commands = def.commands
+    self.requests = def.requests or {}
 
-    self.decoder = Decoder(self.commands, MESSAGE_FORMAT)
+    self.decoder = Decoder(self.requests)
 
 	self.socket = require "socket"
 	self.udp = self.socket.udp()
@@ -28,10 +24,10 @@ function Connection:handleRequest(data, ip, port)
     if data then
         local message = self.decoder:decode(data)
 
-        local command = self.commands[message.command]
+        local request = self.requests[message.request]
 
-        if command then
-            command.execute(message, self, ip, port)
+        if request then
+            request(message, self, ip, port)
         end
     end
 end

@@ -5,6 +5,7 @@ Host = Class{__includes = Connection}
 function Host:init(def)
     Connection:init(self, def)
 	self.udp:setsockname(def.interface or '*', def.port or 12345)
+	self.state = def.state
 end
 
 function Host:send(data, ip, port)

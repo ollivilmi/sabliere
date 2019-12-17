@@ -8,15 +8,18 @@ function Client:init(def)
     self.host = def.address or "127.0.0.1"
     self.port = def.port or 12345
 
-    self.updaterate = def.updaterate or 0.1
+    -- 20 tick
+    self.updaterate = def.updaterate or 0.05
 
     self.t = 0
     
     self.udp:setpeername(self.host, self.port)
     
     self.id = tostring(math.random(99999))
-    
-    self.udp:send(Data(self.id, 'connect', {x = 320, y = 240}):toString())
+end
+
+function Client:connect(coords)
+    self.udp:send(Data(self.id, 'connect', coords):toString())
 end
 
 function Client:update(dt)
