@@ -25,15 +25,10 @@ end
 function Client:update(dt)
     self.t = self.t + dt
 
-	if self.t > self.updaterate then
-		local x, y = 0, 0
-		if love.keyboard.isDown('up') then      y=y-(20*self.t) end
-		if love.keyboard.isDown('down') then 	y=y+(20*self.t) end
-		if love.keyboard.isDown('left') then 	x=x-(20*self.t) end
-		if love.keyboard.isDown('right') then 	x=x+(20*self.t) end
-    
-        self.udp:send(Data(self.id, 'move', {x = x, y = y}):toString())
-        self.udp:send(Data(self.id, 'update'):toString())
+    if self.t > self.updaterate then
+        for _, input in pairs(self.inputs) do
+            self.udp:send(input:toString())
+        end
 
         self.t = self.t - self.updaterate
     end

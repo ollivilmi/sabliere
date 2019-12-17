@@ -1,3 +1,0 @@
-local Client = {}
-
-return Client

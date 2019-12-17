@@ -5,7 +5,15 @@ Host = Class{__includes = Connection}
 function Host:init(def)
     Connection:init(self, def)
 	self.udp:setsockname(def.interface or '*', def.port or 12345)
-	self.state = def.state
+
+	-- updates is a table that contains all the state updates from
+	-- previous tick that will be sent to all clients
+	-- 
+	-- the table is then cleared for next tick
+	self.updates = {}
+
+	-- code brevity
+	self.clients = self.state.index.client
 end
 
 function Host:send(data, ip, port)
@@ -20,6 +28,16 @@ function Host:receive(sleep)
         error("Network error: "..tostring(msg))
 	end
 	self.socket.sleep(sleep)
+end
+
+function Host:update(tickrate)
+	for id, client in pairs(self.clients) do
+		for _, update in pairs(self.updates) do
+			self.udp:sendto(update:toString(), client.ip, client.port)
+		end
+	end
+
+	self.updates = {}
 end
 
 return Host

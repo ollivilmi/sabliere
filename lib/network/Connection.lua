@@ -1,4 +1,5 @@
 require "lib/network/Decoder"
+require "lib/network/State"
 
 Connection = Class{}
 
@@ -11,8 +12,8 @@ Connection = Class{}
 -- Remainders: optional parameters for the command (JSON)
 function Connection:init(self, def)
     self.requests = def.requests or {}
-
-    self.decoder = Decoder(self.requests)
+    self.decoder = Decoder()
+	self.state = State(self)
 
 	self.socket = require "socket"
 	self.udp = self.socket.udp()
@@ -23,7 +24,6 @@ end
 function Connection:handleRequest(data, ip, port)
     if data then
         local message = self.decoder:decode(data)
-
         local request = self.requests[message.request]
 
         if request then

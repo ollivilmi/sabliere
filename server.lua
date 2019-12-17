@@ -12,6 +12,9 @@ local running = true
 -- reduce usage -- may need to adjust this in the future
 local sleep = 0.01
 
+-- todo: instead of having this loop here, have a startable coroutine
+-- in Host class
+
 print "Beginning server loop."
 while running do
     connection:receive(sleep)
