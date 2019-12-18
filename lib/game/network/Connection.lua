@@ -1,5 +1,5 @@
-require "lib/network/Decoder"
-require "lib/network/State"
+require "lib/game/network/Decoder"
+require "lib/game/network/State"
 
 Connection = Class{}
 

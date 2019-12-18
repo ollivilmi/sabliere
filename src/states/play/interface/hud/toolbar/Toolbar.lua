@@ -1,4 +1,4 @@
-require 'lib/interface/Bar'
+require 'src/states/play/interface/hud/Bar'
 
 Toolbar = Class{__includes = Bar}
 

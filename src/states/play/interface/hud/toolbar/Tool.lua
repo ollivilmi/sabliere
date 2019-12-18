@@ -1,4 +1,4 @@
-require 'lib/interface/Button'
+require 'src/states/play/interface/hud/Button'
 
 Tool = Class{__includes = Button}
 

@@ -1,4 +1,4 @@
-require 'lib/network/Connection'
+require 'lib/game/network/Connection'
 
 Host = Class{__includes = Connection}
 

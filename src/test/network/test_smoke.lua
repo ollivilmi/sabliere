@@ -1,13 +1,13 @@
 luaunit = require 'src/test/luaunit'
-Class = require 'lib/util/class'
+Class = require 'lib/language/class'
 
-require "lib/network/Decoder"
-require "lib/network/Host"
-require "lib/network/Client"
-require "lib/network/Data"
+require "lib/game/network/Decoder"
+require "lib/game/network/Data"
+
+require "src/test/network/setup"
 
 function testDecoder()
-    local json = require 'lib/util/json'
+    local json = require 'lib/language/json'
 
     local message = "entity123 location " .. json.encode({x = 5, y = 15})
 
@@ -18,35 +18,6 @@ function testDecoder()
     assert(data.request == "location")
     assert(data.parameters.x == 5)
     assert(data.parameters.y == 15)
-end
-
-function setupClientAndHost()
-    local client = Client{
-        requests = require 'src/client/Requests',
-        address = '127.0.0.1',
-        port = 12345,
-    }
-
-    local host = Host{
-        requests = require 'src/server/Requests',
-        interface = '*',
-        port = 12345
-    }
-
-    return client, host
-end
-
-function nextTick(client, host)
-    host:tick()
-    client:update(0.05)
-end
-
-function connectClient(client, host, coords)
-    -- Connect:
-    -- Server receives ip, port, unique ID
-    -- x, y for player coordinates
-    client:connect(coords)
-    nextTick(client, host)
 end
 
 function testConnect()
@@ -95,6 +66,9 @@ function testMove()
 
     nextTick(client, host)
     nextTick(client, host)
+
+    assert(host.state.index.player[client.id].x == 310)
+    assert(client.state.index.player[client.id].x == 310)
 
     client:close()
     host:close()

@@ -1,4 +1,4 @@
-require 'src/states/play/interface/toolbar/objects/Tools'
+require 'src/states/play/interface/hud/toolbar/objects/Tools'
 
 gTools.load()
 

@@ -1,5 +1,5 @@
 -- Superclass for cursors
-require 'lib/interface/Component'
+require 'src/states/play/interface/hud/Component'
 
 Cursor = Class{}
 

@@ -1,5 +1,5 @@
 Data = Class{}
-local json = require 'lib/util/json'
+local json = require 'lib/language/json'
 
 function Data:init(client, request, parameters)
     self.client = client

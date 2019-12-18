@@ -1,6 +1,6 @@
-Class = require 'lib/util/class'
+Class = require 'lib/language/class'
 
-require 'lib/network/Host'
+require 'lib/game/network/Host'
 
 local host = Host{
     requests = require "src/server/Requests",

@@ -18,7 +18,7 @@ function love.load()
         address = '127.0.0.1',
         port = 12345,
         updaterate = 0.05,
-        requests = require 'src/client/network/Requests'
+        requests = require 'src/client/Requests'
     }
 end
 

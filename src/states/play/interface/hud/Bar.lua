@@ -1,5 +1,5 @@
-require 'lib/physics/Rectangle'
-require 'lib/interface/Component'
+require 'lib/game/physics/Rectangle'
+require 'src/states/play/interface/hud/Component'
 
 -- Superclass
 

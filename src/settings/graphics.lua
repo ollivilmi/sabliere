@@ -1,4 +1,4 @@
-push = require 'lib/util/push'
+push = require 'lib/game/love-utils/push'
 
 local graphics = {}
 

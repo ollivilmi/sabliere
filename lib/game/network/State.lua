@@ -1,4 +1,4 @@
-require 'lib/network/Data'
+require 'lib/game/network/Data'
 
 -- State holds the current server state for everything necessary
 -- Can be compared to redux index

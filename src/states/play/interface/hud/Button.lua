@@ -1,6 +1,6 @@
-require 'lib/interface/Component'
-require 'lib/interface/Icon'
-require 'lib/interface/EmptyIcon'
+require 'src/states/play/interface/hud/Component'
+require 'src/states/play/interface/hud/Icon'
+require 'src/states/play/interface/hud/EmptyIcon'
 
 -- Superclass
 

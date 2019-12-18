@@ -1,6 +1,6 @@
-require 'src/states/play/interface/toolbar/Tool'
+require 'src/states/play/interface/hud/toolbar/Tool'
 require 'src/states/play/interface/cursor/objects/Cursors'
-require 'lib/interface/Icon'
+require 'src/states/play/interface/hud/Icon'
 
 local toolQuads = GenerateQuads(gTextures.ui.tools, 40, 40)
 

@@ -1,6 +1,6 @@
-require 'lib/interface/Component'
+require 'src/states/play/interface/hud/Component'
 require 'src/settings/player/Toolmap'
-require 'src/states/play/interface/toolbar/Toolbar'
+require 'src/states/play/interface/hud/toolbar/Toolbar'
 
 Interface = Class{}
 

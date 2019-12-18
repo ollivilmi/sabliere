@@ -1,4 +1,4 @@
-require 'lib/interface/Bar'
+require 'src/states/play/interface/hud/Bar'
 
 Menubar = Class{__includes = Bar}
 

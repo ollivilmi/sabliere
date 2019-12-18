@@ -1,4 +1,4 @@
-require 'lib/physics/Rectangle'
+require 'lib/game/physics/Rectangle'
 
 BoxCollider = Class{__includes = Rectangle}
 
