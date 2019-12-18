@@ -20,17 +20,20 @@ function Host:send(data, ip, port)
 	self.udp:sendto(data:toString(), ip, port)
 end
 
-function Host:receive(sleep)
-	local data, msg_or_ip, port = self.udp:receivefrom()
-	if data then
-		self:handleRequest(data, msg_or_ip, port)
-	elseif msg_or_ip ~= 'timeout' then 
-        error("Network error: "..tostring(msg))
+function Host:receive()
+	while true do
+		local data, msg_or_ip, port = self.udp:receivefrom()
+		if data then
+			self:handleRequest(data, msg_or_ip, port)
+		elseif msg_or_ip ~= 'timeout' then 
+			error("Network error: "..tostring(msg))
+		else
+			break
+		end
 	end
-	self.socket.sleep(sleep)
 end
 
-function Host:update(tickrate)
+function Host:update()
 	for id, client in pairs(self.clients) do
 		for _, update in pairs(self.updates) do
 			self.udp:sendto(update:toString(), client.ip, client.port)
@@ -40,4 +43,7 @@ function Host:update(tickrate)
 	self.updates = {}
 end
 
-return Host
+function Host:tick()
+	self:receive()
+	self:update()
+end

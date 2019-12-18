@@ -14,6 +14,7 @@ function Client:init(def)
     self.t = 0
     
     self.udp:setpeername(self.host, self.port)
+    self.inputs = {}
     
     self.id = tostring(math.random(99999))
 end
@@ -30,6 +31,7 @@ function Client:update(dt)
             self.udp:send(input:toString())
         end
 
+        self.inputs = {}
         self.t = self.t - self.updaterate
     end
     

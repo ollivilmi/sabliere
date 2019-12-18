@@ -31,3 +31,7 @@ function Connection:handleRequest(data, ip, port)
         end
     end
 end
+
+function Connection:close()
+    self.udp:close()
+end
