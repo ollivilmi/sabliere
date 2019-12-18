@@ -1,6 +1,6 @@
-require 'src/dependencies'
+require 'src/client/dependencies'
 
-local settings = require 'src/settings/Settings'
+local settings = require 'src/client/settings/Settings'
 -- for now
 gWorld = {}
 
@@ -18,7 +18,7 @@ function love.load()
         address = '127.0.0.1',
         port = 12345,
         updaterate = 0.05,
-        requests = require 'src/client/Requests'
+        requests = require 'src/network/client/Requests'
     }
 end
 

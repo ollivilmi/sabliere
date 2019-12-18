@@ -3,7 +3,7 @@ Class = require 'lib/language/class'
 require 'lib/game/network/Host'
 
 local host = Host{
-    requests = require "src/server/Requests",
+    requests = require "src/network/server/Requests",
     interface = '*',
     port = 12345
 }

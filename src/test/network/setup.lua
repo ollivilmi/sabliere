@@ -5,13 +5,13 @@ require "lib/game/network/Client"
 
 function setupClientAndHost()
     local client = Client{
-        requests = require 'src/client/Requests',
+        requests = require 'src/network/client/Requests',
         address = '127.0.0.1',
         port = 12345,
     }
 
     local host = Host{
-        requests = require 'src/server/Requests',
+        requests = require 'src/network/server/Requests',
         interface = '*',
         port = 12345
     }
