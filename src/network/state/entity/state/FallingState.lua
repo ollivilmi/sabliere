@@ -1,4 +1,4 @@
-require 'lib/game/state/State'
+require 'src/network/state/State'
 
 FallingState = Class{__includes = State}
 

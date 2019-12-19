@@ -1,4 +1,4 @@
-require 'lib/game/physics/TileCollider'
+require 'src/network/state/physics/TileCollider'
 
 -- Entity can have multiple separate colliders attached for different purposes
 -- this class is a parent of Entity

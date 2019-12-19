@@ -3,7 +3,7 @@ tilemath.snap = function(...)
     newValues = {...}
 
     for i, value in ipairs(newValues) do
-        newValues[i] = value - math.fmod(value, SNAP)
+        newValues[i] = value - math.fmod(value, TILE_SIZE)
     end
     return unpack(newValues)
 end

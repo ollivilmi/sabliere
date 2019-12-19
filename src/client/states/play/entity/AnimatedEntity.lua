@@ -1,4 +1,4 @@
-require 'src/client/states/play/entity/Entity'
+require 'src/network/state/entity/Entity'
 
 AnimatedEntity = Class{__includes = Entity}
 

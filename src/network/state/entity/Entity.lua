@@ -1,4 +1,4 @@
-require 'src/client/states/play/entity/EntityPhysics'
+require 'src/network/state/entity/EntityPhysics'
 
 Entity = Class{__includes = EntityPhysics}
 

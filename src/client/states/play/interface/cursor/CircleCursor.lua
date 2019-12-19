@@ -1,5 +1,5 @@
 require 'src/client/states/play/interface/cursor/Cursor'
-require 'lib/game/physics/Circle'
+require 'src/network/state/physics/Circle'
 
 CircleCursor = Class{__includes = Cursor}
 

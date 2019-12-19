@@ -1,3 +1,5 @@
+require 'src/clients/states/State'
+
 MenuState = Class{__includes = State}
 
 function MenuState:enter(params)

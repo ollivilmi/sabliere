@@ -1,4 +1,4 @@
-require 'src/client/states/play/entity/state/IdleState'
+require 'src/network/state/entity/state/IdleState'
 
 PlayerIdleState = Class{__includes = IdleState}
 

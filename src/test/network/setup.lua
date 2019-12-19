@@ -1,13 +1,14 @@
 Class = require 'lib/language/class'
 
-require "lib/game/network/Host"
-require "lib/game/network/Client"
+require "src/network/Host"
+require "src/network/Client"
 
 function setupClientAndHost()
     local client = Client{
         requests = require 'src/network/client/Requests',
         address = '127.0.0.1',
         port = 12345,
+        tickrate = 0.05,
     }
 
     local host = Host{

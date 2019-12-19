@@ -1,14 +1,13 @@
 luaunit = require 'src/test/luaunit'
 Class = require 'lib/language/class'
+local json = require 'lib/language/json'
 
-require "lib/game/network/Decoder"
-require "lib/game/network/Data"
+require "src/network/Decoder"
+require "src/network/Data"
 
 require "src/test/network/setup"
 
 function testDecoder()
-    local json = require 'lib/language/json'
-
     local message = "entity123 location " .. json.encode({x = 5, y = 15})
 
     local decoder = Decoder()
@@ -28,11 +27,11 @@ function testConnect()
     host:receive()
 
     -- Player is added to state
-    assert(host.state.index.player[client.id].x == coords.x)
-    assert(host.state.index.player[client.id].y == coords.y)
+    assert(host.state.player[client.id].x == coords.x)
+    assert(host.state.player[client.id].y == coords.y)
 
     -- Client is added to state
-    assert(host.state.index.client[client.id])
+    assert(host.state.client[client.id])
 
     -- State update is added to updates table
     assert(table.getn(host.updates) == 1)
@@ -48,8 +47,8 @@ function testConnect()
     client:update(0)
 
     -- Client should now have updated player state from server
-    assert(client.state.index.player[client.id].x == 320)
-    assert(client.state.index.player[client.id].y == 240)
+    assert(client.state.player[client.id].x == 320)
+    assert(client.state.player[client.id].y == 240)
 
     client:close()
     host:close()
@@ -67,8 +66,10 @@ function testMove()
     nextTick(client, host)
     nextTick(client, host)
 
-    assert(host.state.index.player[client.id].x == 310)
-    assert(client.state.index.player[client.id].x == 310)
+    assert(host.state.player[client.id].x == 310)
+    assert(client.state.player[client.id].x == 310)
+    
+    print(json.encode(host.state.level.tilemap.tiles))
 
     client:close()
     host:close()

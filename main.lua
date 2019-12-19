@@ -1,24 +1,20 @@
-require 'src/client/dependencies'
+require 'src/client/language-extensions'
+require 'src/network/Client'
 
 local settings = require 'src/client/settings/Settings'
--- for now
-gWorld = {}
 
 function love.load()
     love.filesystem.setIdentity('sabliere')
     settings:loadAll()
 
     math.randomseed(os.time())
-    -- Game states: menu, play...
-    initStateMachine()
 
     love.window.setTitle('Sabliere')
 
     client = Client{
         address = '127.0.0.1',
         port = 12345,
-        updaterate = 0.05,
-        requests = require 'src/network/client/Requests'
+        tickrate = 0.05
     }
 end
 
@@ -31,9 +27,9 @@ function love.update(dt)
         lovebird.update()
     end
 
-    client:update(dt) 
-    gStateMachine:update(dt)
-    settings.core.input.clear()
+    -- client:update(dt) 
+    -- gStateMachine:update(dt)
+    -- settings.core.input.clear()
 end
 
 function log(message)
@@ -43,5 +39,5 @@ function log(message)
 end
 
 function love.draw()
-    settings.core.graphics.render(gStateMachine)
+    -- settings.core.graphics.render(gStateMachine)
 end

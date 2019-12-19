@@ -1,5 +1,5 @@
 require 'src/client/states/play/interface/cursor/Cursor'
-require 'lib/game/physics/BoxCollider'
+require 'src/network/state/physics/BoxCollider'
 
 RectangleCursor = Class{__includes = Cursor, Rectangle}
 

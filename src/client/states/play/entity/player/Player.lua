@@ -1,10 +1,10 @@
-require 'src/client/states/play/entity/AnimationState'
+require 'src/network/state/entity/AnimationState'
 
-require 'src/client/states/play/entity/AnimatedEntity'
-require 'src/client/states/play/entity/player/state/PlayerFallingState'
-require 'src/client/states/play/entity/player/state/PlayerIdleState'
-require 'src/client/states/play/entity/player/state/PlayerJumpingState'
-require 'src/client/states/play/entity/player/state/PlayerMovingState'
+require 'src/network/state/entity/AnimatedEntity'
+require 'src/network/state/entity/player/state/PlayerFallingState'
+require 'src/network/state/entity/player/state/PlayerIdleState'
+require 'src/network/state/entity/player/state/PlayerJumpingState'
+require 'src/network/state/entity/player/state/PlayerMovingState'
 
 Player = Class{__includes = AnimatedEntity}
 

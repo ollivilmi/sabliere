@@ -1,4 +1,4 @@
-require 'lib/game/state/StateMachine'
+require 'src/client/states/StateMachine'
 
 -- order of the dependencies matters. it's a bit of a pasta situation..
 require 'src/client/states/play/PlayState'

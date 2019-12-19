@@ -1,4 +1,4 @@
-require 'lib/game/state/State'
+require 'src/network/state/State'
 
 AnimationState = Class{__includes = State}
 

@@ -1,10 +1,11 @@
-require 'lib/game/network/Connection'
+require 'src/network/Connection'
 
 Host = Class{__includes = Connection}
 
 function Host:init(def)
     Connection:init(self, def)
 	self.udp:setsockname(def.interface or '*', def.port or 12345)
+    self.requests = require "src/network/server/Requests"
 
 	-- updates is a table that contains all the state updates from
 	-- previous tick that will be sent to all clients
@@ -13,7 +14,7 @@ function Host:init(def)
 	self.updates = {}
 
 	-- code brevity
-	self.clients = self.state.index.client
+	self.clients = self.state.client
 end
 
 function Host:send(data, ip, port)
@@ -46,4 +47,9 @@ end
 function Host:tick()
 	self:receive()
 	self:update()
+end
+
+function Host:pushUpdate(substate, key, value)
+	self.state:set(substate, key, value)
+	table.insert(self.updates, Data(key, substate, value))
 end

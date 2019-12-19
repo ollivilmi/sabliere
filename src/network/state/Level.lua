@@ -1,22 +1,13 @@
-require 'lib/game/tilemap/Tilemap'
-require 'src/client/states/play/entity/player/Player'
-require 'src/client/states/play/entity/enemy/TargetDummy'
-require 'src/client/states/play/entity/projectile/Bullet'
-require 'src/client/states/play/level/Projectiles'
+require 'src/network/state/tilemap/Tilemap'
+require 'src/network/state/entity/projectile/Bullet'
+require 'src/network/state/entity/Projectiles'
 
 Level = Class{}
 
 function Level:init(playState)
-    gTilemap = Tilemap()
-
-    gPlayer = Player(MAP_WIDTH / 2, MAP_HEIGHT - 300)
-    local targetDummy = TargetDummy(MAP_WIDTH / 4, MAP_HEIGHT - 300)
+    self.tilemap = Tilemap(100, 100, 10)
     
-    self.enemies = { targetDummy }
-    self.entities = { gPlayer, targetDummy }
-    -- speed multiplier, offset
-    gCamera = Camera(1, gPlayer, 150)
-
+    self.entities = {}
     self.projectiles = Projectiles()
 end
 
@@ -33,8 +24,6 @@ function Level:entityCollision(collider)
 end
 
 function Level:update(dt)
-    gCamera:update(dt)
-
     self.projectiles:update(dt)
 
     for k, entity in ipairs(self.entities) do
@@ -43,12 +32,10 @@ function Level:update(dt)
 end
 
 function Level:render()
-    -- using world coordinates from camera
-    gCamera:translate()
     love.graphics.setColor(0.6,0.6,0.6)
     love.graphics.clear(0.5, 0.4, 0.3, 255)
     love.graphics.draw(gTextures.background, 0, 0)
-    gTilemap:render()
+    self.tilemap:render()
 
     self.projectiles:render()
 

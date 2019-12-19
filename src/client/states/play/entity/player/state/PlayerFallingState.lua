@@ -1,4 +1,4 @@
-require 'src/client/states/play/entity/state/FallingState'
+require 'src/network/state/entity/state/FallingState'
 
 PlayerFallingState = Class{__includes = FallingState}
 

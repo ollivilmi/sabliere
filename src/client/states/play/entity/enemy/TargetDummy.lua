@@ -1,6 +1,5 @@
-require 'src/client/states/play/entity/AnimationState'
-require 'src/client/states/play/entity/AnimatedEntity'
-
+require 'src/network/state/entity/AnimationState'
+require 'src/network/state/entity/AnimatedEntity'
 
 TargetDummy = Class{__includes = AnimatedEntity}
 

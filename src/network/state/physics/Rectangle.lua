@@ -6,10 +6,6 @@ function Rectangle:init(x, y, width, height, scale)
     self.y = y
     self.width = width * scale
     self.height = height * scale
-    self.map = {
-        x = self.x / TILE_SIZE + 1, -- addition because tables are 1 indexed
-        y = self.y / TILE_SIZE + 1,
-    }
 end
 
 function Rectangle:render()

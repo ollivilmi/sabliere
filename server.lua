@@ -1,9 +1,8 @@
 Class = require 'lib/language/class'
 
-require 'lib/game/network/Host'
+require 'src/network/Host'
 
 local host = Host{
-    requests = require "src/network/server/Requests",
     interface = '*',
     port = 12345
 }
@@ -14,7 +13,15 @@ local tickrate = 0.05
 
 print("Sabliere server started on port 12345")
 
+local previousTime = host.socket.gettime()
+local currentTime = host.socket.gettime()
+
 while running do
     host:tick()
     host.socket.sleep(tickrate)
+    
+    -- update game state by delta time
+    currentTime = host.socket.gettime()
+    host.state:update(currentTime - previousTime)
+    previousTime = currentTime
 end

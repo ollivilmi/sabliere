@@ -1,4 +1,4 @@
-require 'lib/game/physics/BoxCollider'
+require 'src/network/state/physics/BoxCollider'
 
 TileCollider = Class{__includes = BoxCollider}
 

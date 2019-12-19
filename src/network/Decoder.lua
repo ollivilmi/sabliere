@@ -1,4 +1,4 @@
-require "lib/game/network/Data"
+require "src/network/Data"
 local json = require 'lib/language/json'
 
 Decoder = Class{}

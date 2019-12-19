@@ -1,16 +1,14 @@
-require 'lib/game/network/Connection'
+require 'src/network/Connection'
 
 Client = Class{__includes = Connection}
 
 function Client:init(def)
     Connection:init(self, def)
- 
+
     self.host = def.address or "127.0.0.1"
     self.port = def.port or 12345
-
-    -- 20 tick
-    self.updaterate = def.updaterate or 0.05
-
+    
+    self.requests = require 'src/network/client/Requests'
     self.t = 0
     
     self.udp:setpeername(self.host, self.port)
@@ -26,13 +24,13 @@ end
 function Client:update(dt)
     self.t = self.t + dt
 
-    if self.t > self.updaterate then
+    if self.t > self.tickrate then
         for _, input in pairs(self.inputs) do
             self.udp:send(input:toString())
         end
 
         self.inputs = {}
-        self.t = self.t - self.updaterate
+        self.t = self.t - self.tickrate
     end
     
     while true do

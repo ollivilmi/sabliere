@@ -1,5 +1,5 @@
-require "lib/game/network/Decoder"
-require "lib/game/network/State"
+require "src/network/Decoder"
+require "src/network/state/GameState"
 
 Connection = Class{}
 
@@ -11,9 +11,10 @@ Connection = Class{}
 --
 -- Remainders: optional parameters for the command (JSON)
 function Connection:init(self, def)
-    self.requests = def.requests or {}
+    self.requests = nil
     self.decoder = Decoder()
-	self.state = State(self)
+    self.state = GameState(self)
+    self.tickrate = def.tickrate or 0.05
 
 	self.socket = require "socket"
 	self.udp = self.socket.udp()

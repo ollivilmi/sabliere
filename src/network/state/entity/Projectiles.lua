@@ -1,8 +1,8 @@
-require 'src/client/states/play/entity/projectile/Bullet'
+require 'src/network/state/entity/projectile/Bullet'
 
 Projectiles = Class{}
 
-function Projectiles:init(playState)
+function Projectiles:init()
     self.projectiles = {}
 
     Timer.every(10, function() 

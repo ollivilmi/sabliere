@@ -1,4 +1,4 @@
-require 'src/client/states/play/entity/projectile/Projectile'
+require 'src/network/state/entity/projectile/Projectile'
 
 Bullet = Class{__includes = Projectile}
 

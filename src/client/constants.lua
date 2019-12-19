@@ -5,7 +5,6 @@ GRAVITY = 8
 
 -- minimum size
 TILE_SIZE = 10
-SNAP = TILE_SIZE
 
 -- bullets
 BULLET_WIDTH = 10
