@@ -5,8 +5,8 @@ Tilemap = Class{}
 function Tilemap:init(width, height, tileSize)
     self.tileSize = tileSize
 
-    self.width = width / tileSize
-    self.height = height / tileSize
+    self.width = width
+    self.height = height
 
     self.tiles = {}
     self.tileTypes = require 'src/network/state/tilemap/TileTypes'
@@ -27,8 +27,12 @@ function Tilemap:addRectangle(rectangle, type)
 
     local x, y = self:toMapCoordinates(rectangle.x, rectangle.y)
 
-    local fy = y + (rectangle.width / self.tileSize)
-    local fx = x + (rectangle.height / self.tileSize)
+    print(x, y)
+
+    local fy = (y - 1) + (rectangle.height / self.tileSize)
+    local fx = (x - 1) + (rectangle.width / self.tileSize)
+
+    print(fx, fy)
 
     if not self:inBounds(fx, fy) then
         self:expand(fx, fy)
@@ -138,8 +142,12 @@ function Tilemap:render()
             local tile = self.tiles[y][x]
 
             if tile.t then
-                local texture = self.tileTypes[tile.t].texture
+                love.graphics.setColor(1,1,1)
+                local texture = love.graphics.newImage(self.tileTypes[tile.t].texture)
                 love.graphics.draw(texture, (x-1)*self.tileSize, (y-1)*self.tileSize)
+                love.graphics.setColor(0,0,0)
+                love.graphics.setLineWidth(1)
+                love.graphics.rectangle('line', (x-1)*self.tileSize, (y-1)*self.tileSize, self.tileSize, self.tileSize)
             end
         end
     end

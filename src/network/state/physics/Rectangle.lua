@@ -6,6 +6,7 @@ function Rectangle:init(x, y, width, height, scale)
     self.y = y
     self.width = width * scale
     self.height = height * scale
+
 end
 
 function Rectangle:render()
