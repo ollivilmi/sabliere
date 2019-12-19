@@ -1,8 +1,13 @@
 local Player = {}
 
--- todo: validate that the move is not too far away from previous location
-function Player.update(data, host)
-    host.state:set('player', data.client, data.parameters)
+function Player.connect(data, host)
+    host.state.level:addEntity(data.client, Entity(
+        data.parameters
+    ))
+end
+
+function Player.move(data, host)
+    host.state.level.entities[data.client]:updateLocation(data.parameters)
 end
 
 return Player

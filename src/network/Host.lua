@@ -50,6 +50,5 @@ function Host:tick()
 end
 
 function Host:pushUpdate(substate, key, value)
-	self.state:set(substate, key, value)
 	table.insert(self.updates, Data(key, substate, value))
 end

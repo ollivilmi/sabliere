@@ -11,8 +11,8 @@ function Level:init(playState)
     self.projectiles = Projectiles()
 end
 
-function Level:addEntity(entity)
-    table.insert(self.entities, entity)
+function Level:addEntity(id, entity)
+    self.entities[id] = entity
 end
 
 function Level:entityCollision(collider)
@@ -32,18 +32,10 @@ function Level:update(dt)
 end
 
 function Level:render()
-    love.graphics.setColor(0.6,0.6,0.6)
-    love.graphics.clear(0.5, 0.4, 0.3, 255)
-    love.graphics.draw(gTextures.background, 0, 0)
     self.tilemap:render()
-
     self.projectiles:render()
 
     for k, entity in pairs(self.entities) do
         entity:render()
-    end
-
-    if DEBUG_MODE then
-        gPlayer.toolRange:render()
     end
 end

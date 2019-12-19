@@ -27,12 +27,8 @@ function Tilemap:addRectangle(rectangle, type)
 
     local x, y = self:toMapCoordinates(rectangle.x, rectangle.y)
 
-    print(x, y)
-
     local fy = (y - 1) + (rectangle.height / self.tileSize)
     local fx = (x - 1) + (rectangle.width / self.tileSize)
-
-    print(fx, fy)
 
     if not self:inBounds(fx, fy) then
         self:expand(fx, fy)

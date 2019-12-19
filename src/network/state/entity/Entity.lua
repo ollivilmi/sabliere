@@ -8,7 +8,7 @@ Entity = Class{__includes = EntityPhysics}
 -- * moving
 -- * idling
 -- * jumping
-function Entity:init(self, def)
+function Entity:init(def)
     EntityPhysics:init(self, def)
 
     -- could be a class
@@ -36,8 +36,12 @@ function Entity:input()
     -- empty, can be implemented in child to controls
 end
 
-function Entity:render(self)
-    if DEBUG_MODE then
-        self.collider:render()
-    end
+function Entity:updateLocation(coords)
+    self.x = coords.x
+    self.y = coords.y
+end
+
+function Entity:render()
+    love.graphics.setColor(1,1,1)
+    love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
 end

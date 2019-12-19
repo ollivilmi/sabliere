@@ -21,14 +21,14 @@ end
 
 function testConnect()
     local client, host = setupClientAndHost()
-    local coords = {x = 320, y = 240}
+    local entity = {x = 100, y = 100, width = 100, height = 100}
 
-    client:connect(coords)
+    client:connect(entity)
     host:receive()
 
     -- Player is added to state
-    assert(host.state.player[client.id].x == coords.x)
-    assert(host.state.player[client.id].y == coords.y)
+    assert(host.state.level.entities[client.id].x == entity.x)
+    assert(host.state.level.entities[client.id].y == entity.y)
 
     -- Client is added to state
     assert(host.state.client[client.id])
@@ -47,8 +47,8 @@ function testConnect()
     client:update(0)
 
     -- Client should now have updated player state from server
-    assert(client.state.player[client.id].x == 320)
-    assert(client.state.player[client.id].y == 240)
+    assert(client.state.level.entities[client.id].x == 100)
+    assert(client.state.level.entities[client.id].y == 100)
 
     client:close()
     host:close()
@@ -56,9 +56,9 @@ end
 
 function testMove()
     local client, host = setupClientAndHost()
-    local coords = {x = 320, y = 240}
+    local entity = {x = 100, y = 100, width = 100, height = 100}
 
-    connectClient(client, host, coords)
+    connectClient(client, host, entity)
 
     table.insert(client.inputs,
         Data(client.id, 'move', {x = 310, y = 240}))
@@ -66,11 +66,8 @@ function testMove()
     nextTick(client, host)
     nextTick(client, host)
 
-    assert(host.state.player[client.id].x == 310)
-    assert(client.state.player[client.id].x == 310)
+    assert(host.state.level.entities[client.id].x == 310)
     
-    print(json.encode(host.state.level.tilemap.tiles))
-
     client:close()
     host:close()
 end

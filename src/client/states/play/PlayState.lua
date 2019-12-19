@@ -12,6 +12,6 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-    self.gameState.level.tilemap:render()
+    self.gameState.level:render()
     -- gInterface:render()
 end

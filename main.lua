@@ -18,6 +18,8 @@ function love.load()
         tickrate = 0.05
     }
 
+    client:connect{x = 100, y = 100, width = 100, height = 100}
+
     game:changeState('play', client)
 end
 
