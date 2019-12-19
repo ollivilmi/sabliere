@@ -27,9 +27,6 @@ function graphics.render(state)
     push:apply('start')
 
     state:render()
-	for k, v in pairs(gWorld) do
-		love.graphics.print(k, v.x, v.y)
-    end
     
     push:apply('end')
 end

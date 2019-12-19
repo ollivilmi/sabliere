@@ -1,3 +1,5 @@
+require 'lib/game/State'
+
 StateMachine = Class{}
 
 function StateMachine:init(states)
@@ -11,7 +13,7 @@ function StateMachine:init(states)
 	self.current = self.empty
 end
 
-function StateMachine:change(stateName, enterParams)
+function StateMachine:changeState(stateName, enterParams)
 	self.current:exit()
 	self.current = self.states[stateName]
 	self.current:enter(enterParams)

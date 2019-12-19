@@ -134,17 +134,13 @@ end
 function Tilemap:render()
     for y = 1, self.height do
         for x = 1, self.width do
-            if self.tiles[y][x].image then
-                love.graphics.draw(gTextures.tiles[self.tiles[y][x].image], (x-1)*self.tileSize, (y-1)*self.tileSize)
+
+            local tile = self.tiles[y][x]
+
+            if tile.t then
+                local texture = self.tileTypes[tile.t].texture
+                love.graphics.draw(texture, (x-1)*self.tileSize, (y-1)*self.tileSize)
             end
         end
-    end
-
-    if DEBUG_MODE then
-        self:toAllTiles(function(tile)
-            if tile.x then
-                tile:render()
-            end
-        end)
     end
 end

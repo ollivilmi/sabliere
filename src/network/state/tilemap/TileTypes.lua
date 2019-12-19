@@ -2,7 +2,7 @@ local TileTypes = {}
 
 TileTypes = {
     s = {
-        image = "sand",
+        texture = love.graphics.newImage('src/client/assets/textures/sand.png'),
         solid = true
     }
 }

@@ -2,6 +2,7 @@ require 'src/client/language-extensions'
 require 'src/network/Client'
 
 local settings = require 'src/client/settings/Settings'
+local game = require 'src/client/Game'
 
 function love.load()
     love.filesystem.setIdentity('sabliere')
@@ -16,6 +17,8 @@ function love.load()
         port = 12345,
         tickrate = 0.05
     }
+
+    game:changeState('play', client)
 end
 
 function love.resize(w,h)
@@ -27,9 +30,9 @@ function love.update(dt)
         lovebird.update()
     end
 
-    -- client:update(dt) 
-    -- gStateMachine:update(dt)
-    -- settings.core.input.clear()
+    client:update(dt)
+    game:update(dt)
+    settings.core.input.clear()
 end
 
 function log(message)
@@ -39,5 +42,5 @@ function log(message)
 end
 
 function love.draw()
-    -- settings.core.graphics.render(gStateMachine)
+    settings.core.graphics.render(game)
 end
