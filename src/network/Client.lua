@@ -17,8 +17,10 @@ function Client:init(def)
     self.id = tostring(math.random(99999))
 end
 
-function Client:connect(coords)
-    self.udp:send(Data(self.id, 'connect', coords):toString())
+function Client:connect(player)
+    local msg = self.encode(Data(self.id, 'connect', player))
+
+    self.udp:send(msg)
 end
 
 function Client:update(dt)
@@ -26,7 +28,7 @@ function Client:update(dt)
 
     if self.t > self.tickrate then
         for _, input in pairs(self.inputs) do
-            self.udp:send(input:toString())
+            self.udp:send(self.encode(input))
         end
 
         self.inputs = {}

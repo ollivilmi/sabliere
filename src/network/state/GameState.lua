@@ -16,14 +16,10 @@ Timer = require 'lib/game/love-utils/knife/timer'
 function GameState:init()
     self.level = Level()
     self.client = {}
-    self.player = {}
 
     self.level.tilemap:addRectangle(BoxCollider(0, 520, 960, 20))
 end
 
-function GameState:set(substate, key, value)
-    self[substate][key] = value
-end
-
 function GameState:update(dt)
+    -- self.level:update(dt)
 end

@@ -21,17 +21,17 @@ function EntityPhysics:init(self, def)
     -- affects knockbacks
     self.weight = def.weight or 100
 
-    local scale = def.scale or 1.0
-    -- adjust offset of x,y when collider is larger or smaller than entity
-    local cx = def.x - ((scale - 1.0) * def.width / 2)
-    local cy = def.y - ((scale - 1.0) * def.height / 2)
-    self.collider = TileCollider(cx, cy, def.width, def.height, scale)
+    -- local scale = def.scale or 1.0
+    -- -- adjust offset of x,y when collider is larger or smaller than entity
+    -- local cx = def.x - ((scale - 1.0) * def.width / 2)
+    -- local cy = def.y - ((scale - 1.0) * def.height / 2)
+    -- self.collider = TileCollider(cx, cy, def.width, def.height, scale)
 
-    -- table is used as other colliders may be added which also need x,y to be updated
-    self.components = { 
-        self, 
-        self.collider,
-    }
+    -- -- table is used as other colliders may be added which also need x,y to be updated
+    -- self.components = { 
+    --     self, 
+    --     self.collider,
+    -- }
 end
 
 function EntityPhysics:addX(x)

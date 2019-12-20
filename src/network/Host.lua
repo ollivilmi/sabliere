@@ -18,7 +18,15 @@ function Host:init(def)
 end
 
 function Host:send(data, ip, port)
-	self.udp:sendto(data:toString(), ip, port)
+	local msg = self.encode(data)
+
+	self.udp:sendto(msg, ip, port)
+end
+
+function Host:sendToClient(data, clientId)
+	local client = self.state.client[clientId]
+
+	self:send(data, client.ip, client.port)
 end
 
 function Host:receive()
@@ -37,7 +45,7 @@ end
 function Host:update()
 	for id, client in pairs(self.clients) do
 		for _, update in pairs(self.updates) do
-			self.udp:sendto(update:toString(), client.ip, client.port)
+			self:send(update, client.ip, client.port)
 		end
 	end
 
@@ -49,6 +57,6 @@ function Host:tick()
 	self:update()
 end
 
-function Host:pushUpdate(substate, key, value)
-	table.insert(self.updates, Data(key, substate, value))
+function Host:pushUpdate(data)
+	table.insert(self.updates, data)
 end

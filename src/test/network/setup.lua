@@ -25,10 +25,10 @@ function nextTick(client, host)
     client:update(0.05)
 end
 
-function connectClient(client, host, entity)
+function connectClient(client, host, player)
     -- Connect:
     -- Server receives ip, port, unique ID
     -- x, y for player coordinates
-    client:connect(entity)
+    client:connect(player)
     nextTick(client, host)
 end

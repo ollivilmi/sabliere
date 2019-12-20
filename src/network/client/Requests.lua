@@ -6,6 +6,7 @@ local post = require "src/network/client/request/Post"
 local Requests = {
     connect = post.player.connect,
     move = post.player.move,
+    tilemap = post.tilemap.snapshot
 }
 
 return Requests

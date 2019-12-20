@@ -7,18 +7,18 @@ Level = Class{}
 function Level:init(playState)
     self.tilemap = Tilemap(100, 100, 10)
     
-    self.entities = {}
+    self.players = {}
     self.projectiles = Projectiles()
 end
 
-function Level:addEntity(id, entity)
-    self.entities[id] = entity
+function Level:addPlayer(id, player)
+    self.players[id] = player
 end
 
-function Level:entityCollision(collider)
-    for k,entity in ipairs(self.entities) do
-        if collider:collides(entity.collider) then
-            return entity
+function Level:playerCollision(collider)
+    for k,player in pairs(self.players) do
+        if collider:collides(player.collider) then
+            return player
         end
     end
 end
@@ -26,8 +26,8 @@ end
 function Level:update(dt)
     self.projectiles:update(dt)
 
-    for k, entity in ipairs(self.entities) do
-        entity:update(dt)
+    for k, player in pairs(self.players) do
+        player:update(dt)
     end
 end
 
@@ -35,7 +35,7 @@ function Level:render()
     self.tilemap:render()
     self.projectiles:render()
 
-    for k, entity in pairs(self.entities) do
-        entity:render()
+    for k, player in pairs(self.players) do
+        player:render()
     end
 end

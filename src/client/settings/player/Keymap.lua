@@ -1,4 +1,4 @@
-gKeymap = {
+local keymap = {
 
     move = {
         left = 'a',
@@ -22,3 +22,5 @@ gKeymap = {
         shoot = 'f'
     }
 }
+
+return keymap
