@@ -1,3 +1,5 @@
+require 'lib/game/State'
+
 JumpingState = Class{__includes = State}
 
 function JumpingState:init(entity)
@@ -5,19 +7,17 @@ function JumpingState:init(entity)
 end
 
 function JumpingState:enter(params)
-    self.entity.sounds.jump:play()
-    self.entity.dy = -GRAVITY * 75
+    self.entity.dy = -8 * 75
 end
 
 function JumpingState:update(dt)
-    self.entity.dy = self.entity.dy + GRAVITY
+    self.entity.dy = self.entity.dy + 8
 
     self.entity:upwardMovement()
 
     if self.entity.dy > 0 then
         self.entity:changeState('falling')
     else
-        self:input()
         self.entity:horizontalMovement()
     end
 end

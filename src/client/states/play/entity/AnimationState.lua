@@ -1,8 +1,14 @@
-require 'src/network/state/State'
+require 'lib/game/State'
 
 AnimationState = Class{__includes = State}
 
-function AnimationState:init(frames, interval, entity)
+function AnimationState:init(frames, interval, entity, sheet)
+    self.sheet = love.graphics.newImage(sheet)
+    self.quads = GenerateQuads(
+        self.sheet,
+        entity.width,
+        entity.height
+    )
     self.frames = frames
     self.interval = interval
     self.timer = 0
@@ -25,7 +31,7 @@ end
 
 function AnimationState:render()
     love.graphics.setColor(1,1,1)
-    love.graphics.draw(self.entity.sheet, self.entity.quads[self.frames[self.currentFrame]], 
+    love.graphics.draw(self.sheet, self.quads[self.frames[self.currentFrame]], 
 
     -- X and Y we draw at need to be shifted by half our width and height because we're setting the origin
     -- to that amount for proper scaling, which reverse-shifts rendering

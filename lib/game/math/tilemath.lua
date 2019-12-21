@@ -1,4 +1,5 @@
-tilemath = {}
+local tilemath = {}
+
 tilemath.snap = function(...)
     newValues = {...}
 
@@ -41,18 +42,20 @@ tilemath.isTile = function(value)
     return tilemath.nearestTile(value) == value
 end
 
-tilemath.diffTop = function(tile, collider)
-    return (tile.y + tile.height) - (collider.y)
+tilemath.diffTop = function(tile, entity)
+    return (tile.y + tile.height) - (entity.y)
 end
 
-tilemath.diffBottom = function(tile, collider)
-    return (tile.y) - (collider.y + collider.height)
+tilemath.diffBottom = function(tile, entity)
+    return (tile.y) - (entity.y + entity.height)
 end
 
-tilemath.diffLeft = function(tile, collider)
-    return (tile.x + tile.width) - (collider.x)
+tilemath.diffLeft = function(tile, entity)
+    return (tile.x + tile.width) - (entity.x)
 end
 
-tilemath.diffRight = function(tile, collider)
-    return (tile.x) - (collider.x + collider.width)
+tilemath.diffRight = function(tile, entity)
+    return (tile.x) - (entity.x + entity.width)
 end
+
+return tilemath

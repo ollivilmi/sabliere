@@ -23,6 +23,12 @@ function Client:connect(player)
     self.udp:send(msg)
 end
 
+function Client:disconnect()
+    local msg = self.encode(Data(self.id, 'quit', nil))
+
+    self.udp:send(msg)
+end
+
 function Client:update(dt)
     self.t = self.t + dt
 

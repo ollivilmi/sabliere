@@ -1,3 +1,5 @@
+require 'lib/game/State'
+
 MovingState = Class{__includes = State}
 
 function MovingState:init(entity)
@@ -5,10 +7,9 @@ function MovingState:init(entity)
 end
 
 function MovingState:update(dt)
-    if not self.entity.collider:grounded() then
+    if not self.entity:grounded() then
         self.entity:changeState('falling')
     end
 
-    self:input()
     self.entity:horizontalMovement()
 end

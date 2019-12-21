@@ -1,5 +1,5 @@
 local Post = {
-    player = require "src/network/server/request/post/Player"
+    player = require "src/network/server/request/post/PostPlayer"
 }
 
 return Post

@@ -23,7 +23,9 @@ function Connection:init(self, def)
 end
 
 function Connection.encode(data)
-    local payload = lzw.compress(json.encode(data.parameters))
+    local payload = data.parameters or '{}'
+
+    payload = lzw.compress(json.encode(payload))
 
     return string.format("%s %s %s", data.client, data.request, payload)
 end

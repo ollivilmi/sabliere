@@ -8,11 +8,15 @@ function Level:init(playState)
     self.tilemap = Tilemap(100, 100, 10)
     
     self.players = {}
-    self.projectiles = Projectiles()
+    -- self.projectiles = Projectiles()
 end
 
-function Level:addPlayer(id, player)
-    self.players[id] = player
+function Level:loadAssets()
+    self.tilemap:loadTextures()
+end
+
+function Level:addPlayer(id, def)
+    self.players[id] = Entity(def, self)
 end
 
 function Level:playerCollision(collider)
@@ -24,7 +28,7 @@ function Level:playerCollision(collider)
 end
 
 function Level:update(dt)
-    self.projectiles:update(dt)
+    -- self.projectiles:update(dt)
 
     for k, player in pairs(self.players) do
         player:update(dt)
@@ -33,7 +37,7 @@ end
 
 function Level:render()
     self.tilemap:render()
-    self.projectiles:render()
+    -- self.projectiles:render()
 
     for k, player in pairs(self.players) do
         player:render()

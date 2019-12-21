@@ -1,9 +1,9 @@
 local Player = {}
 
 function Player.connect(data, host)
-    host.state.level:addPlayer(data.client, Entity(
-        data.parameters
-    ))
+    if (data.client ~= host.id) then
+        host.state.level:addPlayer(data.client, data.parameters)
+    end
 end
 
 function Player.move(data, host)

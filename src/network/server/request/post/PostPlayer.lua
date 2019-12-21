@@ -8,6 +8,8 @@ function PostPlayer.move(data, host)
 end
 
 function PostPlayer.connect(data, host, ip, port)
+    print("New player connected: " .. data.client)
+
     host.state.client[data.client] = {ip = ip, port = port}
 
     -- Send verification that the user has connected and can construct
@@ -18,13 +20,12 @@ function PostPlayer.connect(data, host, ip, port)
     host:pushUpdate(Data(data.client, 'entity', data.parameters))
     host:pushUpdate(Data(data.client, 'tilemap', host.state.level.tilemap.tiles))
 
-    -- Add entity for server simulation
-    host.state.level:addPlayer(data.client, Entity(
-        data.parameters
-    ))
+    host.state.level:addPlayer(data.client, data.parameters)
 end
 
 function PostPlayer.quit(data, host)
+    print("Player disconnected: " .. data.client)
+
     host.state.client[data.client] = nil
 
     host.state.level.players[data.client] = nil

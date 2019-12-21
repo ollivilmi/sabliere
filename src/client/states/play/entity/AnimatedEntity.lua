@@ -1,28 +1,21 @@
-require 'src/network/state/entity/Entity'
+AnimatedEntity = Class{}
 
-AnimatedEntity = Class{__includes = Entity}
-
-function AnimatedEntity:init(self, def)
-    Entity:init(self, def)
-    self.sheet = def.sheet
-    self.quads = GenerateQuads(self.sheet, def.width, def.height)
+function AnimatedEntity:init(entity, def)
+    self.entity = entity
+    self.entity.movementState:addListener(self)
+    
     self.animationState = def.animationState
-    self:changeState('falling')
+    self.animationState:changeState(self.entity.state)
+end
+
+function AnimatedEntity:onStateChange(stateName)
+    self.animationState:changeState(stateName)
 end
 
 function AnimatedEntity:update(dt)
-    Entity:update(self, dt)
     self.animationState:update(dt)
 end
 
-function AnimatedEntity:changeState(state)
-    self.movementState:change(state)
-    self.animationState:change(state)
-end
-
 function AnimatedEntity:render()
-    if DEBUG_MODE then
-        Entity:render(self)
-    end
     self.animationState:render()
 end

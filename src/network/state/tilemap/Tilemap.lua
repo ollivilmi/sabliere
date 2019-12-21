@@ -41,28 +41,26 @@ function Tilemap:addRectangle(rectangle, type)
     end
 end
 
-function Tilemap:addSquareInRange(square, circle)
-    local tile = TileRectangle:fromSquare(square)
-    local tiles = tile:destroyNotInArea(circle)
-    self:overwriteTiles(tiles)  
-end
+-- function Tilemap:addSquareInRange(square, range)
+--     local tile = TileRectangle:fromSquare(square)
+--     local tiles = tile:destroyNotInArea(range)
+-- end
 
-function Tilemap:addRectangleInRange(rectangle, circle)
-    local beforeRange = TileRectangle:toTiles(rectangle)
-    local afterRange = {}
+-- function Tilemap:addRectangleInRange(rectangle, range)
+--     local beforeRange = TileRectangle:toTiles(rectangle)
+--     local afterRange = {}
 
-    for k,tile in pairs(beforeRange) do
-        table.addTable(afterRange, tile:destroyNotInArea(circle))
-    end
-    self:overwriteTiles(afterRange)
-end
+--     for k,tile in pairs(beforeRange) do
+--         table.addTable(afterRange, tile:destroyNotInArea(range))
+--     end
+-- end
 
 function Tilemap:inBounds(x,y)
     return y > 0 and x > 0 and y <= self.height and x <= self.width
 end
 
 function Tilemap:hasTile(x,y)
-    return self:inBounds(x,y) and self.tiles[y][x].x
+    return self:inBounds(x,y) and self.tiles[y][x].t
 end
 
 function Tilemap:toMapCoordinates(x,y)
@@ -71,11 +69,21 @@ end
 
 function Tilemap:pointToTile(x,y)
     x,y = self:toMapCoordinates(x,y)
+
     if not self:hasTile(x,y) then
         return nil
     end
+
+    local tile = self.tiles[y][x]
     
-    return self.tiles[y][x]
+    return {
+        x = (x - 1) * self.tileSize,
+        y = (y - 1) * self.tileSize,
+        width = self.tileSize,
+        height = self.tileSize,
+        health = tile.h,
+        solid = self.tileTypes[tile.t].solid
+    }
 end
 
 function Tilemap:toAllTiles(action)
@@ -130,6 +138,12 @@ function Tilemap:expand(x,y)
     end
 end
 
+function Tilemap:loadTextures()
+    for k, tile in pairs(self.tileTypes) do
+        tile.texture = love.graphics.newImage(tile.texture)
+    end
+end
+
 -- TODO: refactor for readability
 function Tilemap:render()
     for y = 1, self.height do
@@ -139,11 +153,11 @@ function Tilemap:render()
 
             if tile.t then
                 love.graphics.setColor(1,1,1)
-                local texture = love.graphics.newImage(self.tileTypes[tile.t].texture)
-                love.graphics.draw(texture, (x-1)*self.tileSize, (y-1)*self.tileSize)
+                local texture = self.tileTypes[tile.t].texture
+                love.graphics.draw(texture, (x - 1) * self.tileSize, (y - 1) * self.tileSize)
                 love.graphics.setColor(0,0,0)
                 love.graphics.setLineWidth(1)
-                love.graphics.rectangle('line', (x-1)*self.tileSize, (y-1)*self.tileSize, self.tileSize, self.tileSize)
+                love.graphics.rectangle('line', (x - 1) * self.tileSize, (y - 1) * self.tileSize, self.tileSize, self.tileSize)
             end
         end
     end

@@ -1,4 +1,4 @@
-require 'src/network/state/State'
+require 'lib/game/State'
 
 FallingState = Class{__includes = State}
 
@@ -7,7 +7,7 @@ function FallingState:init(entity)
 end
 
 function FallingState:update(dt)
-    self.entity.dy = self.entity.dy + GRAVITY
+    self.entity.dy = self.entity.dy + 8
 
     self.entity:downwardMovement()
 
@@ -18,7 +18,6 @@ function FallingState:update(dt)
             self.entity:changeState('idle')
         end
     else
-        self:input()
         self.entity:horizontalMovement()
     end
 end

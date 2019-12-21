@@ -31,10 +31,6 @@ function testConnect()
     -- Receive update from server
     client:update(0)
 
-    -- Client should now have updated player state from server
-    assert(client.state.level.players[client.id].x == 100)
-    assert(client.state.level.players[client.id].y == 100)
-
     client:close()
     host:close()
 end

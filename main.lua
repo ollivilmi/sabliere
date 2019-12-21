@@ -4,6 +4,8 @@ require 'src/network/Client'
 local settings = require 'src/client/settings/Settings'
 local game = require 'src/client/Game'
 
+local lovebird = require 'lib/game/love-utils/debug/lovebird'
+
 function love.load()
     love.filesystem.setIdentity('sabliere')
     settings:loadAll()
@@ -18,8 +20,6 @@ function love.load()
         tickrate = 0.05
     }
 
-    client:connect{x = 100, y = 100, width = 100, height = 100}
-
     game:changeState('play', client)
 end
 
@@ -28,12 +28,16 @@ function love.resize(w,h)
 end
 
 function love.update(dt)
-    if DEBUG_MODE then
-        lovebird.update()
+    if love.keyboard.wasPressed('escape') then
+        client:disconnect()
+        love.event.quit()
     end
+
+    lovebird.update()
 
     client:update(dt)
     game:update(dt)
+
     settings.core.input.clear()
 end
 
