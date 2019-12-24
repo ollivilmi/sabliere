@@ -7,31 +7,35 @@ function PostPlayer.move(data, host)
 	host.state.level.players[data.client]:updateLocation(data.parameters)
 end
 
+function PostPlayer.update(data, host)
+    local player = host.state.level.players[data.client]
+
+    if player then
+        player:updateState(data.parameters)
+    end
+end
+
 function PostPlayer.connect(data, host, ip, port)
     print("New player connected: " .. data.client)
-
-    host.state.client[data.client] = {ip = ip, port = port}
-
-    -- Send verification that the user has connected and can construct
-    -- a Player entity
-    host:sendToClient(Data(data.client, 'connect', data.parameters), data.client)
     
-    -- Send update of new entity to all clients
-    host:pushUpdate(Data(data.client, 'entity', data.parameters))
-    host:pushUpdate(Data(data.client, 'tilemap', host.state.level.tilemap.tiles))
+    local player = Entity({x = 100, y = 100, height = 100, width = 50}, host.state.level)
 
-    host.state.level:addPlayer(data.client, data.parameters)
+    host:addPlayer(data.client, player, ip, port)
+
+    -- Send update of new player to all clients
+    host:pushUpdate(Data(data.client, 'connect', player:getState()))
+    
+    -- Send state snapshot to connected player
+    host:sendToClient(Data(data.client, 'snapshot', host.state:getSnapshot()), data.client)
 end
 
 function PostPlayer.quit(data, host)
     print("Player disconnected: " .. data.client)
 
-    host.state.client[data.client] = nil
-
-    host.state.level.players[data.client] = nil
+    host:removePlayer(data.client)
 
     -- Push update to all users to remove entity
-    host:pushUpdate('disconnected', data.client, nil)
+    host:pushUpdate(Data(data.client, 'disconnect', nil))
 end
 
 return PostPlayer

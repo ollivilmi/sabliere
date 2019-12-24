@@ -1,7 +1,7 @@
 local Tilemap = {}
 
-function Tilemap.snapshot(data, host)
-    host.state.level.tilemap.tiles = data.parameters
+function Tilemap.chunk(data, host)
+    host.state.level.tilemap:setChunk(data.parameters)
 end
 
 return Tilemap

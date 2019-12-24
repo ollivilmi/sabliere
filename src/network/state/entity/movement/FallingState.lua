@@ -7,7 +7,7 @@ function FallingState:init(entity)
 end
 
 function FallingState:update(dt)
-    self.entity.dy = self.entity.dy + 8
+    self.entity.dy = math.max(100, self.entity.dy + (self.entity.weight * dt))
 
     self.entity:downwardMovement()
 

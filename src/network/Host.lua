@@ -1,4 +1,5 @@
 require 'src/network/Connection'
+require 'src/network/Data'
 
 Host = Class{__includes = Connection}
 
@@ -6,12 +7,6 @@ function Host:init(def)
     Connection:init(self, def)
 	self.udp:setsockname(def.interface or '*', def.port or 12345)
     self.requests = require "src/network/server/Requests"
-
-	-- updates is a table that contains all the state updates from
-	-- previous tick that will be sent to all clients
-	-- 
-	-- the table is then cleared for next tick
-	self.updates = {}
 
 	-- code brevity
 	self.clients = self.state.client
@@ -44,6 +39,12 @@ end
 
 function Host:update()
 	for id, client in pairs(self.clients) do
+		for entityId, entity in pairs(self.entityUpdates) do
+			self:send(Data(entityId, 'update', entity:getState()), client.ip, client.port)
+		end
+	end
+
+	for id, client in pairs(self.clients) do
 		for _, update in pairs(self.updates) do
 			self:send(update, client.ip, client.port)
 		end
@@ -57,6 +58,14 @@ function Host:tick()
 	self:update()
 end
 
-function Host:pushUpdate(data)
-	table.insert(self.updates, data)
+function Host:addPlayer(clientId, player, ip, port)
+    self.state.level.players[clientId] = player
+    self.state.client[clientId] = {ip = ip, port = port}
+    self.entityUpdates[clientId] = player
+end
+
+function Host:removePlayer(clientId)
+    self.state.client[clientId] = nil
+    self.state.level.players[clientId] = nil
+    self.entityUpdates[clientId] = nil
 end

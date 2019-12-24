@@ -7,11 +7,11 @@ function JumpingState:init(entity)
 end
 
 function JumpingState:enter(params)
-    self.entity.dy = -8 * 75
+    self.entity.dy = -self.entity.weight * 0.3
 end
 
 function JumpingState:update(dt)
-    self.entity.dy = self.entity.dy + 8
+    self.entity.dy = self.entity.dy + (self.entity.weight * dt)
 
     self.entity:upwardMovement()
 

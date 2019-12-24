@@ -8,36 +8,9 @@ require 'src/network/state/entity/EntityPhysics'
 
 Entity = Class{__includes = EntityPhysics}
 
--- Entities are rectangular objects which implement gravity and
--- optionally different states of movement:
--- * falling
--- * moving
--- * idling
--- * jumping
-function Entity:init(def, level)
-    -- for rendering
-    self.x = def.x
-    self.y = def.y
-    self.width = def.width
-    self.height = def.height
-
-    self.dy = 0
-    self.dx = 0
-
-    self.level = level
-    self.tilemap = level.tilemap
-    
-    -- affects dx
-    self.speed = def.speed or 100
-    -- affects rendering
-    self.direction = 'right'
-    -- affects knockbacks
-    self.weight = def.weight or 100
-
-    -- stats (max, min is 0)
-    self.health = def.health or 100
-    self.resources = def.resources or 100
-
+-- Entities are rectangular objects which implement physics
+-- (gravity and collision)
+function Entity:init(parameters, level)
     self.movementState = StateMachine {
         idle = IdleState(self),
         moving = MovingState(self),
@@ -45,8 +18,10 @@ function Entity:init(def, level)
         falling = FallingState(self)
     }
 
-    self.state = 'falling'
-    self:changeState(self.state)
+    self:setState(parameters)
+
+    self.level = level
+    self.tilemap = level.tilemap
 end
 
 function Entity:changeState(state)
@@ -65,13 +40,12 @@ function Entity:updateLocation(coords)
     self.y = coords.y
 end
 
-function Entity:render()
-    love.graphics.setColor(1,1,1)
-    love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
+function Entity:getLocation()
+    return {x = self.x, y = self.y}
 end
 
 --  to pass state between client and server
-function Entity:getPrimitives()
+function Entity:getState()
     return {
         x = self.x,
         y = self.y,
@@ -83,6 +57,37 @@ function Entity:getPrimitives()
         direction = self.direction,
         weight = self.weight,
         health = self.health,
-        resources = self.resources
+        resources = self.resources,
+        state = self.state
     }
+end
+
+function Entity:updateState(state)
+    for k,v in pairs(state) do
+        self[k] = v
+    end
+
+    self:changeState(self.state)
+end
+
+function Entity:setState(state)
+    self.x = state.x
+    self.y = state.y
+    self.width = state.width
+    self.height = state.height
+    self.dy = state.dy or 0
+    self.dx = state.dx or 0
+    self.speed = state.speed or 200
+    self.direction = state.direction or 'right'
+    self.weight = state.weight or 2000
+    self.health = state.health or 100
+    self.resources = state.resources or 100
+    self.state = state.state or 'falling'
+
+    self:changeState(self.state)
+end
+
+function Entity:render()
+    love.graphics.setColor(1,1,1)
+    love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
 end

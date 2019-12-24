@@ -9,7 +9,7 @@ function Tilemap:init(width, height, tileSize)
     self.height = height
 
     self.tiles = {}
-    self.tileTypes = require 'src/network/state/tilemap/TileTypes'
+    self.types = require 'src/network/state/tilemap/TileTypes'
 
     for y = 1, self.height do
         table.insert(self.tiles, {})
@@ -36,54 +36,83 @@ function Tilemap:addRectangle(rectangle, type)
 
     for y = y, fy do
         for x = x, fx do
-            self.tiles[y][x] = Tile(type)
+            self.tiles[y][x] = Tile{
+                x = x,
+                y = y,
+                size = self.tileSize,
+                type = self.types['s'],
+            }
         end
     end
 end
 
--- function Tilemap:addSquareInRange(square, range)
---     local tile = TileRectangle:fromSquare(square)
---     local tiles = tile:destroyNotInArea(range)
--- end
+function Tilemap:getChunk(entity)
+    -- todo: use entity to defer active chunk
 
--- function Tilemap:addRectangleInRange(rectangle, range)
---     local beforeRange = TileRectangle:toTiles(rectangle)
---     local afterRange = {}
+    local chunk = {
+        x = 1,
+        y = 1,
+        width = self.width,
+        height = self.height,
+        tiles = {}
+    }
 
---     for k,tile in pairs(beforeRange) do
---         table.addTable(afterRange, tile:destroyNotInArea(range))
---     end
--- end
+    for y = chunk.y, chunk.height do
+        chunk.tiles[y] = {}
 
-function Tilemap:inBounds(x,y)
+        for x = chunk.x, chunk.width do
+            local tile = self.tiles[y][x]
+
+            tile = tile.type and tile:getState() or {}
+
+            table.insert(chunk.tiles[y], {
+                tile
+            })
+        end
+    end
+
+    return chunk
+end
+
+function Tilemap:setChunk(chunk)
+    for y = chunk.y, chunk.height do
+        for x = chunk.x, chunk.width do
+            local state = chunk.tiles[y][x]
+
+            if state.t ~= nil then
+
+                self.tiles[y][x] = Tile{
+                    x = x,
+                    y = y,
+                    size = self.tileSize,
+                    type = self.types[state.t],
+                    health = self.types[state.h]
+                }
+            end
+        end
+    end
+end
+
+function Tilemap:inBounds(x, y)
     return y > 0 and x > 0 and y <= self.height and x <= self.width
 end
 
-function Tilemap:hasTile(x,y)
-    return self:inBounds(x,y) and self.tiles[y][x].t
+function Tilemap:hasTile(x, y)
+    return self:inBounds(x,y) and self.tiles[y][x].type
 end
 
-function Tilemap:toMapCoordinates(x,y)
+function Tilemap:toMapCoordinates(x, y)
     return math.floor(x / self.tileSize) + 1, math.floor(y / self.tileSize) + 1
 end
 
-function Tilemap:pointToTile(x,y)
+function Tilemap:pointToTile(x, y)
     x,y = self:toMapCoordinates(x,y)
 
     if not self:hasTile(x,y) then
         return nil
     end
 
-    local tile = self.tiles[y][x]
-    
-    return {
-        x = (x - 1) * self.tileSize,
-        y = (y - 1) * self.tileSize,
-        width = self.tileSize,
-        height = self.tileSize,
-        health = tile.h,
-        solid = self.tileTypes[tile.t].solid
-    }
+    return self.tiles[y][x]
 end
 
 function Tilemap:toAllTiles(action)
@@ -139,25 +168,19 @@ function Tilemap:expand(x,y)
 end
 
 function Tilemap:loadTextures()
-    for k, tile in pairs(self.tileTypes) do
+    for k, tile in pairs(self.types) do
         tile.texture = love.graphics.newImage(tile.texture)
     end
 end
 
--- TODO: refactor for readability
 function Tilemap:render()
     for y = 1, self.height do
         for x = 1, self.width do
 
             local tile = self.tiles[y][x]
 
-            if tile.t then
-                love.graphics.setColor(1,1,1)
-                local texture = self.tileTypes[tile.t].texture
-                love.graphics.draw(texture, (x - 1) * self.tileSize, (y - 1) * self.tileSize)
-                love.graphics.setColor(0,0,0)
-                love.graphics.setLineWidth(1)
-                love.graphics.rectangle('line', (x - 1) * self.tileSize, (y - 1) * self.tileSize, self.tileSize, self.tileSize)
+            if tile.type then
+                tile:render()
             end
         end
     end

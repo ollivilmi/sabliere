@@ -12,13 +12,12 @@ function Client:init(def)
     self.t = 0
     
     self.udp:setpeername(self.host, self.port)
-    self.inputs = {}
     
     self.id = tostring(math.random(99999))
 end
 
-function Client:connect(player)
-    local msg = self.encode(Data(self.id, 'connect', player))
+function Client:connect()
+    local msg = self.encode(Data(self.id, 'connect', nil))
 
     self.udp:send(msg)
 end
@@ -33,11 +32,20 @@ function Client:update(dt)
     self.t = self.t + dt
 
     if self.t > self.tickrate then
-        for _, input in pairs(self.inputs) do
-            self.udp:send(self.encode(input))
+        for id, entity in pairs(self.entityUpdates) do
+            self.udp:send(
+                self.encode(
+                    Data(id, 'update', entity:getState())
+                )
+            )
         end
 
-        self.inputs = {}
+        for _, update in pairs(self.updates) do
+            self.udp:send(self.encode(update))
+        end
+
+        self.updates = {}
+
         self.t = self.t - self.tickrate
     end
     

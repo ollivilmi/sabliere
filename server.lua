@@ -1,4 +1,5 @@
 Class = require 'lib/language/class'
+local json = require 'lib/language/json'
 
 require 'src/network/Host'
 
@@ -16,6 +17,8 @@ print("Sabliere server started on port 12345")
 local previousTime = host.socket.gettime()
 local currentTime = host.socket.gettime()
 
+local fiveseconds = host.socket.gettime()
+
 while running do
     host:tick()
     host.socket.sleep(tickrate)
@@ -24,4 +27,11 @@ while running do
     currentTime = host.socket.gettime()
     host.state:update(currentTime - previousTime)
     previousTime = currentTime
+
+    if currentTime - fiveseconds > 5 then
+        for k,v in pairs(host.state.level.players) do
+            print(k, json.encode(v:getState()))
+        end
+        fiveseconds = currentTime
+    end
 end

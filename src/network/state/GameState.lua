@@ -21,5 +21,15 @@ function GameState:init()
 end
 
 function GameState:update(dt)
-    -- self.level:update(dt)
+    self.level:update(dt)
+end
+
+-- Returns snapshot of gamestate, tiles are limited to player
+-- location
+function GameState:getSnapshot(player)
+    return self.level:getSnapshot()
+end
+
+function GameState:setSnapshot(snapshot)
+    self.level:setSnapshot(snapshot)
 end

@@ -5,19 +5,11 @@ require 'src/client/states/play/entity/AnimatedEntity'
 
 require 'src/client/states/play/entity/player/input/EntityMovement'
 
+-- Basically a wrapper to control Entity and follow it with camera
 PlayerEntity = Class{}
 
-function PlayerEntity:init(def)
-    self.entity = Entity(
-        { 
-            x = def.x,
-            y = def.y,
-            width = 50,
-            height = 100,
-            speed = 200,
-        },
-        def.level
-    )
+function PlayerEntity:init(entity, keymap)
+    self.entity = entity
 
     local sheet = 'src/client/assets/textures/dude.png'
 
@@ -30,7 +22,7 @@ function PlayerEntity:init(def)
         }
     })
     
-    self.movementControls = EntityMovement(def.keymap.move, self.entity)
+    self.movementControls = EntityMovement(keymap.move, self.entity)
     -- self.interface = interface
     self.canShoot = true
 end

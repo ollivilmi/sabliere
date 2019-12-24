@@ -17,7 +17,18 @@ function Connection:init(self, def)
     self.tickrate = def.tickrate or 0.05
 
 	self.socket = require "socket"
-	self.udp = self.socket.udp()
+    self.udp = self.socket.udp()
+    
+    -- updates contains all the state updates from
+    -- previous tick, eg. bullet spawned
+	-- 
+	-- the table should then be cleared for next tick
+    self.updates = {}
+    -- stateUpdates is a list of objects that need to update
+    -- their current state to the host every tick
+    --
+    -- todo: only send difference from previous state
+    self.entityUpdates = {}
 	
 	self.udp:settimeout(0)
 end
@@ -53,4 +64,8 @@ end
 
 function Connection:close()
     self.udp:close()
+end
+
+function Connection:pushUpdate(data)
+	table.insert(self.updates, data)
 end
