@@ -170,6 +170,7 @@ end
 function Tilemap:loadTextures()
     for k, tile in pairs(self.types) do
         tile.texture = love.graphics.newImage(tile.texture)
+        tile.scale = self.tileSize / tile.texture:getWidth()
     end
 end
 
