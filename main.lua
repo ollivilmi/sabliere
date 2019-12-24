@@ -1,4 +1,4 @@
-require 'src/client/language-extensions'
+require 'lib/language/language-extensions'
 require 'src/network/Client'
 
 local settings = require 'src/client/settings/Settings'

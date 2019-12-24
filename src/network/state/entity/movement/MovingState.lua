@@ -11,5 +11,5 @@ function MovingState:update(dt)
         self.entity:changeState('falling')
     end
 
-    self.entity:horizontalMovement()
+    self.entity:horizontalCollision()
 end

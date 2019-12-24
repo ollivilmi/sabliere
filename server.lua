@@ -1,4 +1,4 @@
-Class = require 'lib/language/class'
+require 'lib/language/language-extensions'
 local json = require 'lib/language/json'
 
 require 'src/network/Host'

@@ -7,9 +7,9 @@ function FallingState:init(entity)
 end
 
 function FallingState:update(dt)
-    self.entity.dy = math.max(100, self.entity.dy + (self.entity.weight * dt))
+    self.entity.dy = self.entity.dy + (self.entity.weight * dt)
 
-    self.entity:downwardMovement()
+    self.entity:bottomCollision()
 
     if self.entity.dy == 0 then
         if self.entity.dx ~= 0 then
@@ -17,7 +17,8 @@ function FallingState:update(dt)
         else
             self.entity:changeState('idle')
         end
+
     else
-        self.entity:horizontalMovement()
+        self.entity:horizontalCollision()
     end
 end
