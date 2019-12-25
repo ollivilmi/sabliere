@@ -59,13 +59,24 @@ function Host:tick()
 end
 
 function Host:addPlayer(clientId, player, ip, port)
-    self.state.level.players[clientId] = player
+	local players = self.state.level.players
+
+	players:setEntity(clientId, player)
+
+	local player = players:get(clientId)
+	
     self.state.client[clientId] = {ip = ip, port = port}
-    self.entityUpdates[clientId] = player
+	self.entityUpdates[clientId] = player
+	
+    -- Send update of new player to all clients
+    self:pushUpdate(Data(clientId, 'connect', player:getState()))
 end
 
 function Host:removePlayer(clientId)
+    self.state.level.players:disconnect(clientId)
     self.state.client[clientId] = nil
-    self.state.level.players[clientId] = nil
-    self.entityUpdates[clientId] = nil
+	self.entityUpdates[clientId] = nil
+	
+	-- Push update to all users to remove entity
+	self:pushUpdate(Data(clientId, 'disconnect', nil))
 end

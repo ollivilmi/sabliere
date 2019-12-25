@@ -8,7 +8,7 @@ Connection = Class{}
 
 -- First two variables are strings
 -- 
--- String 1: entity   String 2: command
+-- String 1: client ID   String 2: command
 --
 -- Remainders: optional parameters for the command (JSON)
 function Connection:init(self, def)
@@ -24,10 +24,8 @@ function Connection:init(self, def)
 	-- 
 	-- the table should then be cleared for next tick
     self.updates = {}
-    -- stateUpdates is a list of objects that need to update
+    -- entityUpdates is a list of entities that need to update
     -- their current state to the host every tick
-    --
-    -- todo: only send difference from previous state
     self.entityUpdates = {}
 	
 	self.udp:settimeout(0)

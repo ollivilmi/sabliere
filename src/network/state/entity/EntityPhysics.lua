@@ -1,8 +1,10 @@
+require 'src/network/state/physics/BoxCollider'
+
 local tilemath = require 'lib/game/math/tilemath'
 
 TileCollision = require 'src/network/state/physics/TileCollision'
 
-EntityPhysics = Class{}
+EntityPhysics = Class{__includes = BoxCollider}
 
 function EntityPhysics:grounded()
     return TileCollision:grounded(self, self.tilemap)
@@ -98,7 +100,8 @@ function EntityPhysics:collidesTile()
     return tile
 end
 
-function EntityPhysics:move(dx, dy, tileSize)
+function EntityPhysics:move(dx, dy)
+    local tileSize = self.tilemap.tileSize
     -- if entity has moved more than tileSize at once, we need to check
     -- for tile collisions incrementally
     if math.abs(dx) > tileSize or math.abs(dy) > tileSize then

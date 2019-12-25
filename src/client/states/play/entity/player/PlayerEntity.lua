@@ -12,6 +12,8 @@ function PlayerEntity:init(animatedEntity, keymap)
     self.movementControls = EntityControls(keymap.move, animatedEntity.entity)
     -- self.interface = interface
     self.canShoot = true
+
+    self.entity.level.camera:follow(self.entity)
 end
 
 function PlayerEntity:input()

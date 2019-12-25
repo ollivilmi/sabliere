@@ -5,17 +5,20 @@ local Snapshot = {}
 function Snapshot.set(data, client)
     client.state:setSnapshot(data.parameters)
 
-    -- To periodically send updates to server
-    client.entityUpdates[client.id] = client.state.level.players[client.id]
-    
-    client.state.level:animatePlayers()
+    local players = client.state.level.players
 
-    -- overwrite entity with controllable "PlayerEntity"
-    local entity = client.state.level.players[client.id]
+    players:animate()
+    
+    local player = players:get(client.id)
+
+    -- To periodically send updates to server
+    client.entityUpdates[client.id] = player.entity
 
     -- keymap could be loaded from server, that's why it's a constructor parameter
     local keymap = require 'src/client/states/play/entity/player/settings/Keymap'
-    client.state.level.players[client.id] = PlayerEntity(entity, keymap)
+
+    -- overwrite entity with controllable "PlayerEntity"
+    players:set(client.id, PlayerEntity(player, keymap))
 end
 
 return Snapshot

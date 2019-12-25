@@ -11,15 +11,5 @@ function BoxCollider:hasPoint(c)
 end
 
 function BoxCollider:getCenter()
-    local x, y = math.rectangleCenter(self)
-    -- adjust to center of screen
-    x = x - VIRTUAL_WIDTH / 2
-    y = y - VIRTUAL_HEIGHT / 2
-    
-    return x, y
-end
-
--- bandaid solution to change collision to reuse a method
-function BoxCollider:mapCollider()
-    return BoxCollider(self.x+1, self.y+1, self.width-2, self.height-2)
+    return math.rectangleCenter(self)
 end

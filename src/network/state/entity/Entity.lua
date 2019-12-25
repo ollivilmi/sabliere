@@ -30,8 +30,8 @@ function Entity:changeState(state)
 end
 
 function Entity:update(dt)
-    self:move(self.dx * dt, self.dy * dt, self.tilemap.tileSize)
     self.movementState:update(dt)
+    self:move(self.dx * dt, self.dy * dt)
 end
 
 function Entity:updateLocation(coords)

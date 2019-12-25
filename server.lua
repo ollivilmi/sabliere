@@ -1,5 +1,4 @@
 require 'lib/language/language-extensions'
-local json = require 'lib/language/json'
 
 require 'src/network/Host'
 
@@ -29,9 +28,7 @@ while running do
     previousTime = currentTime
 
     if currentTime - fiveseconds > 5 then
-        for k,v in pairs(host.state.level.players) do
-            print(k, json.encode(v:getState()))
-        end
+        host.state.level.players:print()
         fiveseconds = currentTime
     end
 end

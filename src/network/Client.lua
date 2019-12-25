@@ -34,9 +34,7 @@ function Client:update(dt)
     if self.t > self.tickrate then
         for id, entity in pairs(self.entityUpdates) do
             self.udp:send(
-                self.encode(
-                    Data(id, 'update', entity:getState())
-                )
+                self.encode(Data(id, 'update', entity:getState()))
             )
         end
 

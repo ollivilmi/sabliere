@@ -1,12 +1,10 @@
 Rectangle = Class{}
 
-function Rectangle:init(x, y, width, height, scale)
-    local scale = scale or 1
+function Rectangle:init(x, y, width, height)
     self.x = x
     self.y = y
-    self.width = width * scale
-    self.height = height * scale
-
+    self.width = width
+    self.height = height
 end
 
 function Rectangle:render()
