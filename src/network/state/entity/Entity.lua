@@ -82,6 +82,7 @@ function Entity:setState(state)
     self.health = state.health or 100
     self.resources = state.resources or 100
     self.state = state.state or 'falling'
+    self.model = state.model or 'dude'
 
     self:changeState(self.state)
 end

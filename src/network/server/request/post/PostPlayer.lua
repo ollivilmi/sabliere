@@ -2,11 +2,6 @@ require 'src/network/state/entity/Entity'
 
 local PostPlayer = {}
 
--- todo: validate that the move is not too far away from previous location
-function PostPlayer.move(data, host)
-	host.state.level.players[data.client]:updateLocation(data.parameters)
-end
-
 function PostPlayer.update(data, host)
     local player = host.state.level.players[data.client]
 

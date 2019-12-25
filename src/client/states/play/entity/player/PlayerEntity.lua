@@ -1,28 +1,15 @@
-require 'lib/game/StateMachine'
-
-require 'src/client/states/play/entity/AnimationState'
 require 'src/client/states/play/entity/AnimatedEntity'
 
-require 'src/client/states/play/entity/player/input/EntityMovement'
+require 'src/client/states/play/entity/player/input/EntityControls'
 
 -- Basically a wrapper to control Entity and follow it with camera
 PlayerEntity = Class{}
 
-function PlayerEntity:init(entity, keymap)
-    self.entity = entity
-
-    local sheet = 'src/client/assets/textures/dude.png'
-
-    self.animation = AnimatedEntity(self.entity, {
-        animationState = StateMachine {
-            idle = AnimationState({1}, 1, self.entity, sheet),
-            moving = AnimationState({2, 3}, 0.2, self.entity, sheet),
-            jumping = AnimationState({4}, 1, self.entity, sheet),
-            falling = AnimationState({5}, 1, self.entity, sheet)
-        }
-    })
+function PlayerEntity:init(animatedEntity, keymap)
+    self.entity = animatedEntity.entity
+    self.animatedEntity = animatedEntity
     
-    self.movementControls = EntityMovement(keymap.move, self.entity)
+    self.movementControls = EntityControls(keymap.move, animatedEntity.entity)
     -- self.interface = interface
     self.canShoot = true
 end
@@ -43,11 +30,10 @@ function PlayerEntity:input()
 end
 
 function PlayerEntity:update(dt)
-    self.entity:update(dt)
-    self.animation:update(dt)
+    self.animatedEntity:update(dt)
     self:input()
 end
 
 function PlayerEntity:render()
-    self.animation:render()
+    self.animatedEntity:render()
 end

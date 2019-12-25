@@ -1,21 +1,21 @@
 AnimatedEntity = Class{}
 
-function AnimatedEntity:init(entity, def)
+function AnimatedEntity:init(entity, model)
     self.entity = entity
-    self.entity.movementState:addListener(self)
-    
-    self.animationState = def.animationState
-    self.animationState:changeState(self.entity.state)
-end
+    self.model = model
+    self.model:changeState(self.entity.state)
 
-function AnimatedEntity:onStateChange(stateName)
-    self.animationState:changeState(stateName)
+    self.entity.movementState:addListener(self, function(newState)
+        self.model:changeState(newState)
+    end)
+    self.animated = true
 end
 
 function AnimatedEntity:update(dt)
-    self.animationState:update(dt)
+    self.entity:update(dt)
+    self.model:update(dt)
 end
 
 function AnimatedEntity:render()
-    self.animationState:render()
+    self.model:render(self.entity)
 end

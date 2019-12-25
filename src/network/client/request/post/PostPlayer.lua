@@ -1,16 +1,15 @@
 require 'src/network/state/entity/Entity'
+require 'src/client/states/play/entity/AnimatedEntity'
+
+local models = require 'src/client/states/play/entity/models/playerModels'
 
 local PostPlayer = {}
 
 function PostPlayer.connect(data, client)
     if (data.client ~= client.id) then
-        client.state.level.players[data.client] = Entity(data.parameters, client.state.level)
+        local entity = Entity(data.parameters, client.state.level)
+        client.state.level.players[data.client] = AnimatedEntity(entity, models[entity.model]())
     end
-end
-
-function PostPlayer.move(data, client)
-    -- todo interpolate
-    client.state.level.players[data.client]:updateLocation(data.parameters)
 end
 
 function PostPlayer.update(data, client)
@@ -19,7 +18,7 @@ function PostPlayer.update(data, client)
         local player = client.state.level.players[data.client]
 
         if player then
-            player:updateState(data.parameters)
+            player.entity:updateState(data.parameters)
         end
     end
 end

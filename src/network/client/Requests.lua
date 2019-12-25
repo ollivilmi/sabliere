@@ -5,7 +5,6 @@ local post = require "src/network/client/request/Post"
 -- to get or post some information
 local Requests = {
     connect = post.player.connect,
-    move = post.player.move,
     update = post.player.update,
     disconnect = post.player.disconnect,
     snapshot = post.snapshot.set,

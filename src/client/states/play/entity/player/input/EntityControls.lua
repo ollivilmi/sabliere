@@ -1,6 +1,6 @@
-EntityMovement = Class{}
+EntityControls = Class{}
 
-function EntityMovement:init(keymap, entity)
+function EntityControls:init(keymap, entity)
     self.keymap = keymap
     self.entity = entity
 
@@ -12,11 +12,11 @@ function EntityMovement:init(keymap, entity)
     }
 end
 
-function EntityMovement:update()
+function EntityControls:update()
     self.inputs[self.entity.state](self)
 end
 
-function EntityMovement:falling()
+function EntityControls:falling()
     if love.keyboard.isDown(self.keymap.left) then
         self.entity.dx = -self.entity.speed
     elseif love.keyboard.isDown(self.keymap.right) then
@@ -26,7 +26,7 @@ function EntityMovement:falling()
     end
 end
 
-function EntityMovement:idle()
+function EntityControls:idle()
     if love.keyboard.isDown(self.keymap.left) or love.keyboard.isDown(self.keymap.right) then
         self.entity:changeState('moving')
     elseif love.keyboard.isDown(self.keymap.jump) then
@@ -34,7 +34,7 @@ function EntityMovement:idle()
     end
 end
 
-function EntityMovement:jumping()
+function EntityControls:jumping()
     if love.keyboard.isDown(self.keymap.left) then
         self.entity.dx = -self.entity.speed
     elseif love.keyboard.isDown(self.keymap.right) then
@@ -44,7 +44,7 @@ function EntityMovement:jumping()
     end
 end
 
-function EntityMovement:moving()
+function EntityControls:moving()
     if love.keyboard.isDown(self.keymap.jump) then
         self.entity:changeState('jumping')
     

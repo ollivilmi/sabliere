@@ -2,6 +2,9 @@ require 'src/network/state/tilemap/Tilemap'
 require 'src/network/state/entity/projectile/Bullet'
 require 'src/network/state/entity/Projectiles'
 
+require 'src/client/states/play/entity/AnimatedEntity'
+local models = require 'src/client/states/play/entity/models/playerModels'
+
 Level = Class{}
 
 function Level:init()
@@ -12,6 +15,7 @@ function Level:init()
 end
 
 function Level:loadAssets()
+    if not love then return end
     self.tilemap:loadTextures()
 end
 
@@ -63,4 +67,15 @@ function Level:setSnapshot(snapshot)
     end
 
     local chunk = self.tilemap:setChunk(snapshot.chunk)
+end
+
+function Level:animatePlayers()
+    if not love then return end
+
+    for id, entity in pairs(self.players) do
+        -- Check to see that the Entity is not already animated
+        if not entity.animated then
+            self.players[id] = AnimatedEntity(entity, models[entity.model]())
+        end
+    end
 end

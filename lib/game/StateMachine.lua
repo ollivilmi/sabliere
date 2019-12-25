@@ -12,19 +12,23 @@ function StateMachine:init(states)
 	self.states = states or {} -- [name] -> [function that returns states]
 	self.current = self.empty
 	self.listeners = {}
+	self.state = ''
 end
 
-function StateMachine:addListener(listener)
-	table.insert(self.listeners, listener)
+function StateMachine:addListener(listener, callback)
+	table.insert(self.listeners, callback)
 end
 
-function StateMachine:changeState(stateName, enterParams)
-	self.current:exit()
-	self.current = self.states[stateName]
-	self.current:enter(enterParams)
+function StateMachine:changeState(newState, enterParams)
+	if self.state ~= newState then
+		self.current:exit()
+		self.current = self.states[newState]
+		self.current:enter(enterParams)
+		self.state = newState
 
-	for k, listener in pairs(self.listeners) do
-		listener:onStateChange(stateName)
+		for k, callback in pairs(self.listeners) do
+			callback(newState)
+		end
 	end
 end
 
