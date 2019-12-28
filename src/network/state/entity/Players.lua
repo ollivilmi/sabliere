@@ -10,13 +10,27 @@ function Players:init(level)
     self.level = level
 end
 
-function Players:setEntity(id, state)
+function Players:createEntity(id, state)
     self.players[id] = Entity(state, self.level)
+    return self.players[id]
 end
 
-function Players:setAnimatedEntity(id, state)
+function Players:createAnimatedEntity(id, state)
     local entity = Entity(state, self.level)
     self.players[id] = AnimatedEntity(entity, models[entity.model]())
+    return self.players[id]
+end
+
+function Players:getEntity(id)
+    return self.players[id]
+end
+
+function Players:setEntity(id, entity)
+    self.players[id] = entity
+end
+
+function Players:removeEntity(id)
+    self.players[id] = nil
 end
 
 function Players:updateState(id, state)
@@ -30,18 +44,6 @@ function Players:updateState(id, state)
             player:updateState(state)
         end
     end
-end
-
-function Players:get(id)
-    return self.players[id]
-end
-
-function Players:set(id, entity)
-    self.players[id] = entity
-end
-
-function Players:disconnect(id)
-    self.players[id] = nil
 end
 
 function Players:getSnapshot()
@@ -58,6 +60,16 @@ function Players:setSnapshot(players)
     for id, player in pairs(players) do
         self.players[id] = Entity(player, self.level)
     end
+end
+
+function Players:getUpdates()
+    local players = {}
+
+    for id, player in pairs(self.players) do
+        players[id] = player:getUpdates()
+    end
+
+    return players
 end
 
 function Players:collision(collider)

@@ -43,7 +43,7 @@ function Entity:getLocation()
     return {x = self.x, y = self.y}
 end
 
---  to pass state between client and server
+--  to pass all state between client and server
 function Entity:getState()
     return {
         x = self.x,
@@ -55,6 +55,20 @@ function Entity:getState()
         speed = self.speed,
         direction = self.direction,
         weight = self.weight,
+        health = self.health,
+        resources = self.resources,
+        state = self.state,
+        model = self.model
+    }
+end
+
+-- to pass parameters that change rapidly
+function Entity:getUpdates()
+    return {
+        x = self.x,
+        y = self.y,
+        dy = self.dy,
+        dx = self.dx,
         health = self.health,
         resources = self.resources,
         state = self.state

@@ -1,3 +1,0 @@
-local Player = {}
-
-return Player

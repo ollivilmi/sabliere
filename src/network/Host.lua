@@ -1,56 +1,43 @@
 require 'src/network/Connection'
 require 'src/network/Data'
+require 'src/network/updates/ServerUpdates'
 
 Host = Class{__includes = Connection}
 
 function Host:init(def)
     Connection:init(self, def)
 	self.udp:setsockname(def.interface or '*', def.port or 12345)
-    self.requests = require "src/network/server/Requests"
+	
+	self.requests = require "src/network/server/Requests"
+	self.receiveFunction = self.udp.receivefrom
 
-	-- code brevity
-	self.clients = self.state.client
+	-- [id] = ip, port
+	self.clients = {}
+    self.updates = ServerUpdates()
 end
 
 function Host:send(data, ip, port)
-	local msg = self.encode(data)
-
-	self.udp:sendto(msg, ip, port)
+	self.udp:sendto(data:encode(), ip, port)
 end
 
-function Host:sendToClient(data, clientId)
-	local client = self.state.client[clientId]
+function Host:sendToClient(clientId, data)
+	local client = self.clients[clientId]
 
 	self:send(data, client.ip, client.port)
 end
 
-function Host:receive()
-	while true do
-		local data, msg_or_ip, port = self.udp:receivefrom()
-		if data then
-			self:handleRequest(data, msg_or_ip, port)
-		elseif msg_or_ip ~= 'timeout' then 
-			error("Network error: "..tostring(msg))
-		else
-			break
-		end
-	end
-end
-
 function Host:update()
-	for id, client in pairs(self.clients) do
-		for entityId, entity in pairs(self.entityUpdates) do
-			self:send(Data(entityId, 'update', entity:getState()), client.ip, client.port)
+	for clientId, client in pairs(self.clients) do
+		for _, data in pairs(self.updates:getUpdates()) do
+			self:send(data, client.ip, client.port)
+		end
+
+		for _, data in pairs(self.updates:getUpdatesForClient(clientId)) do
+			self:send(data, client.ip, client.port)
 		end
 	end
 
-	for id, client in pairs(self.clients) do
-		for _, update in pairs(self.updates) do
-			self:send(update, client.ip, client.port)
-		end
-	end
-
-	self.updates = {}
+	self.updates:clearEvents()
 end
 
 function Host:tick()
@@ -58,25 +45,12 @@ function Host:tick()
 	self:update()
 end
 
-function Host:addPlayer(clientId, player, ip, port)
-	local players = self.state.level.players
-
-	players:setEntity(clientId, player)
-
-	local player = players:get(clientId)
-	
-    self.state.client[clientId] = {ip = ip, port = port}
-	self.entityUpdates[clientId] = player
-	
-    -- Send update of new player to all clients
-    self:pushUpdate(Data(clientId, 'connect', player:getState()))
+function Host:addClient(clientId, ip, port)
+    self.clients[clientId] = {ip = ip, port = port}
+	self.updates:addClient(clientId)
 end
 
-function Host:removePlayer(clientId)
-    self.state.level.players:disconnect(clientId)
-    self.state.client[clientId] = nil
-	self.entityUpdates[clientId] = nil
-	
-	-- Push update to all users to remove entity
-	self:pushUpdate(Data(clientId, 'disconnect', nil))
+function Host:removeClient(clientId)
+	self.clients[clientId] = nil
+	self.updates:removeClient(clientId)
 end

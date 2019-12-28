@@ -1,6 +1,4 @@
 require "src/network/state/GameState"
-local json = require 'lib/language/json'
-local lzw = require 'lib/language/lzw'
 
 Connection = Class{}
 
@@ -12,50 +10,40 @@ Connection = Class{}
 --
 -- Remainders: optional parameters for the command (JSON)
 function Connection:init(self, def)
-    self.requests = nil
     self.state = GameState(self)
     self.tickrate = def.tickrate or 0.05
-
+    
 	self.socket = require "socket"
     self.udp = self.socket.udp()
+    self.udp:settimeout(0)
     
-    -- updates contains all the state updates from
-    -- previous tick, eg. bullet spawned
-	-- 
-	-- the table should then be cleared for next tick
-    self.updates = {}
-    -- entityUpdates is a list of entities that need to update
-    -- their current state to the host every tick
-    self.entityUpdates = {}
-	
-	self.udp:settimeout(0)
+    -- configure in child class
+    self.updates = nil
+    self.requests = nil
+    self.receiveFunction = nil
 end
 
-function Connection.encode(data)
-    local payload = data.parameters or '{}'
-
-    payload = lzw.compress(json.encode(payload))
-
-    return string.format("%s %s %s", data.client, data.request, payload)
+function Connection:isDuplexRequest(data)
+    return data.headers.duplex and data.headers.request ~= 'ACK'
 end
 
-function Connection.decode(data)
-    local client, command, payload = data:match('^(%S*) (%S*) (.*)')
+function Connection:handleRequest(dataString, ip, port)
+    if dataString then
+        local decoded, data = pcall(Data.decode, dataString)
+        
+        if decoded then
+            if self:isDuplexRequest(data) then
+                self.updates:sendACK(data)
+            end
 
-    local parameters = lzw.decompress(payload)
+            local requestHandler = self.requests[data.headers.request]
 
-    parameters = json.decode(parameters)
-
-    return Data(client, command, parameters)
-end
-
-function Connection:handleRequest(data, ip, port)
-    if data then
-        local message = self.decode(data)
-        local request = self.requests[message.request]
-
-        if request then
-            request(message, self, ip, port)
+            if requestHandler then
+                requestHandler(data, self, ip, port)
+            end
+        else
+            -- add packet loss statistics here?
+            print(data)
         end
     end
 end
@@ -64,6 +52,16 @@ function Connection:close()
     self.udp:close()
 end
 
-function Connection:pushUpdate(data)
-	table.insert(self.updates, data)
+function Connection:receive()
+    while true do
+        local data, msg_or_ip, port = self.receiveFunction(self.udp)
+        if data then
+            self:handleRequest(data, msg_or_ip, port)
+        elseif msg_or_ip ~= 'timeout' then 
+            error("Network error: "..tostring(msg))
+        else
+            break
+        end
+    end
 end
+

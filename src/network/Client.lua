@@ -1,4 +1,5 @@
 require 'src/network/Connection'
+require 'src/network/updates/ClientUpdates'
 
 Client = Class{__includes = Connection}
 
@@ -7,54 +8,49 @@ function Client:init(def)
 
     self.host = def.address or "127.0.0.1"
     self.port = def.port or 12345
-    
-    self.requests = require 'src/network/client/Requests'
-    self.t = 0
-    
     self.udp:setpeername(self.host, self.port)
     
+    self.requests = require 'src/network/client/Requests'
+    self.receiveFunction = self.udp.receive
+
+    self.t = 0
     self.id = tostring(math.random(99999))
+
+    -- For duplex communication queue
+    self.updates = ClientUpdates(self.id)
+end
+
+function Client:send(data)
+    self.udp:send(data:encode())
 end
 
 function Client:connect()
-    local msg = self.encode(Data(self.id, 'connect', nil))
-
-    self.udp:send(msg)
+    -- todo: duplex
+    self:send(Data({
+        clientId = self.id,
+        request = 'connect'
+    }))
 end
 
 function Client:disconnect()
-    local msg = self.encode(Data(self.id, 'quit', nil))
-
-    self.udp:send(msg)
+    self:send(Data({
+        clientId = self.id,
+        request = 'quit'
+    }))
 end
 
 function Client:update(dt)
     self.t = self.t + dt
 
     if self.t > self.tickrate then
-        for id, entity in pairs(self.entityUpdates) do
-            self.udp:send(
-                self.encode(Data(id, 'update', entity:getState()))
-            )
+        for _, data in pairs(self.updates:clientUpdates()) do
+            self:send(data)
         end
 
-        for _, update in pairs(self.updates) do
-            self.udp:send(self.encode(update))
-        end
-
-        self.updates = {}
+        self.updates:clearEvents()
 
         self.t = self.t - self.tickrate
     end
     
-    while true do
-        local data, msg = self.udp:receive()
-        if data then
-            self:handleRequest(data)
-        elseif msg ~= 'timeout' then 
-            error("Network error: "..tostring(msg))
-        else
-            break
-        end
-    end
+    self:receive()
 end

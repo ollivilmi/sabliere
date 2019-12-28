@@ -1,5 +1,3 @@
-local Get = {
-    player = require "src/network/client/request/get/Player"
-}
+local Get = {}
 
 return Get

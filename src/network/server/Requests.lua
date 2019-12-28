@@ -7,7 +7,8 @@ local Requests = {
     connect = post.player.connect,
     move = post.player.move,
     quit = post.player.quit,
-    update = post.player.update
+    update = post.player.update,
+    ACK = post.duplex.acknowledge,
 }
 
 return Requests

@@ -20,6 +20,7 @@ local fiveseconds = host.socket.gettime()
 
 while running do
     host:tick()
+
     host.socket.sleep(tickrate)
     
     -- update game state by delta time
