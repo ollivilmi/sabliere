@@ -1,3 +1,0 @@
-local Get = {}
-
-return Get

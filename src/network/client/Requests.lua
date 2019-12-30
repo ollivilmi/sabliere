@@ -1,19 +1,18 @@
-local get = require "src/network/client/request/Get"
-local post = require "src/network/client/request/Post"
+local duplex = require "src/network/client/request/DuplexIndex"
+local update = require "src/network/client/request/UpdateIndex"
 
 -- Requests are basically like an API call, client asks the server
 -- to get or post some information
 local Requests = {
-    -- duplex communication
-    ACK = post.duplex.acknowledge,
-    connect = post.duplex.connect,
-    -- player
-    connectPlayer = post.player.connect,
-    update = post.player.update,
-    disconnect = post.player.disconnect,
-    -- level
-    snapshot = post.snapshot.set,
-    chunk = post.tilemap.chunk,
+    ACK = duplex.protocol.acknowledge,
+    connect = duplex.protocol.connect,
+
+    connectPlayer = update.player.connect,
+    updatePlayer = update.player.update,
+    quitPlayer = update.player.disconnect,
+
+    snapshot = duplex.snapshot.set,
+    chunk = duplex.tilemap.chunk,
 }
 
 return Requests

@@ -3,26 +3,26 @@ require 'src/client/states/play/entity/AnimatedEntity'
 
 local models = require 'src/client/states/play/entity/models/playerModels'
 
-local PostPlayer = {}
+local PlayerUpdate = {}
 
-function PostPlayer.connect(data, client)
+function PlayerUpdate.connect(data, client)
     if (data.headers.clientId ~= client.id) then
         client.state.level.players:createEntity(data.headers.clientId, data.payload)
     end
 end
 
-function PostPlayer.clientId(data, client)
+function PlayerUpdate.clientId(data, client)
     client:setConnected(data.payload.clientId)
 end
 
-function PostPlayer.update(data, client)
+function PlayerUpdate.update(data, client)
     if (data.headers.entityId ~= client.id) then
         client.state.level.players:updateState(data.headers.entityId, data.payload)
     end
 end
 
-function PostPlayer.disconnect(data, client)
+function PlayerUpdate.disconnect(data, client)
     client.state.level.players:removeEntity(data.headers.clientId)
 end
 
-return PostPlayer
+return PlayerUpdate

@@ -37,7 +37,7 @@ end
 --     connectClient(client, host, player)
 
 --     table.insert(client.inputs,
---         Data(client.id, 'update', {x = 310, y = 240}))
+--         Data(client.id, 'updatePlayer', {x = 310, y = 240}))
 
 --     nextTick(client, host)
 --     nextTick(client, host)

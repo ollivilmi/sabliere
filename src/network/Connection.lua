@@ -3,13 +3,6 @@ require 'lib/language/Listener'
 
 Connection = Class{__includes = Listener}
 
--- Every message must be in this format to parse, delimited by spaces
-
--- First two variables are strings
--- 
--- String 1: client ID   String 2: command
---
--- Remainders: optional parameters for the command (JSON)
 function Connection:init(self, def)
     Listener:init(self)
     self.state = GameState(self)

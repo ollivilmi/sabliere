@@ -47,7 +47,7 @@ function Client:setConnected(clientId)
 end
 
 function Client:disconnect()
-    self:send(Data{clientId = self.id, request = 'quit'})
+    self:send(Data{clientId = self.id, request = 'quitPlayer'})
 end
 
 function Client:sendUpdates()

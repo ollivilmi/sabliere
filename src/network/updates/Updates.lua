@@ -25,7 +25,7 @@ function Updates:entityData()
         table.insert(entityData,
             Data({
                 entityId = entityId,
-                request = 'update'
+                request = 'updatePlayer'
             }, entity:getUpdates())
         )
     end

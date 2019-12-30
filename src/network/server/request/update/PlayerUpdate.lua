@@ -1,12 +1,12 @@
 require 'src/network/state/entity/Entity'
 
-local PostPlayer = {}
+local PlayerUpdates = {}
 
-function PostPlayer.update(data, host)
+function PlayerUpdates.update(data, host)
     host.state.level.players:updateState(data.headers.entityId, data.payload)
 end
 
-function PostPlayer.connect(data, host, ip, port)
+function PlayerUpdates.connect(data, host, ip, port)
     local clientId = data.headers.clientId
     print("New player connected: " .. clientId)
     local player = host.state.level.players:createEntity(clientId, {x = 700, y = 0, height = 100, width = 50})
@@ -24,7 +24,7 @@ function PostPlayer.connect(data, host, ip, port)
     }, player:getState()))
 end
 
-function PostPlayer.quit(data, host)
+function PlayerUpdates.quit(data, host)
     local clientId = data.headers.clientId
     print("Player disconnected: " .. clientId)
 
@@ -34,8 +34,8 @@ function PostPlayer.quit(data, host)
     -- Push update to all users to remove entity
 	host.updates:pushEvent(Data({
 		clientId = clientId,
-		request = 'disconnect'
+		request = 'quitPlayer'
 	}))
 end
 
-return PostPlayer
+return PlayerUpdates
