@@ -5,14 +5,13 @@ function AnimatedEntity:init(entity, model)
     self.model = model
     self.model:changeState(self.entity.state)
 
-    self.entity.movementState:addListener(self, function(newState)
+    self.entity.movementState:addListener('STATE CHANGED', function(newState)
         self.model:changeState(newState)
     end)
     self.animated = true
 end
 
 function AnimatedEntity:update(dt)
-    self.entity:update(dt)
     self.model:update(dt)
 end
 

@@ -1,6 +1,7 @@
 require "src/network/state/GameState"
+require 'lib/language/Listener'
 
-Connection = Class{}
+Connection = Class{__includes = Listener}
 
 -- Every message must be in this format to parse, delimited by spaces
 
@@ -10,6 +11,7 @@ Connection = Class{}
 --
 -- Remainders: optional parameters for the command (JSON)
 function Connection:init(self, def)
+    Listener:init(self)
     self.state = GameState(self)
     self.tickrate = def.tickrate or 0.05
     
@@ -17,10 +19,26 @@ function Connection:init(self, def)
     self.udp = self.socket.udp()
     self.udp:settimeout(0)
     
+    self.t = 0
+
     -- configure in child class
     self.updates = nil
     self.requests = nil
     self.receiveFunction = nil
+end
+
+function Connection:update(dt)
+	self.t = self.t + dt
+
+	if self.t > self.tickrate then
+		self:sendUpdates()
+
+		self.t = self.t - self.tickrate
+		self.updates:clearEvents()
+	end
+
+	self.state:update(dt)
+	self:receive()
 end
 
 function Connection:isDuplexRequest(data)

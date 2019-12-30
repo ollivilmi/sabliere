@@ -3,10 +3,15 @@ require 'src/network/updates/DuplexQueue'
 
 ClientUpdates = Class{__includes = Updates}
 
-function ClientUpdates:init(clientId)
+function ClientUpdates:init()
     Updates:init(self)
 
     -- updates that require confirmation and must be sent in order
+    -- requires clientId to work
+    self.duplexQueue = DuplexQueue()
+end
+
+function ClientUpdates:setClientId(clientId)
     self.duplexQueue = DuplexQueue(clientId)
 end
 

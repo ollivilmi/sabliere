@@ -10,4 +10,8 @@ function Duplex.acknowledge(data, client)
     end
 end
 
+function Duplex.connect(data, client)
+    client:setConnected(data.payload.clientId)
+end
+
 return Duplex

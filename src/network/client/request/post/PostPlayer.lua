@@ -7,8 +7,12 @@ local PostPlayer = {}
 
 function PostPlayer.connect(data, client)
     if (data.headers.clientId ~= client.id) then
-        client.state.level.players:createAnimatedEntity(data.headers.clientId, data.payload)
+        client.state.level.players:createEntity(data.headers.clientId, data.payload)
     end
+end
+
+function PostPlayer.clientId(data, client)
+    client:setConnected(data.payload.clientId)
 end
 
 function PostPlayer.update(data, client)

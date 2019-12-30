@@ -1,8 +1,10 @@
 require 'lib/game/State'
+require 'lib/language/Listener'
 
-StateMachine = Class{}
+StateMachine = Class{__includes = Listener}
 
 function StateMachine:init(states)
+	Listener:init(self)
 	self.empty = {
 		render = function() end,
 		update = function() end,
@@ -11,24 +13,18 @@ function StateMachine:init(states)
 	}
 	self.states = states or {} -- [name] -> [function that returns states]
 	self.current = self.empty
-	self.listeners = {}
 	self.state = ''
-end
-
-function StateMachine:addListener(listener, callback)
-	table.insert(self.listeners, callback)
 end
 
 function StateMachine:changeState(newState, enterParams)
 	if self.state ~= newState then
+
 		self.current:exit()
 		self.current = self.states[newState]
 		self.current:enter(enterParams)
 		self.state = newState
 
-		for k, callback in pairs(self.listeners) do
-			callback(newState)
-		end
+		self:broadcastEvent('STATE CHANGED', newState)
 	end
 end
 

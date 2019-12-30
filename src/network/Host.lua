@@ -13,7 +13,9 @@ function Host:init(def)
 
 	-- [id] = ip, port
 	self.clients = {}
-    self.updates = ServerUpdates()
+	self.updates = ServerUpdates()
+	
+	self.t = 0
 end
 
 function Host:send(data, ip, port)
@@ -26,7 +28,7 @@ function Host:sendToClient(clientId, data)
 	self:send(data, client.ip, client.port)
 end
 
-function Host:update()
+function Host:sendUpdates()
 	for clientId, client in pairs(self.clients) do
 		for _, data in pairs(self.updates:getUpdates()) do
 			self:send(data, client.ip, client.port)
@@ -36,13 +38,6 @@ function Host:update()
 			self:send(data, client.ip, client.port)
 		end
 	end
-
-	self.updates:clearEvents()
-end
-
-function Host:tick()
-	self:receive()
-	self:update()
 end
 
 function Host:addClient(clientId, ip, port)

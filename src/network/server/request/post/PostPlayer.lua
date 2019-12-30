@@ -9,20 +9,19 @@ end
 function PostPlayer.connect(data, host, ip, port)
     local clientId = data.headers.clientId
     print("New player connected: " .. clientId)
-
     local player = host.state.level.players:createEntity(clientId, {x = 700, y = 0, height = 100, width = 50})
 
-    host:addClient(clientId, ip, port)
     host.updates:pushEntity(clientId, player)
     
+    -- Send state snapshot to connecting player
+    host.updates:pushDuplex(clientId, Data({request = 'snapshot'}, host.state:getSnapshot()))
+
     -- Add update of new player for all clients
+    -- Todo: duplex
     host.updates:pushEvent(Data({
         clientId = clientId,
-        request = 'connect'
+        request = 'connectPlayer'
     }, player:getState()))
-
-    -- Send state snapshot to connected player
-    host.updates:pushDuplex(clientId, Data({request = 'snapshot'}, host.state:getSnapshot()))
 end
 
 function PostPlayer.quit(data, host)

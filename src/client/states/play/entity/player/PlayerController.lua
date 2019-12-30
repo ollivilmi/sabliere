@@ -3,20 +3,15 @@ require 'src/client/states/play/entity/AnimatedEntity'
 require 'src/client/states/play/entity/player/input/EntityControls'
 
 -- Basically a wrapper to control Entity and follow it with camera
-PlayerEntity = Class{}
+PlayerController = Class{}
 
-function PlayerEntity:init(animatedEntity, keymap)
-    self.entity = animatedEntity.entity
-    self.animatedEntity = animatedEntity
-    
-    self.movementControls = EntityControls(keymap.move, animatedEntity.entity)
+function PlayerController:init(entity, keymap)
+    self.movementControls = EntityControls(keymap.move, entity)
     -- self.interface = interface
     self.canShoot = true
-
-    self.entity.level.camera:follow(self.entity)
 end
 
-function PlayerEntity:input()
+function PlayerController:input()
     self.movementControls:update()
 
     -- if love.keyboard.isDown(self.keymap.ability.shoot) then
@@ -31,11 +26,6 @@ function PlayerEntity:input()
     -- end
 end
 
-function PlayerEntity:update(dt)
-    self.animatedEntity:update(dt)
+function PlayerController:update(dt)
     self:input()
-end
-
-function PlayerEntity:render()
-    self.animatedEntity:render()
 end

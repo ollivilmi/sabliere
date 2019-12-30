@@ -6,17 +6,15 @@ require "src/test/network/setup"
 
 function testConnect()
     local client, host = setupClientAndHost()
-    local player = {x = 100, y = 100, width = 100, height = 100}
 
-    client:connect(player)
+    client:connect()
     host:receive()
 
     -- Player is added to state
-    assert(host.state.level.players[client.id].x == player.x)
-    assert(host.state.level.players[client.id].y == player.y)
+    assert(host.state.level.players:getEntity(client.id))
 
-    -- Client is added to state
-    assert(host.state.client[client.id])
+    -- Client is added to host
+    assert(host.clients[client.id])
 
     -- Send out update to clients
     host:update()

@@ -166,23 +166,3 @@ function Tilemap:expand(x,y)
         self.width = x
     end
 end
-
-function Tilemap:loadTextures()
-    for k, tile in pairs(self.types) do
-        tile.texture = love.graphics.newImage(tile.texture)
-        tile.scale = self.tileSize / tile.texture:getWidth()
-    end
-end
-
-function Tilemap:render()
-    for y = 1, self.height do
-        for x = 1, self.width do
-
-            local tile = self.tiles[y][x]
-
-            if tile.type then
-                tile:render()
-            end
-        end
-    end
-end

@@ -1,3 +1,5 @@
+require 'lib/language/table'
+
 Updates = Class{}
 
 function Updates:init(self)

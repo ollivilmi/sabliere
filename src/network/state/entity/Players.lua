@@ -1,23 +1,23 @@
+require 'lib/language/Listener'
+
 require 'src/network/state/entity/Entity'
 require 'src/client/states/play/entity/AnimatedEntity'
+
 local models = require 'src/client/states/play/entity/models/playerModels'
 local json = require 'lib/language/json'
 
-Players = Class{}
+Players = Class{__includes = Listener}
 
 function Players:init(level)
+    Listener:init(self)
     self.players = {}
     self.level = level
 end
 
 function Players:createEntity(id, state)
     self.players[id] = Entity(state, self.level)
-    return self.players[id]
-end
+    self:broadcastEvent('NEW PLAYER', id)
 
-function Players:createAnimatedEntity(id, state)
-    local entity = Entity(state, self.level)
-    self.players[id] = AnimatedEntity(entity, models[entity.model]())
     return self.players[id]
 end
 
@@ -25,12 +25,9 @@ function Players:getEntity(id)
     return self.players[id]
 end
 
-function Players:setEntity(id, entity)
-    self.players[id] = entity
-end
-
 function Players:removeEntity(id)
     self.players[id] = nil
+    self:broadcastEvent('PLAYER REMOVED', id)
 end
 
 function Players:updateState(id, state)
@@ -38,11 +35,7 @@ function Players:updateState(id, state)
     local player = self.players[id]
 
     if player then
-        if player.animated then
-            player.entity:updateState(state)
-        else
-            player:updateState(state)
-        end
+        player:updateState(state)
     end
 end
 
@@ -57,8 +50,8 @@ function Players:getSnapshot()
 end
 
 function Players:setSnapshot(players)
-    for id, player in pairs(players) do
-        self.players[id] = Entity(player, self.level)
+    for id, playerState in pairs(players) do
+        self:createEntity(id, playerState)
     end
 end
 
@@ -83,23 +76,6 @@ end
 function Players:update(dt)
     for id, player in pairs(self.players) do
         player:update(dt)
-    end
-end
-
-function Players:animate()
-    if not love then return end
-
-    for id, entity in pairs(self.players) do
-        -- Check to see that the Entity is not already animated
-        if not entity.animated then
-            self.players[id] = AnimatedEntity(entity, models[entity.model]())
-        end
-    end
-end
-
-function Players:render()
-    for id, player in pairs(self.players) do
-        player:render()
     end
 end
 

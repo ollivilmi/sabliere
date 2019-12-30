@@ -14,10 +14,12 @@ function Client:init(def)
     self.receiveFunction = self.udp.receive
 
     self.t = 0
-    self.id = tostring(math.random(99999))
+    self.id = nil
 
     -- For duplex communication queue
-    self.updates = ClientUpdates(self.id)
+    self.updates = ClientUpdates()
+
+    self.connecting = false
 end
 
 function Client:send(data)
@@ -25,32 +27,31 @@ function Client:send(data)
 end
 
 function Client:connect()
-    -- todo: duplex
-    self:send(Data({
-        clientId = self.id,
-        request = 'connect'
-    }))
+    self.connecting = true
+
+    return coroutine.create(function()
+        while self.connecting do
+            self:send(Data{request = 'connect'})
+            coroutine.yield()
+        end
+    
+        self.updates:pushDuplex(Data{request = 'connectPlayer'})
+    end)
+end
+
+-- Receive clientId from server
+function Client:setConnected(clientId)
+    self.connecting = false
+    self.id = clientId
+    self.updates:setClientId(clientId)
 end
 
 function Client:disconnect()
-    self:send(Data({
-        clientId = self.id,
-        request = 'quit'
-    }))
+    self:send(Data{clientId = self.id, request = 'quit'})
 end
 
-function Client:update(dt)
-    self.t = self.t + dt
-
-    if self.t > self.tickrate then
-        for _, data in pairs(self.updates:clientUpdates()) do
-            self:send(data)
-        end
-
-        self.updates:clearEvents()
-
-        self.t = self.t - self.tickrate
+function Client:sendUpdates()
+    for _, data in pairs(self.updates:clientUpdates()) do
+        self:send(data)
     end
-    
-    self:receive()
 end
