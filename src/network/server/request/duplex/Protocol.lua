@@ -13,9 +13,9 @@ function Duplex.acknowledge(data, host)
 end
 
 function Duplex.connect(data, host, ip, port)
-    local clientId = tostring(math.random(99999))
-    host:addClient(clientId, ip, port)
+    local clientId = ip .. ":" .. port
 
+    host:addClient(clientId, ip, port)
     host:sendToClient(clientId, Data({request = 'connect'}, {clientId = clientId}))
 end
 

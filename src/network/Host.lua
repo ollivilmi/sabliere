@@ -18,6 +18,12 @@ function Host:init(def)
 	self.t = 0
 end
 
+function Host:validClientId(clientId)
+	if clientId == nil then return true end
+
+	return self.clients[clientId] ~= nil
+end
+
 function Host:send(data, ip, port)
 	self.udp:sendto(data:encode(), ip, port)
 end

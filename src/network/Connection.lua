@@ -42,7 +42,7 @@ function Connection:handleRequest(dataString, ip, port)
     if dataString then
         local decoded, data = pcall(Data.decode, dataString)
         
-        if decoded then
+        if decoded and self:validClientId(data.headers.clientId) then
             if self:isDuplexRequest(data) then
                 self.updates:sendACK(data)
             end
@@ -54,7 +54,7 @@ function Connection:handleRequest(dataString, ip, port)
             end
         else
             -- add packet loss statistics here?
-            print(data)
+            print(data:toString())
         end
     end
 end

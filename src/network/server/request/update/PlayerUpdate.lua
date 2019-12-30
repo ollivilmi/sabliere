@@ -19,7 +19,7 @@ function PlayerUpdates.connect(data, host, ip, port)
     -- Add update of new player for all clients
     -- Todo: duplex
     host.updates:pushEvent(Data({
-        clientId = clientId,
+        entityId = clientId,
         request = 'connectPlayer'
     }, player:getState()))
 end

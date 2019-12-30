@@ -22,6 +22,12 @@ function Client:init(def)
     self.connecting = false
 end
 
+function Client:validClientId(clientId)
+	if clientId == nil then return true end
+
+	return self.id == clientId
+end
+
 function Client:send(data)
     self.udp:send(data:encode())
 end

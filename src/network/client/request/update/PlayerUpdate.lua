@@ -6,8 +6,8 @@ local models = require 'src/client/states/play/entity/models/playerModels'
 local PlayerUpdate = {}
 
 function PlayerUpdate.connect(data, client)
-    if (data.headers.clientId ~= client.id) then
-        client.state.level.players:createEntity(data.headers.clientId, data.payload)
+    if (data.headers.entityId ~= client.id) then
+        client.state.level.players:createEntity(data.headers.entityId, data.payload)
     end
 end
 
