@@ -6,6 +6,8 @@ require 'src/network/state/entity/movement/MovingState'
 
 require 'src/network/state/entity/EntityPhysics'
 
+local Timer = require 'lib/game/love-utils/knife/timer'
+
 Entity = Class{__includes = EntityPhysics}
 
 -- Entities are rectangular objects which implement physics
@@ -83,6 +85,12 @@ function Entity:updateState(state)
     self:changeState(self.state)
 end
 
+function Entity:tween(time, state)
+    Timer.tween(time, {
+        [self] = { x = state.x, y = state.y}
+    })
+end
+
 function Entity:setState(state)
     self.x = state.x
     self.y = state.y
@@ -99,9 +107,4 @@ function Entity:setState(state)
     self.model = state.model or 'dude'
 
     self:changeState(self.state)
-end
-
-function Entity:render()
-    love.graphics.setColor(1,1,1)
-    love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
 end

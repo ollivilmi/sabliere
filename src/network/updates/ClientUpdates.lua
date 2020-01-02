@@ -3,16 +3,20 @@ require 'src/network/updates/DuplexQueue'
 
 ClientUpdates = Class{__includes = Updates}
 
-function ClientUpdates:init()
+function ClientUpdates:init(client)
     Updates:init(self)
 
     -- updates that require confirmation and must be sent in order
     -- requires clientId to work
     self.duplexQueue = DuplexQueue()
-end
 
-function ClientUpdates:setClientId(clientId)
-    self.duplexQueue = DuplexQueue(clientId)
+    client:addListener('CONNECTED', function(clientId)
+        self.duplexQueue = DuplexQueue(clientId)
+    end)
+
+    client:addListener('DISCONNECTED', function()
+        self.duplexQueue = DuplexQueue()
+    end)
 end
 
 function ClientUpdates:pushDuplex(data)

@@ -11,8 +11,9 @@ function Connection:init(self, def)
 	self.socket = require "socket"
     self.udp = self.socket.udp()
     self.udp:settimeout(0)
-    
-    self.t = 0
+
+    self.timeout = def.timeout or 1
+    self.tickrateTimer = 0
 
     -- configure in child class
     self.updates = nil
@@ -21,21 +22,24 @@ function Connection:init(self, def)
 end
 
 function Connection:update(dt)
-	self.t = self.t + dt
+	self:receive()
 
-	if self.t > self.tickrate then
-		self:sendUpdates()
+    self.tickrateTimer = self.tickrateTimer + dt
+    
+    self:checkTimeout(dt)
 
-		self.t = self.t - self.tickrate
+	if self.tickrateTimer > self.tickrate then
+		self:sendUpdates(dt)
+
+		self.tickrateTimer = self.tickrateTimer - self.tickrate
 		self.updates:clearEvents()
 	end
 
 	self.state:update(dt)
-	self:receive()
 end
 
 function Connection:isDuplexRequest(data)
-    return data.headers.duplex and data.headers.request ~= 'ACK'
+    return data.headers.duplex and data.headers.clientId and data.headers.request ~= 'ACK'
 end
 
 function Connection:handleRequest(dataString, ip, port)
@@ -50,7 +54,11 @@ function Connection:handleRequest(dataString, ip, port)
             local requestHandler = self.requests[data.headers.request]
 
             if requestHandler then
-                requestHandler(data, self, ip, port)
+                success, error = pcall(requestHandler, data, self, ip, port)
+
+                if not success then
+                    print(error)
+                end
             end
         else
             -- add packet loss statistics here?

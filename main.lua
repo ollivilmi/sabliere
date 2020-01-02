@@ -27,11 +27,12 @@ end
 
 function love.update(dt)
     if love.keyboard.wasPressed('escape') then
-        game.client:disconnect()
+        game.client:setDisconnected()
         love.event.quit()
     end
 
     lovebird.update()
+    Timer.update(dt)
 
     game:update(dt)
 end

@@ -14,13 +14,16 @@ function Game:init(client)
         play = PlayState(self),
         loading = LoadingState(self)
     }
-    -- todo settings..
+
+    self.client:addListener('CONNECTION TIMED OUT', function()
+        self.state:changeState('loading', self.client:connect())
+    end)
 end
 
 function Game:update(dt)
     self.client:update(dt)
     self.state:update(dt)
-
+    
     self.settings.input.clear()
 end
 

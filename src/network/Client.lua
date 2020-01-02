@@ -1,4 +1,5 @@
 require 'src/network/Connection'
+require 'src/network/ClientStatus'
 require 'src/network/updates/ClientUpdates'
 
 Client = Class{__includes = Connection}
@@ -13,51 +14,62 @@ function Client:init(def)
     self.requests = require 'src/network/client/Requests'
     self.receiveFunction = self.udp.receive
 
-    self.t = 0
-    self.id = nil
+    -- ping, connected, connecting...
+    self.status = ClientStatus(self)
+
+    -- add to game state for easy access to client status
+    self.state.connectionStatus = self.status
 
     -- For duplex communication queue
-    self.updates = ClientUpdates()
-
-    self.connecting = false
+    self.updates = ClientUpdates(self)
 end
 
 function Client:validClientId(clientId)
 	if clientId == nil then return true end
 
-	return self.id == clientId
+	return self.status.id == clientId
 end
 
 function Client:send(data)
+    data.headers.clientId = self.status.id
     self.udp:send(data:encode())
 end
 
 function Client:connect()
-    self.connecting = true
+    self.status.connecting = true
 
     return coroutine.create(function()
-        while self.connecting do
+        while self.status.connecting do
             self:send(Data{request = 'connect'})
             coroutine.yield()
         end
-    
-        self.updates:pushDuplex(Data{request = 'connectPlayer'})
     end)
 end
 
--- Receive clientId from server
 function Client:setConnected(clientId)
-    self.connecting = false
-    self.id = clientId
-    self.updates:setClientId(clientId)
+    self.status:setConnected(clientId)
+    self:broadcastEvent('CONNECTED', clientId)
 end
 
-function Client:disconnect()
-    self:send(Data{clientId = self.id, request = 'quitPlayer'})
+function Client:setDisconnected()
+    self.status:setDisconnected()
+    self:broadcastEvent('DISCONNECTED')
 end
 
 function Client:sendUpdates()
-    for _, data in pairs(self.updates:clientUpdates()) do
-        self:send(data)
+    if self.status.connected then
+        for _, data in pairs(self.updates:clientUpdates()) do
+            self:send(data)
+        end
+
+        -- Could be combined with playerUpdates for performance
+        self:send(Data({request = 'ping'}, {sentTime = self.socket.gettime()}))
+    end
+end
+
+function Client:checkTimeout(dt)
+    if self.status:isTimedOut(dt) then
+        self:setDisconnected()
+        self:broadcastEvent('CONNECTION TIMED OUT')
     end
 end

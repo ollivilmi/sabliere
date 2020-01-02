@@ -30,15 +30,6 @@ function Players:removeEntity(id)
     self:broadcastEvent('PLAYER REMOVED', id)
 end
 
-function Players:updateState(id, state)
-    -- todo interpolate
-    local player = self.players[id]
-
-    if player then
-        player:updateState(state)
-    end
-end
-
 function Players:getSnapshot()
     local players = {}
 

@@ -16,7 +16,13 @@ function Duplex.connect(data, host, ip, port)
     local clientId = ip .. ":" .. port
 
     host:addClient(clientId, ip, port)
-    host:sendToClient(clientId, Data({request = 'connect'}, {clientId = clientId}))
+    host:send(Data({request = 'connect'}, {clientId = clientId}), ip, port)
+end
+
+function Duplex.ping(data, host, ip, port)
+    data.payload.receivedTime = host.socket.gettime()
+    host:resetTimeout(data.headers.clientId)
+    host:send(data, ip, port)
 end
 
 return Duplex

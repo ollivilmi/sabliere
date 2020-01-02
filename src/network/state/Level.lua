@@ -4,15 +4,11 @@ require 'src/network/state/entity/Players'
 require 'src/network/state/entity/projectile/Bullet'
 require 'src/network/state/entity/Projectiles'
 
-require 'src/client/states/play/entity/player/Camera'
-
 Level = Class{}
 
 function Level:init()
     self.tilemap = Tilemap(100, 100, 10)
     self.players = Players(self)
-
-    self.camera = Camera(1, 120)
 
     self.renderingLayers = {
         {}, -- to add: background, background tiles?
@@ -38,7 +34,6 @@ function Level:loadAssets()
 end
 
 function Level:update(dt)
-    self.camera:update(dt)
     self.players:update(dt)
 end
 

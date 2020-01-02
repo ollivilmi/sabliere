@@ -11,7 +11,7 @@ function Host:init(def)
 	self.requests = require "src/network/server/Requests"
 	self.receiveFunction = self.udp.receivefrom
 
-	-- [id] = ip, port
+	-- [id] = ip, port, time from last ping
 	self.clients = {}
 	self.updates = ServerUpdates()
 	
@@ -47,11 +47,28 @@ function Host:sendUpdates()
 end
 
 function Host:addClient(clientId, ip, port)
-    self.clients[clientId] = {ip = ip, port = port}
+    self.clients[clientId] = {ip = ip, port = port, lastMessage = 0}
 	self.updates:addClient(clientId)
 end
 
 function Host:removeClient(clientId)
 	self.clients[clientId] = nil
 	self.updates:removeClient(clientId)
+end
+
+function Host:resetTimeout(clientId)
+	if clientId then
+		self.clients[clientId].lastMessage = 0
+	end
+end
+
+function Host:checkTimeout(dt)
+	for clientId, client in pairs(self.clients) do
+		client.lastMessage = client.lastMessage + dt
+
+		if client.lastMessage > self.timeout then
+			self:removeClient(clientId)
+			self.requests.quitPlayer({headers = {clientId = clientId}}, self)
+		end
+	end
 end

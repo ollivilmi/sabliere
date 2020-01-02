@@ -6,6 +6,7 @@ local update = require "src/network/client/request/UpdateIndex"
 local Requests = {
     ACK = duplex.protocol.acknowledge,
     connect = duplex.protocol.connect,
+    ping = duplex.protocol.ping,
 
     connectPlayer = update.player.connect,
     updatePlayer = update.player.update,

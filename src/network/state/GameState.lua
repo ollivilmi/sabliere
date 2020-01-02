@@ -11,8 +11,6 @@ require 'src/network/state/physics/BoxCollider'
 -- previous state from database etc.
 GameState = Class{}
 
-Timer = require 'lib/game/love-utils/knife/timer'
-
 function GameState:init()
     self.level = Level()
     self.client = {}

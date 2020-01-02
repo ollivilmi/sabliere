@@ -17,18 +17,26 @@ function setupClientAndHost()
         port = 12345
     }
 
+    client:send(Data{request = 'connect'})
+    host:receive()
+    client:receive()
+
+    -- Client is added to host
+    assert(host.clients[client.status.id])
+
+    assert(client.status.id)
+    assert(client.status.connected)
+    assert(not client.status.connecting)
+
     return client, host
 end
 
-function nextTick(client, host)
-    host:tick()
-    client:update(0.05)
+function cleanup(client, host)
+    client:setDisconnected()
+    host:close()
 end
 
-function connectClient(client, host, player)
-    -- Connect:
-    -- Server receives ip, port, unique ID
-    -- x, y for player coordinates
-    client:connect(player)
-    nextTick(client, host)
+function nextTick(client, host)
+    host:update(host.tickrate)
+    client:update(client.tickrate)
 end

@@ -6,23 +6,25 @@ local models = require 'src/client/states/play/entity/models/playerModels'
 local PlayerUpdate = {}
 
 function PlayerUpdate.connect(data, client)
-    if (data.headers.entityId ~= client.id) then
+    if (data.headers.entityId ~= client.status.id) then
         client.state.level.players:createEntity(data.headers.entityId, data.payload)
     end
 end
 
-function PlayerUpdate.clientId(data, client)
-    client:setConnected(data.payload.clientId)
-end
-
 function PlayerUpdate.update(data, client)
-    if (data.headers.entityId ~= client.id) then
-        client.state.level.players:updateState(data.headers.entityId, data.payload)
+    if (data.headers.entityId ~= client.status.id) then
+        local player = client.state.level.players:getEntity(data.headers.entityId)
+
+        if player then
+            player:tween(client.tickrate, data.payload)
+            data.payload.x, data.payload.y = nil, nil
+            player:updateState(data.payload)
+        end
     end
 end
 
 function PlayerUpdate.disconnect(data, client)
-    client.state.level.players:removeEntity(data.headers.clientId)
+    client.state.level.players:removeEntity(data.headers.entityId)
 end
 
 return PlayerUpdate

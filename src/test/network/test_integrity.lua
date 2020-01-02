@@ -1,7 +1,7 @@
 luaunit = require 'src/test/luaunit'
 Class = require 'lib/language/class'
 
-require "src/test/network/setup"
+require "src/test/network/clientHostSetup"
 require 'lib/language/Dequeue'
 require 'src/network/state/tilemap/Tilemap'
 

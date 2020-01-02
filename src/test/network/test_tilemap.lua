@@ -31,12 +31,12 @@ function testAddRectangle()
     tilemap:addRectangle(BoxCollider(0, 0, 10, 10))
 
     -- only first tile should be filled
-    assert(tilemap.tiles[1][1].t ~= nil)
+    assert(tilemap:hasTile(1,1))
 
     for y = 1, 10 do
         for x = 1, 10 do
             if y ~= 1 and x ~= 1 then
-                assert(tilemap.tiles[y][x].t == nil, "unexpected tile at " .. x .. "," .. y)
+                assert(not tilemap:hasTile(y,x), "unexpected tile at " .. x .. "," .. y)
             end
         end
     end
