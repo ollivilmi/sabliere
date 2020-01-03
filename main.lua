@@ -18,7 +18,7 @@ function love.load()
 
     math.randomseed(os.time())
 
-    game.state:changeState('loading', game.client:connect())
+    game.scene:changeState('loading', game.client:connect())
 end
 
 function love.resize(w,h)

@@ -1,9 +1,9 @@
 require 'lib/language/Listener'
 
 require 'src/network/state/entity/Entity'
-require 'src/client/states/play/entity/AnimatedEntity'
+require 'src/client/scenes/play/entity/AnimatedEntity'
 
-local models = require 'src/client/states/play/entity/models/playerModels'
+local models = require 'src/client/scenes/play/entity/models/playerModels'
 local json = require 'lib/language/json'
 
 Players = Class{__includes = Listener}

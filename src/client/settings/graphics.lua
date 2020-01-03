@@ -23,10 +23,10 @@ function graphics.load()
     })
 end
 
-function graphics.render(state)
+function graphics.render(scene)
     push:apply('start')
 
-    state:render()
+    scene:render()
     
     push:apply('end')
 end

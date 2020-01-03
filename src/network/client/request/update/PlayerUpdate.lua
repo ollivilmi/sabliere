@@ -1,7 +1,7 @@
 require 'src/network/state/entity/Entity'
-require 'src/client/states/play/entity/AnimatedEntity'
+require 'src/client/scenes/play/entity/AnimatedEntity'
 
-local models = require 'src/client/states/play/entity/models/playerModels'
+local models = require 'src/client/scenes/play/entity/models/playerModels'
 
 local PlayerUpdate = {}
 

@@ -1,7 +1,7 @@
 require 'lib/game/StateMachine'
 require 'src/client/settings/Settings'
-require 'src/client/states/play/PlayState'
-require 'src/client/states/loading/LoadingState'
+require 'src/client/scenes/play/PlayScene'
+require 'src/client/scenes/loading/LoadingScene'
 
 Game = Class{}
 
@@ -9,22 +9,22 @@ function Game:init(client)
     self.client = client
     self.settings = Settings()
 
-    self.state = StateMachine {
-        play = PlayState(self),
-        loading = LoadingState(self)
+    self.scene = StateMachine {
+        play = PlayScene(self),
+        loading = LoadingScene(self)
     }
 
     self.client:addListener('CONNECTION TIMED OUT', function()
-        self.state:changeState('loading', self.client:connect())
+        self.scene:changeState('loading', self.client:connect())
     end)
 end
 
 function Game:update(dt)
     self.client:update(dt)
-    self.state:update(dt)
+    self.scene:update(dt)
     self.settings.input.clear()
 end
 
 function Game:render()
-    self.settings.graphics.render(self.state)
+    self.settings.graphics.render(self.scene)
 end
