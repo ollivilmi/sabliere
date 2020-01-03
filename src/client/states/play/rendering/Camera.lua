@@ -7,7 +7,16 @@ function Camera:init(speed)
     self.y = 0
     self.dx = 0
     self.dy = 0
-    self.zoom = 1.25
+    self.zoom = 1.2
+
+    self.center = {
+        x = love.graphics.getWidth() / 2 * self.zoom,
+        y = love.graphics.getHeight() / 2 * self.zoom
+    }
+end
+
+function Camera:setZoom(zoom)
+    self.zoom = zoom
 
     self.center = {
         x = love.graphics.getWidth() / 2 * self.zoom,

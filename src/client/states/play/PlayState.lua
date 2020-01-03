@@ -1,6 +1,7 @@
 require 'lib/game/State'
 require 'src/client/states/play/rendering/Rendering'
 require 'src/client/states/play/entity/player/PlayerController'
+require 'src/client/states/play/rendering/interface/InterfaceController'
 
 PlayState = Class{__includes = State}
 
@@ -25,7 +26,8 @@ function PlayState:init(game)
             local keymap = require 'src/client/states/play/entity/player/settings/Keymap'
 
             self.controls.player = PlayerController(playerEntity, keymap)
-            
+            self.controls.interface = InterfaceController(self.rendering, keymap)
+
             -- To periodically send updates to server
             self.client.updates:pushEntity(self.client.status.id, playerEntity)
             self.rendering.camera:follow(playerEntity)

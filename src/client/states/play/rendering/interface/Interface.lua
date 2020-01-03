@@ -8,13 +8,21 @@ function Interface:init(gameState)
             love.graphics.print(gameState.connectionStatus.ping, 10, 10)
         end
     }
+
+    self.active = true
 end
 
 function Interface:update(dt)
 end
 
+function Interface:toggle()
+    self.active = not self.active
+end
+
 function Interface:render()
-    for __, component in pairs(self.components) do
-        component:render()
+    if self.active then
+        for __, component in pairs(self.components) do
+            component:render()
+        end
     end
 end

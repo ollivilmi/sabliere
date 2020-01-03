@@ -15,7 +15,13 @@ local keymap = {
     },
 
     interface = {
-        toggle = "-"
+        hud = {
+            toggle = '-'
+        },
+        camera = {
+            zoomIn = ',',
+            zoomOut = '.'
+        }
     },
 
     ability = {
