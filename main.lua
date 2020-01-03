@@ -33,6 +33,7 @@ function love.update(dt)
 
     lovebird.update()
     Timer.update(dt)
+    Gui:update(dt)
 
     game:update(dt)
 end

@@ -7,7 +7,6 @@ Game = Class{}
 
 function Game:init(client)
     self.client = client
-
     self.settings = Settings()
 
     self.state = StateMachine {
@@ -23,7 +22,6 @@ end
 function Game:update(dt)
     self.client:update(dt)
     self.state:update(dt)
-    
     self.settings.input.clear()
 end
 

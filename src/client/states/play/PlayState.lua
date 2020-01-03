@@ -36,6 +36,7 @@ function PlayState:init(game)
 end
 
 function PlayState:enter()
+    Gui = self.rendering.interface.gui
 end
 
 function PlayState:update(dt)

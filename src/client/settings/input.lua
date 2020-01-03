@@ -1,17 +1,21 @@
-function love.keypressed(key)
+function love.keypressed(key, code)
     love.keyboard.keysPressed[key] = true
+    Gui:keypress(key, code)
 end
 
 function love.mousepressed(x, y, button)
     love.mouse.buttonsPressed[button] = true
+    Gui:mousepress(x, y, button)
 end
 
 function love.mousereleased(x, y, button)
     love.mouse.buttonsReleased[button] = true
+    Gui:mouserelease(x, y, button)
 end
 
 function love.wheelmoved(x, y)
     love.mouse.wheelmoved = y
+    Gui:mousewheel(x, y, button)
 end
 
 function love.keyboard.wasPressed(key)

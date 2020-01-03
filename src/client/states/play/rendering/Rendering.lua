@@ -33,14 +33,11 @@ function Rendering:addRenderable(layer, renderable)
 end
 
 function Rendering:update(dt)
-    self.interface:update(dt)
     self.camera:update(dt)
     self.players:update(dt)
 end
 
 function Rendering:render()
-    self.interface:render()
-
     self.camera:set()
 
     for depth, layer in pairs(self.renderingLayers) do
@@ -50,4 +47,5 @@ function Rendering:render()
     end
 
     self.camera:unset()
+    self.interface:render()
 end

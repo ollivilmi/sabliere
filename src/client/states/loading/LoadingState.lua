@@ -5,6 +5,13 @@ LoadingState = Class{__includes = State}
 function LoadingState:init(game)
     self.game = game
     self.font = love.graphics.newFont('src/client/assets/fonts/font.ttf', 24)
+    self.gui = Gui()
+
+    self.gui:button('Menu', {0, 0, 100, 25})
+
+    self.gui.style.fg = {1,1,1}
+    self.gui.style.default = {0.15, 0.15, 0.15}
+    self.gui.style.hilite = {0.1, 0.1, 0.1}
 end
 
 function LoadingState:enter(loadingCoroutine)
@@ -13,6 +20,8 @@ function LoadingState:enter(loadingCoroutine)
     self.timeOut = 100
     self.retryInterval = 0.5
     self.loadingCoroutine = loadingCoroutine
+
+    Gui = self.gui
 end
 
 function LoadingState:update(dt)
@@ -34,6 +43,8 @@ function LoadingState:update(dt)
 end
 
 function LoadingState:render()
+    self.gui:draw()
+
     local loadingString = 'LOADING... ' .. math.floor(self.timePassed)
     love.graphics.setFont(self.font)
     
