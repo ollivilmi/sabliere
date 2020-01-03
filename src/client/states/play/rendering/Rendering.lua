@@ -10,7 +10,7 @@ Rendering = Class{}
 function Rendering:init(gameState)
     self.level = gameState.level
 
-    self.camera = Camera(1, 120)
+    self.camera = Camera(1)
 
     self.tilemap = TilemapRendering(self.level.tilemap)
     self.players = PlayerRendering(self.level.players)
@@ -41,11 +41,13 @@ end
 function Rendering:render()
     self.interface:render()
 
-    self.camera:translate()
+    self.camera:set()
 
     for depth, layer in pairs(self.renderingLayers) do
         for k, renderable in pairs(layer) do
             renderable:render()
         end
     end
+
+    self.camera:unset()
 end

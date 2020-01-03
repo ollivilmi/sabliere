@@ -1,58 +1,64 @@
 Camera = Class{}
 
-function Camera:init(speed, offset)
-    self.speed = speed
+function Camera:init(speed)
     self.entity = {x = 0, y = 0}
-    self.offset = offset
+    self.speed = speed
     self.x = 0
     self.y = 0
     self.dx = 0
     self.dy = 0
-    self.maxWidth = 20000
-    self.maxHeight = 10000
+    self.zoom = 1.25
+
+    self.center = {
+        x = love.graphics.getWidth() / 2 * self.zoom,
+        y = love.graphics.getHeight() / 2 * self.zoom
+    }
 end
 
 function Camera:follow(entity)
     self.entity = entity
-    self.x = entity.x - love.graphics.getWidth() / 2
-    self.y = entity.y - love.graphics.getHeight() / 2
+    self.x, self.y = self:getEntityCenter(entity)
+end
+
+function Camera:getEntityCenter(entity)
+    local x = (entity.x - self.center.x)
+    local y = (entity.y - self.center.y)
+
+    return x, y
 end
 
 function Camera:update(dt)
-    if not love then return end
-    -- bound between 0 - maxWidth
-    self.x = math.min(self.maxWidth, math.max(0, self.x + self.dx * dt))
-    -- bound between 0 - maxHeight
-    self.y = math.min(self.maxHeight, math.max(0, self.y + self.dy * dt))
+    local x, y = self:getEntityCenter(self.entity)
 
-    local x = self.entity.x - love.graphics.getWidth() / 2
-    local y = self.entity.y - love.graphics.getHeight() / 2
-
-    local distance = math.floor(math.distance(x, y, self.x, self.y))
-
-    if distance > self.offset then
-        -- vector of camera (x,y) -> target (x,y) adjusted by speed
-        self.dx, self.dy = math.vector(self.x, self.y, x, y)
-        self.dx = self.dx * self.speed
-        self.dy = self.dy * self.speed
-    else
-        self.dx = 0
-        self.dy = 0
-    end
+    self:move(self.speed, x, y)
 end
 
-function Camera:translate()
+function Camera:move(speed, dx, dy)
+    local dx = math.max(0, dx)
+    local dy = math.max(0, dy)
+
+    Timer.tween(speed, {
+        [self] = {
+            x = dx,
+            y = dy
+        }
+    })
+end
+
+function Camera:set()
+    love.graphics.push()
+    love.graphics.scale(1 / self.zoom, 1 / self.zoom)
     love.graphics.translate(-self.x, -self.y)
 end
 
-function Camera:reverse()
-    love.graphics.translate(self.x, self.y)
+function Camera:unset()
+    love.graphics.pop()
 end
 
 function Camera:coordinates()
     return Coordinates(self.x, self.y)
 end
 
-function Camera:worldCoordinates(x,y)
-    return x + self.x, y + self.y
+function Camera:worldCoordinates(cursorX, cursorY)
+    return cursorX * self.zoom + self.x, cursorY * self.zoom + self.y
 end
