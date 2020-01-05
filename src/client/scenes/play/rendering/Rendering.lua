@@ -8,8 +8,8 @@ require 'src/client/scenes/play/rendering/interface/Interface'
 -- Wraps GameState level for animations and stuff
 Rendering = Class{}
 
-function Rendering:init(gameState)
-    self.level = gameState.level
+function Rendering:init(level)
+    self.level = level
 
     self.camera = Camera(1)
 
@@ -17,7 +17,7 @@ function Rendering:init(gameState)
     self.tilemap = TilemapRendering(self.level.tilemap)
     self.players = PlayerRendering(self.level.players)
 
-    self.interface = Interface(gameState)
+    self.interface = Interface(game)
 
     self.renderingLayers = {
         { self.background }, -- to add: background, background tiles?

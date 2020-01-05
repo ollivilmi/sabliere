@@ -2,7 +2,6 @@ Settings = Class{}
 
 function Settings:init()
     self.input = require 'src/client/settings/input'
-    self.graphics = require 'src/client/settings/graphics'
 
     self.core = {
         self.input,

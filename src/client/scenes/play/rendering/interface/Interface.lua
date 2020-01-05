@@ -1,20 +1,16 @@
 require 'src/client/scenes/play/rendering/interface/Toolbar'
+require 'src/client/scenes/play/rendering/interface/Stats'
 
 Interface = Class{}
 
-function Interface:init(gameState)
+function Interface:init(game)
     self.gui = Gui()
     self.gui.style.unit = math.max(40, love.graphics.getWidth() / 25)
 
-    self.components = {
-        ping = {
-            render = function()
-                local ping = math.floor(10 * gameState.connectionStatus.ping) / 10
-                love.graphics.print(ping, 10, 10)
-            end
-        },
-    }
+    self.ping = self.gui:text('ping', {x = 5, y = 5, w = 128, h = 128})
+    self.ping.style.fg = {0,0,0}
 
+    self.stats = Stats(self.gui)
     self.toolbar = Toolbar(self.gui)
 
     self.active = true
@@ -27,9 +23,7 @@ function Interface:toggle()
 end
 
 function Interface:render()
-    for __, component in pairs(self.components) do
-        component:render()
-    end
+    self.stats:update()
 
     self.gui:draw()
 end

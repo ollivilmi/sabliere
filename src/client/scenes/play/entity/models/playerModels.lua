@@ -6,7 +6,7 @@ require 'src/client/scenes/play/entity/models/Model'
 local playerModels = {
     dude = function()
         return Model{
-        sheet = 'src/client/assets/textures/dude.png',
+        sheet = 'src/client/assets/textures/entity/dude.png',
         width = 50,
         height = 100,
         animationStates = {

@@ -8,9 +8,18 @@ function MenuScene:init(game)
     self.titleFont = love.graphics.newFont('src/client/assets/fonts/Provicali.otf', 62)
     self.buttonFont = love.graphics.newFont('src/client/assets/fonts/Provicali.otf', 28)
 
-    self.background = love.graphics.newImage('src/client/assets/textures/mountain.png')
+    self.background = love.graphics.newImage('src/client/assets/textures/background/mountain.png')
     
     self.gui = Gui()
+
+    self.title = self.gui:text('SABLIERE', {
+        x = love.graphics.getWidth() / 2 - (self.titleFont:getWidth('SABLIERE') / 2),
+        y = 50,
+        w = 500,
+        h = 100,
+    })
+    self.title.style.fg = {0,0,0}
+    self.title.style.font = self.titleFont
 
     self.connectButton = self.gui:button('Connect', {
             x = (love.graphics.getWidth() / 2) - 150, 
@@ -23,6 +32,14 @@ function MenuScene:init(game)
     self.hostButton = self.gui:button('Host', {
             x = (love.graphics.getWidth() / 2) - 150, 
             y = (love.graphics.getHeight() / 2) + 140, 
+            w = 300, 
+            h = 50
+        }
+    )
+    
+    self.settingsButton = self.gui:button('Settings', {
+            x = (love.graphics.getWidth() / 2) - 150, 
+            y = (love.graphics.getHeight() / 2) + 240, 
             w = 300, 
             h = 50
         }
@@ -61,10 +78,4 @@ function MenuScene:render()
 
     love.graphics.setColor(0,0,0)
     love.graphics.setFont(self.titleFont)
-    
-    love.graphics.print(
-        'SABLIERE',
-        love.graphics.getWidth() / 2 - (self.titleFont:getWidth('SABLIERE') / 2),
-        50
-    )
 end

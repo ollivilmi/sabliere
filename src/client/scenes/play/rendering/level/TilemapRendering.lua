@@ -2,16 +2,17 @@ require 'src/network/state/tilemap/Tile'
 
 TilemapRendering = Class{}
 
-local TILE_TEXTURE_SIZE = 10
+local TILE_TEXTURE_SIZE = 20
 
 function TilemapRendering:init(tilemap)
     self.tilemap = tilemap
 
     self.tileScale = self.tilemap.tileSize / TILE_TEXTURE_SIZE
 
-    -- textures instead of types here
     self.textures = {
-        s = love.graphics.newImage('src/client/assets/textures/sand.png'),
+        s = love.graphics.newImage('src/client/assets/textures/tile/sand.png'),
+        r = love.graphics.newImage('src/client/assets/textures/tile/rock.png'),
+        g = love.graphics.newImage('src/client/assets/textures/tile/grass.png'),
     }
 end
 
@@ -20,11 +21,10 @@ function TilemapRendering:renderTile(tile)
         return
     end
 
+    local texture = self.textures[tile.type.id] or self.textures['r']
+
     love.graphics.setColor(1,1,1)
-    love.graphics.draw(self.textures[tile.type.id], tile.x, tile.y, 0, self.tileScale, self.tileScale)
-    love.graphics.setColor(0,0,0)
-    love.graphics.setLineWidth(1)
-    love.graphics.rectangle('line', tile.x, tile.y, tile.width, tile.height)
+    love.graphics.draw(texture, tile.x, tile.y, 0, self.tileScale, self.tileScale)
 end
 
 function TilemapRendering:render()

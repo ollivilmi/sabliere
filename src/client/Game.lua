@@ -11,6 +11,11 @@ function Game:init(client)
     self.client = client
     self.settings = Settings()
 
+    self.metrics = {
+        fps = 0,
+        connection = self.client.status
+    }
+
     self.scene = StateMachine {
         menu = MenuScene(self),
         loading = LoadingScene(self),
@@ -26,8 +31,10 @@ function Game:update(dt)
     self.client:update(dt)
     self.scene:update(dt)
     self.settings.input.clear()
+
+    self.metrics.fps = love.timer.getFPS()
 end
 
 function Game:render()
-    self.settings.graphics.render(self.scene)
+    self.scene:render()
 end

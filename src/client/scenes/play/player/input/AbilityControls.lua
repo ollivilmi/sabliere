@@ -14,12 +14,12 @@ function AbilityControls:init(keymap, interface)
     self.abilities = {
         [self.keys[1]] = {
             name = "Build sand",
-            icon = love.graphics.newImage('src/client/assets/textures/sand.png'),
+            icon = love.graphics.newImage('src/client/assets/textures/tile/sand.png'),
             onclick = function() print ("build") end
         },
         [self.keys[2]] = {
             name = "Shoot",
-            icon = love.graphics.newImage('src/client/assets/textures/sand.png'),
+            icon = love.graphics.newImage('src/client/assets/textures/tile/sand.png'),
             onclick = function() print ("pew") end
         }
     }

@@ -5,10 +5,10 @@ BackgroundRendering = Class{}
 -- (Parallax scrolling, tiles etc..)
 
 function BackgroundRendering:init()
-    self.sky = love.graphics.newImage('src/client/assets/textures/sky.png')
+    self.sky = love.graphics.newImage('src/client/assets/textures/background/sky.png')
     self.sky:setWrap('repeat', 'repeat')
 
-    self.ground = love.graphics.newImage('src/client/assets/textures/ground.png')
+    self.ground = love.graphics.newImage('src/client/assets/textures/background/ground.png')
     self.ground:setWrap('repeat', 'repeat')
 
     self.skyQuad = love.graphics.newQuad(0, 0, 5000, 500, self.sky:getWidth(), self.sky:getHeight())

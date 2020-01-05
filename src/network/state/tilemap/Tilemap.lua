@@ -24,6 +24,7 @@ end
 function Tilemap:addRectangle(rectangle, type)
     -- translate rectangle to tilemap coordinates, add tiles there
     -- expand if necessary
+    local type = type or 'r'
 
     local x, y = self:toMapCoordinates(rectangle.x, rectangle.y)
 
@@ -40,7 +41,7 @@ function Tilemap:addRectangle(rectangle, type)
                 x = x,
                 y = y,
                 size = self.tileSize,
-                type = self.types['s'],
+                type = self.types[type],
             }
         end
     end

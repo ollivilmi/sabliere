@@ -52,6 +52,7 @@ function LoadingScene:render()
     local loadingString = 'LOADING... ' .. math.floor(self.timePassed)
     love.graphics.setFont(self.font)
     
+    love.graphics.setColor(1,1,1)
     love.graphics.print(
         loadingString,
         love.graphics.getWidth() / 2 - (self.font:getWidth(loadingString) / 2),

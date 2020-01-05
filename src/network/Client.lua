@@ -17,9 +17,6 @@ function Client:init(def)
     -- ping, connected, connecting...
     self.status = ClientStatus(self)
 
-    -- add to game state for easy access to client status
-    self.state.connectionStatus = self.status
-
     -- For duplex communication queue
     self.updates = ClientUpdates(self)
 end
