@@ -7,7 +7,7 @@ require 'src/network/state/entity/Projectiles'
 Level = Class{}
 
 function Level:init()
-    self.tilemap = Tilemap(100, 100, 10)
+    self.tilemap = Tilemap(100, 100, 20)
     self.players = Players(self)
 
     self.renderingLayers = {

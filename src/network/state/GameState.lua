@@ -15,7 +15,7 @@ function GameState:init()
     self.level = Level()
     self.client = {}
 
-    self.level.tilemap:addRectangle(BoxCollider(0, 460, 1500, 200))
+    self.level.tilemap:addRectangle(BoxCollider(0, 500, 3000, 500))
 end
 
 function GameState:update(dt)

@@ -26,7 +26,10 @@ end
 
 function Camera:follow(entity)
     self.entity = entity
-    self.x, self.y = self:getEntityCenter(entity)
+    local x, y = self:getEntityCenter(entity)
+
+    self.x = math.max(0, x)
+    self.y = math.max(0, y)
 end
 
 function Camera:getEntityCenter(entity)

@@ -18,7 +18,7 @@ function love.load()
 
     math.randomseed(os.time())
 
-    game.scene:changeState('loading', game.client:connect())
+    game.scene:changeState('menu')
 end
 
 function love.resize(w,h)
@@ -26,11 +26,6 @@ function love.resize(w,h)
 end
 
 function love.update(dt)
-    if love.keyboard.wasPressed('escape') then
-        game.client:setDisconnected()
-        love.event.quit()
-    end
-
     lovebird.update()
     Timer.update(dt)
     Gui:update(dt)

@@ -1,3 +1,4 @@
+require 'src/client/scenes/play/rendering/level/BackgroundRendering'
 require 'src/client/scenes/play/rendering/level/PlayerRendering'
 require 'src/client/scenes/play/rendering/level/TilemapRendering'
 
@@ -12,13 +13,14 @@ function Rendering:init(gameState)
 
     self.camera = Camera(1)
 
+    self.background = BackgroundRendering()
     self.tilemap = TilemapRendering(self.level.tilemap)
     self.players = PlayerRendering(self.level.players)
 
     self.interface = Interface(gameState)
 
     self.renderingLayers = {
-        {}, -- to add: background, background tiles?
+        { self.background }, -- to add: background, background tiles?
         { self.tilemap },
         { self.players }
     }

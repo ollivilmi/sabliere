@@ -5,6 +5,7 @@ require 'src/client/scenes/play/player/Controls'
 PlayScene = Class{__includes = State}
 
 function PlayScene:init(game)
+    self.game = game
     self.client = game.client
     self.gameState = game.client.state
 
@@ -36,6 +37,11 @@ end
 function PlayScene:update(dt)
     self.controls:update(dt)
     self.rendering:update(dt)
+
+    if love.keyboard.wasPressed('escape') then
+        self.client:setDisconnected()
+        self.game.scene:changeState('menu')
+    end
 end
 
 function PlayScene:render()

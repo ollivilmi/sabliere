@@ -4,10 +4,8 @@ LoadingScene = Class{__includes = State}
 
 function LoadingScene:init(game)
     self.game = game
-    self.font = love.graphics.newFont('src/client/assets/fonts/font.ttf', 24)
+    self.font = love.graphics.newFont('src/client/assets/fonts/Provicali.otf', 24)
     self.gui = Gui()
-
-    self.gui:button('Menu', {0, 0, 100, 25})
 
     self.gui.style.fg = {1,1,1}
     self.gui.style.default = {0.15, 0.15, 0.15}
@@ -17,7 +15,7 @@ end
 function LoadingScene:enter(loadingCoroutine)
     self.t = 0
     self.timePassed = 0
-    self.timeOut = 100
+    self.timeOut = 15
     self.retryInterval = 0.5
     self.loadingCoroutine = loadingCoroutine
 
@@ -25,8 +23,14 @@ function LoadingScene:enter(loadingCoroutine)
 end
 
 function LoadingScene:update(dt)
-    if self.t > self.timeOut then
-        love.event.quit()
+    if love.keyboard.wasPressed('escape') then
+        self.game.client:setDisconnected()
+        self.game.scene:changeState('menu')
+    end
+
+
+    if self.timePassed > self.timeOut then
+        self.game.scene:changeState('menu', {msg = "Connection timed out"})
     end
 
     self.t = self.t + dt
