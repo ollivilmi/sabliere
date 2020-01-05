@@ -3,7 +3,7 @@ require 'src/network/Client'
 require 'src/network/Host'
 require 'src/client/Game'
 
-local settings = require 'src/client/settings/Settings'
+Gui = require 'lib/game/love-utils/interface/Gspot'
 local lovebird = require 'lib/game/love-utils/debug/lovebird'
 
 local game = Game(Client{

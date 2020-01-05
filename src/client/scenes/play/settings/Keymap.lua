@@ -6,8 +6,22 @@ local keymap = {
         jump = 'space'
     },
 
-    tools = {
-        main = {
+    interface = {
+        hud = {
+            toggle = '-'
+        },
+    },
+
+    rendering = {
+        camera = {
+            zoomIn = ',',
+            zoomOut = '.'
+        }
+    },
+
+    ability = {
+        shoot = 'f',
+        toolbar = {
             '1',
             '2',
             '3',
@@ -18,22 +32,8 @@ local keymap = {
             '8',
             '9',
             '0',
-        }
-    },
-
-    interface = {
-        hud = {
-            toggle = '-'
         },
-        camera = {
-            zoomIn = ',',
-            zoomOut = '.'
-        }
     },
-
-    ability = {
-        shoot = 'f'
-    }
 }
 
 return keymap

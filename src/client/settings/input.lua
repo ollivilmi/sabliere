@@ -1,6 +1,14 @@
 function love.keypressed(key, code)
     love.keyboard.keysPressed[key] = true
-    Gui:keypress(key, code)
+    if Gui.focus then
+        Gui:keypress(key, code)
+    end
+end
+
+function love.textinput(key)
+    if Gui.focus then
+        Gui:textinput(key)
+    end
 end
 
 function love.mousepressed(x, y, button)

@@ -1,7 +1,6 @@
 require 'lib/game/State'
 require 'src/client/scenes/play/rendering/Rendering'
-require 'src/client/scenes/play/entity/player/PlayerController'
-require 'src/client/scenes/play/rendering/interface/InterfaceController'
+require 'src/client/scenes/play/player/Controls'
 
 PlayScene = Class{__includes = State}
 
@@ -11,8 +10,8 @@ function PlayScene:init(game)
 
     self.rendering = Rendering(self.gameState)
 
-    -- Move player, open menu, etc..
-    self.controls = {}
+    local keymap = require 'src/client/scenes/play/settings/Keymap'
+    self.controls = Controls(keymap, self.rendering)
 
     self.client:addListener('CONNECTED', function()
         self.client.updates:pushDuplex(Data{request = 'connectPlayer'})
@@ -22,12 +21,7 @@ function PlayScene:init(game)
         local playerEntity = self.gameState.level.players:getEntity(self.client.status.id)
 
         if playerEntity then
-            -- keymap could be loaded from server, that's why it's a constructor parameter
-            local keymap = require 'src/client/scenes/play/entity/player/settings/Keymap'
-
-            self.controls.player = PlayerController(playerEntity, keymap)
-            self.controls.interface = InterfaceController(self.rendering, keymap)
-
+            self.controls:controlEntity(playerEntity)
             -- To periodically send updates to server
             self.client.updates:pushEntity(self.client.status.id, playerEntity)
             self.rendering.camera:follow(playerEntity)
@@ -40,11 +34,8 @@ function PlayScene:enter()
 end
 
 function PlayScene:update(dt)
+    self.controls:update(dt)
     self.rendering:update(dt)
-
-    for _, control in pairs(self.controls) do
-        control:update(dt)
-    end
 end
 
 function PlayScene:render()
