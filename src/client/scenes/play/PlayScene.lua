@@ -21,8 +21,8 @@ function PlayScene:loadInterface()
 end
 
 function PlayScene:loadControls()
-    local keymap = require 'src/client/scenes/play/settings/Keymap'
-    self.controls = Controls(keymap, self.rendering)
+    local hotkeys = require 'src/client/scenes/menu/settings/Hotkeys'
+    self.controls = Controls(hotkeys:load(), self.rendering)
 end
 
 function PlayScene:playerConnectionSettings()

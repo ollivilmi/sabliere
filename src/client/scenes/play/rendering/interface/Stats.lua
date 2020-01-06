@@ -35,6 +35,6 @@ end
 function Stats:update()
     for i, stat in pairs(self.group.children) do
         local s = self.stats[i]
-        stat.label = tostring(math.floor(10 * s.object[s.name]) / 10)
+        stat.label = string.format("%s %s", s.name, math.floor(10 * s.object[s.name]) / 10)
     end
 end

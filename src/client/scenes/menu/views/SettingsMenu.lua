@@ -6,7 +6,7 @@ function SettingsMenu:init(menuScene)
     local group = gui:group(nil, {0, 0, love.graphics.getWidth(), love.graphics.getHeight()})
 
     local title = gui:text('SETTINGS', {
-            x = love.graphics.getWidth() / 2 - (menuScene.titleFont:getWidth('SETTINGS') / 2),
+            x = CenterText(love.graphics.getWidth(), menuScene.titleFont, 'SETTINGS'),
             y = 50,
             w = 500,
             h = 100,
@@ -16,7 +16,7 @@ function SettingsMenu:init(menuScene)
     title.style.fg = {0,0,0}
     title.style.font = menuScene.titleFont
 
-    gui:button('Hotkeys', {
+    local hotkeysButton = gui:button('Hotkeys', {
             x = (love.graphics.getWidth() / 2) - 150, 
             y = (love.graphics.getHeight() / 2) + 140, 
             w = 300, 
@@ -24,6 +24,10 @@ function SettingsMenu:init(menuScene)
         },
         group
     )
+
+    hotkeysButton.click = function(this)
+        menuScene:navigate('hotkeys')
+    end
     
     gui:button('Graphics', {
             x = (love.graphics.getWidth() / 2) - 150, 
@@ -35,6 +39,9 @@ function SettingsMenu:init(menuScene)
     )
 
     group:hide()
+
+    group.onExit = function(this)
+    end
 
     return group
 end

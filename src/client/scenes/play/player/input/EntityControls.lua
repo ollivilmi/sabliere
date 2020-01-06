@@ -1,7 +1,7 @@
 EntityControls = Class{}
 
-function EntityControls:init(keymap, entity)
-    self.keymap = keymap
+function EntityControls:init(hotkeys, entity)
+    self.hotkeys = hotkeys
     self.entity = entity
 
     self.inputs = {
@@ -17,9 +17,9 @@ function EntityControls:update()
 end
 
 function EntityControls:falling()
-    if love.keyboard.isDown(self.keymap.left) then
+    if love.keyboard.isDown(self.hotkeys.left) then
         self.entity.dx = -self.entity.speed
-    elseif love.keyboard.isDown(self.keymap.right) then
+    elseif love.keyboard.isDown(self.hotkeys.right) then
         self.entity.dx = self.entity.speed
     else
         self.entity.dx = 0
@@ -27,17 +27,17 @@ function EntityControls:falling()
 end
 
 function EntityControls:idle()
-    if love.keyboard.isDown(self.keymap.left) or love.keyboard.isDown(self.keymap.right) then
+    if love.keyboard.isDown(self.hotkeys.left) or love.keyboard.isDown(self.hotkeys.right) then
         self.entity:changeState('moving')
-    elseif love.keyboard.isDown(self.keymap.jump) then
+    elseif love.keyboard.isDown(self.hotkeys.jump) then
         self.entity:changeState('jumping')
     end
 end
 
 function EntityControls:jumping()
-    if love.keyboard.isDown(self.keymap.left) then
+    if love.keyboard.isDown(self.hotkeys.left) then
         self.entity.dx = -self.entity.speed
-    elseif love.keyboard.isDown(self.keymap.right) then
+    elseif love.keyboard.isDown(self.hotkeys.right) then
         self.entity.dx = self.entity.speed
     else
         self.entity.dx = 0
@@ -45,13 +45,13 @@ function EntityControls:jumping()
 end
 
 function EntityControls:moving()
-    if love.keyboard.isDown(self.keymap.jump) then
+    if love.keyboard.isDown(self.hotkeys.jump) then
         self.entity:changeState('jumping')
     
-    elseif love.keyboard.isDown(self.keymap.left) then
+    elseif love.keyboard.isDown(self.hotkeys.left) then
         self.entity.dx = -self.entity.speed
     
-    elseif love.keyboard.isDown(self.keymap.right) then
+    elseif love.keyboard.isDown(self.hotkeys.right) then
         self.entity.dx = self.entity.speed
     
     else

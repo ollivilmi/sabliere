@@ -1,6 +1,7 @@
 require 'lib/game/State'
-require 'src/client/scenes/menu/MainMenu'
-require 'src/client/scenes/menu/SettingsMenu'
+require 'src/client/scenes/menu/views/MainMenu'
+require 'src/client/scenes/menu/views/SettingsMenu'
+require 'src/client/scenes/menu/views/HotkeyMenu'
 
 MenuScene = Class{__includes = State}
 
@@ -21,7 +22,8 @@ function MenuScene:init(game)
 
     self.views = {
         main = MainMenu:init(self),
-        settings = SettingsMenu:init(self)
+        settings = SettingsMenu:init(self),
+        hotkeys = HotkeyMenu:init(self)
     }
 
     self.navStack = Dequeue()
@@ -52,7 +54,11 @@ function MenuScene:navigate(view)
 end
 
 function MenuScene:pop()
-    self.navStack:peek():hide()
+    local previousMenu = self.navStack:peek()
+
+    previousMenu:hide()
+    previousMenu:onExit()
+
     self.navStack:pop()
 
     if self.navStack:isEmpty() then
@@ -73,4 +79,8 @@ function MenuScene:render()
     love.graphics.draw(self.background, -200, -200)
 
     self.gui:draw()
+end
+
+function CenterText(width, font, text)
+    return width / 2 - (font:getWidth(text) / 2)
 end

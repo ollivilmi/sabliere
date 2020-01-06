@@ -6,7 +6,7 @@ function MainMenu:init(menuScene)
     local group = gui:group(nil, {0, 0, love.graphics.getWidth(), love.graphics.getHeight()})
 
     local title = gui:text('SABLIERE', {
-            x = love.graphics.getWidth() / 2 - (menuScene.titleFont:getWidth('SABLIERE') / 2),
+            x = CenterText(love.graphics.getWidth(), menuScene.titleFont, 'SABLIERE'),
             y = 50,
             w = 500,
             h = 100,
@@ -52,6 +52,9 @@ function MainMenu:init(menuScene)
     end
 
     group:hide()
+
+    group.onExit = function(this)
+    end
 
     return group
 end

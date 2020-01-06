@@ -3,24 +3,24 @@ require 'src/client/scenes/play/entity/AnimatedEntity'
 require 'src/client/scenes/play/player/input/EntityControls'
 require 'src/client/scenes/play/player/input/AbilityControls'
 require 'src/client/scenes/play/player/input/InterfaceControls'
-require 'src/client/scenes/play/player/input/RenderControls'
+require 'src/client/scenes/play/player/input/CameraControls'
 
 Controls = Class{}
 
-function Controls:init(keymap, rendering)
+function Controls:init(hotkeys, rendering)
     self.controls = {
-        rendering = RenderControls(keymap.rendering, rendering),
-        interface = InterfaceControls(keymap.interface, rendering.interface)
+        camera = CameraControls(hotkeys.camera, rendering.camera),
+        interface = InterfaceControls(hotkeys.interface, rendering.interface)
     }
 
     self.active = true
-    self.keymap = keymap
+    self.hotkeys = hotkeys
     self.rendering = rendering
 end
 
 function Controls:controlEntity(entity)
-    self.controls.entity = EntityControls(self.keymap.move, entity)
-    self.controls.ability = AbilityControls(self.keymap.ability, self.rendering.interface)
+    self.controls.entity = EntityControls(self.hotkeys.movement, entity)
+    self.controls.ability = AbilityControls(self.hotkeys.toolbar, self.rendering.interface)
 end
 
 function Controls:update(dt)

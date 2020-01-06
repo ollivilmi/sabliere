@@ -7,9 +7,9 @@ AbilityControls = Class{__includes = Listener}
 -- Interface is needed to check if mouse if hovering over GUI,
 -- and to load Toolbar
 --
-function AbilityControls:init(keymap, interface)
+function AbilityControls:init(hotkeys, interface)
     Listener:init(self)
-    self.keys = keymap.toolbar
+    self.keys = hotkeys
     
     self.abilities = {
         [self.keys[1]] = {

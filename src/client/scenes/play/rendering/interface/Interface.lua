@@ -7,9 +7,6 @@ function Interface:init(game)
     self.gui = Gui()
     self.gui.style.unit = math.max(40, love.graphics.getWidth() / 25)
 
-    self.ping = self.gui:text('ping', {x = 5, y = 5, w = 128, h = 128})
-    self.ping.style.fg = {0,0,0}
-
     self.stats = Stats(self.gui)
     self.toolbar = Toolbar(self.gui)
 

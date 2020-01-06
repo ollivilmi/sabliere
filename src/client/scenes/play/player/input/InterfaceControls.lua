@@ -2,11 +2,11 @@ InterfaceControls = Class{}
 
 -- Controller to handle interface:
 -- open menu, hide...
-function InterfaceControls:init(keymap, interface)
+function InterfaceControls:init(hotkeys, interface)
     self.interface = interface
 
     self.inputs = {
-        [keymap.hud.toggle] = interface.toggle,
+        [hotkeys.toggle] = interface.toggle,
     }
 end
 
