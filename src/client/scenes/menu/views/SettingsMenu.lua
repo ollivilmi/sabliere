@@ -29,7 +29,7 @@ function SettingsMenu:init(menuScene)
         menuScene:navigate('hotkeys')
     end
     
-    gui:button('Graphics', {
+    local graphicsButton = gui:button('Graphics', {
             x = (love.graphics.getWidth() / 2) - 150, 
             y = (love.graphics.getHeight() / 2) + 240, 
             w = 300, 
@@ -37,6 +37,10 @@ function SettingsMenu:init(menuScene)
         },
         group
     )
+
+    graphicsButton.click = function(this)
+        menuScene:navigate('graphics')
+    end
 
     group:hide()
 

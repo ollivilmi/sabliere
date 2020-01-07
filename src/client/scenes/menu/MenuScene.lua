@@ -2,6 +2,7 @@ require 'lib/game/State'
 require 'src/client/scenes/menu/views/MainMenu'
 require 'src/client/scenes/menu/views/SettingsMenu'
 require 'src/client/scenes/menu/views/HotkeyMenu'
+require 'src/client/scenes/menu/views/GraphicsMenu'
 
 MenuScene = Class{__includes = State}
 
@@ -23,7 +24,8 @@ function MenuScene:init(game)
     self.views = {
         main = MainMenu:init(self),
         settings = SettingsMenu:init(self),
-        hotkeys = HotkeyMenu:init(self)
+        hotkeys = HotkeyMenu:init(self),
+        graphics = GraphicsMenu:init(self),
     }
 
     self.navStack = Dequeue()

@@ -1,7 +1,7 @@
 local json = require 'lib/language/json'
 
 local Hotkeys = {
-    fileName = 'hotkeys'
+    fileName = 'hotkeys',
 }
 
 function Hotkeys:default()

@@ -6,12 +6,21 @@ require 'src/client/Game'
 Gui = require 'lib/game/love-utils/interface/Gspot'
 local lovebird = require 'lib/game/love-utils/debug/lovebird'
 local game
+local graphics = require 'src/client/scenes/menu/settings/Graphics'
 
 function love.load()
     love.filesystem.setIdentity('sabliere')
     love.window.setTitle('Sabliere')
     -- Load resolution, fullscreen from settings file
-    love.window.setMode(1280, 720)
+    local graphics = graphics:load()
+    for k,v in pairs(graphics.resolution) do
+        print(type(v))
+    end
+    love.window.setMode(graphics.resolution.width, graphics.resolution.height, {
+            fullscreen = graphics.resolution.fullscreen,
+            vsync = graphics.resolution.vsync,
+        }
+    )
 
     game = Game(Client{
         address = '127.0.0.1',
