@@ -16,7 +16,7 @@ function TilemapRendering:init(tilemap)
     }
 end
 
-function TilemapRendering:renderTile(tile)
+function TilemapRendering:renderTile(tile, x, y)
     if not tile.type then
         return
     end
@@ -24,13 +24,17 @@ function TilemapRendering:renderTile(tile)
     local texture = self.textures[tile.type.id] or self.textures['r']
 
     love.graphics.setColor(1,1,1)
-    love.graphics.draw(texture, tile.x, tile.y, 0, self.tileScale, self.tileScale)
+
+    local x, y = self.tilemap:toCoordinates(x, y)
+    love.graphics.draw(texture, x, y, 0, self.tileScale, self.tileScale)
 end
 
 function TilemapRendering:render()
+    love.graphics.setColor(0,0,0)
+
     for y = 1, self.tilemap.height do
         for x = 1, self.tilemap.width do
-            self:renderTile(self.tilemap.tiles[y][x])
+            self:renderTile(self.tilemap.tiles[y][x], x, y)
         end
     end
 end

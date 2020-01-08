@@ -4,48 +4,27 @@ require 'src/network/state/entity/Players'
 require 'src/network/state/entity/projectile/Bullet'
 require 'src/network/state/entity/Projectiles'
 
+-- physics Library
+local bump = require '/lib/game/physics/bump'
+
 Level = Class{}
 
 function Level:init()
-    self.tilemap = Tilemap(100, 100, 20)
-    self.players = Players(self)
+    self.world = bump.newWorld(80)
+    self.tilemap = Tilemap(100, 100, self.world)
 
-    self.renderingLayers = {
-        {}, -- to add: background, background tiles?
-        { self.tilemap },
-        { self.players }
-    }
-    -- self.projectiles = Projectiles()
+    self.players = Players(self.world)
 end
 
-function Level:addRenderable(layer, renderable)
-    local layer = self.renderingLayers[layer]
-
-    if not layer then
-        layer = {}
-    end
-
-    table.insert(layer, renderable)
-end
-
-function Level:loadAssets()
-    if not love then return end
-    self.tilemap:loadTextures()
+function Level:addTestTiles()
+	self.tilemap:addRectangle({x=0,y=500,w=3000,h=100}, 'g')
+    self.tilemap:addRectangle({x=0,y=600,w=3000,h=500}, 'r')
+    self.tilemap:addRectangle({x=1000,y=450,w=200,h=60}, 'r')
+    self.tilemap:addRectangle({x=1000,y=275,w=200,h=20}, 'r')
 end
 
 function Level:update(dt)
     self.players:update(dt)
-end
-
-function Level:render()
-    -- interface:render()
-    self.camera:translate()
-
-    for depth, layer in pairs(self.renderingLayers) do
-        for k, renderable in pairs(layer) do
-            renderable:render()
-        end
-    end
 end
 
 function Level:getSnapshot(entity)

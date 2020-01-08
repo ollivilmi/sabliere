@@ -7,9 +7,22 @@ function MovingState:init(entity)
 end
 
 function MovingState:update(dt)
-    if not self.entity:grounded() then
-        self.entity:changeState('falling')
+    if self.entity.dx > 0 then
+        self.entity.direction = 'right'
+    else
+        self.entity.direction = 'left'
     end
 
-    self.entity:horizontalCollision()
+    self.entity:checkGround()
+end
+
+function MovingState:collisions(collisions)
+    for __, col in pairs(collisions) do
+        if col.other.isTile then
+            -- prevent sticking to walls
+            if col.normal.x ~= 0 then
+                self.entity.x = self.entity.x + col.normal.x
+            end
+        end
+    end
 end

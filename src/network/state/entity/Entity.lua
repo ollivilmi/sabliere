@@ -4,15 +4,13 @@ require 'src/network/state/entity/movement/IdleState'
 require 'src/network/state/entity/movement/JumpingState'
 require 'src/network/state/entity/movement/MovingState'
 
-require 'src/network/state/entity/EntityPhysics'
-
 local Timer = require 'lib/game/love-utils/knife/timer'
 
-Entity = Class{__includes = EntityPhysics}
+Entity = Class{}
 
 -- Entities are rectangular objects which implement physics
 -- (gravity and collision)
-function Entity:init(parameters, level)
+function Entity:init(parameters, world)
     self.movementState = StateMachine {
         idle = IdleState(self),
         moving = MovingState(self),
@@ -22,8 +20,7 @@ function Entity:init(parameters, level)
 
     self:setState(parameters)
 
-    self.level = level
-    self.tilemap = level.tilemap
+    self.world = world
 end
 
 function Entity:changeState(state)
@@ -33,12 +30,15 @@ end
 
 function Entity:update(dt)
     self.movementState:update(dt)
-    self:move(self.dx * dt, self.dy * dt)
+    self.x, self.y, cols, cols_len = self.world:move(self, self.x + self.dx * dt, self.y + self.dy * dt)
+    self.movementState.current:collisions(cols)
 end
 
-function Entity:updateLocation(coords)
-    self.x = coords.x
-    self.y = coords.y
+function Entity:checkGround()
+    local items, len = self.world:queryRect(self.x, self.y + self.h + 1, self.w, 1)
+    if len == 0 then
+        self:changeState('falling')
+    end
 end
 
 function Entity:getLocation()
@@ -50,8 +50,8 @@ function Entity:getState()
     return {
         x = self.x,
         y = self.y,
-        width = self.width,
-        height = self.height,
+        w = self.w,
+        h = self.h,
         dy = self.dy,
         dx = self.dx,
         speed = self.speed,
@@ -94,8 +94,8 @@ end
 function Entity:setState(state)
     self.x = state.x
     self.y = state.y
-    self.width = state.width
-    self.height = state.height
+    self.w = state.w
+    self.h = state.h
     self.dy = state.dy or 0
     self.dx = state.dx or 0
     self.speed = state.speed or 200

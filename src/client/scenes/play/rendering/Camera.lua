@@ -33,8 +33,8 @@ function Camera:follow(entity)
 end
 
 function Camera:getEntityCenter(entity)
-    local x = ((entity.x + entity.width / 2) - self.center.x)
-    local y = ((entity.y + entity.height / 2) - self.center.y)
+    local x = ((entity.x + entity.w / 2) - self.center.x)
+    local y = ((entity.y + entity.h / 2) - self.center.y)
 
     return x, y
 end

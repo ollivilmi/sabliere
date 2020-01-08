@@ -13,9 +13,6 @@ function love.load()
     love.window.setTitle('Sabliere')
     -- Load resolution, fullscreen from settings file
     local graphics = graphics:load()
-    for k,v in pairs(graphics.resolution) do
-        print(type(v))
-    end
     love.window.setMode(graphics.resolution.width, graphics.resolution.height, {
             fullscreen = graphics.resolution.fullscreen,
             vsync = graphics.resolution.vsync,

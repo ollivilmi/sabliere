@@ -2,8 +2,9 @@ require 'src/network/state/tilemap/Tile'
 
 Tilemap = Class{}
 
-function Tilemap:init(width, height, tileSize)
-    self.tileSize = tileSize
+function Tilemap:init(width, height, world)
+    self.tileSize = (world.cellSize / 2) / 2
+    self.world = world
 
     self.width = width
     self.height = height
@@ -21,6 +22,10 @@ function Tilemap:init(width, height, tileSize)
     end
 end
 
+function Tilemap:toCoordinates(x, y)
+    return (x - 1) * self.tileSize, (y - 1) * self.tileSize
+end
+
 function Tilemap:addRectangle(rectangle, type)
     -- translate rectangle to tilemap coordinates, add tiles there
     -- expand if necessary
@@ -28,8 +33,8 @@ function Tilemap:addRectangle(rectangle, type)
 
     local x, y = self:toMapCoordinates(rectangle.x, rectangle.y)
 
-    local fy = (y - 1) + (rectangle.height / self.tileSize)
-    local fx = (x - 1) + (rectangle.width / self.tileSize)
+    local fy = (y - 1) + (rectangle.h / self.tileSize)
+    local fx = (x - 1) + (rectangle.w / self.tileSize)
 
     if not self:inBounds(fx, fy) then
         self:expand(fx, fy)
@@ -37,19 +42,36 @@ function Tilemap:addRectangle(rectangle, type)
 
     for y = y, fy do
         for x = x, fx do
-            self.tiles[y][x] = Tile{
-                x = x,
-                y = y,
-                size = self.tileSize,
-                type = self.types[type],
-            }
+            self:setTile(x, y, {t = type})
         end
     end
 end
 
+function Tilemap:removeTile(x, y)
+    if self:hasTile(x, y) then
+        self.world:remove(self.tiles[y][x])
+        self.tiles[y][x] = {}
+    end
+end
+
+function Tilemap:setTile(x, y, state)
+    self:removeTile(x, y)
+
+    self.tiles[y][x] = Tile{
+        type = self.types[state.t],
+        health = self.types[state.h]
+    }
+    local cx, cy = self:toCoordinates(x,y)
+    self.world:add(self.tiles[y][x], 
+        cx,
+        cy,
+        self.tileSize,
+        self.tileSize
+    )
+end
+
 function Tilemap:getChunk(entity)
     -- todo: use entity to defer active chunk
-
     local chunk = {
         x = 1,
         y = 1,
@@ -62,13 +84,13 @@ function Tilemap:getChunk(entity)
         chunk.tiles[y] = {}
 
         for x = chunk.x, chunk.width do
-            local tile = self.tiles[y][x]
-
-            tile = tile.type and tile:getState() or {}
-
-            table.insert(chunk.tiles[y], {
-                tile
-            })
+            if self:hasTile(x, y) then
+                table.insert(chunk.tiles[y], 
+                    self.tiles[y][x]:getState()
+                )
+            else
+                table.insert(chunk.tiles[y], {})
+            end
         end
     end
 
@@ -81,14 +103,9 @@ function Tilemap:setChunk(chunk)
             local state = chunk.tiles[y][x]
 
             if state.t ~= nil then
-
-                self.tiles[y][x] = Tile{
-                    x = x,
-                    y = y,
-                    size = self.tileSize,
-                    type = self.types[state.t],
-                    health = self.types[state.h]
-                }
+                self:setTile(x, y, state)
+            else
+                self:removeTile(x, y)
             end
         end
     end
@@ -114,33 +131,6 @@ function Tilemap:pointToTile(x, y)
     end
 
     return self.tiles[y][x]
-end
-
-function Tilemap:toAllTiles(action)
-    for y = 1, self.height do
-        for x = 1, self.width do
-            action(self.tiles[y][x])
-        end
-    end
-end
-
--- Used to only check adjacent tiles for performance
-function Tilemap:toTilesNear(area, action)
-    -- turn circle to rectangle for the convenience of checking adjacent tiles
-    area = area.width ~= nil and area or area:toRectangle()
-
-    left_tile = math.floor(area.x / self.tileSize) + 1
-    right_tile = math.floor((area.x + area.width) / self.tileSize) + 1
-    top_tile = math.floor(area.y / self.tileSize) + 1
-    bottom_tile = math.floor((area.y + area.height) / self.tileSize) + 1
-
-    for y = top_tile, bottom_tile do
-        for x = left_tile, right_tile do
-            if x <= self.width and y <= self.height then
-                action(y,x)
-            end
-        end
-    end
 end
 
 function Tilemap:expand(x,y)

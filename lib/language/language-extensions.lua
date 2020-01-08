@@ -1,5 +1,4 @@
 Class = require 'lib/language/class'
-Lovebird = require 'lib/game/love-utils/debug/lovebird'
 Timer = require 'lib/game/love-utils/knife/timer'
 
 require 'lib/language/table'

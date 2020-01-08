@@ -8,14 +8,17 @@ local json = require 'lib/language/json'
 
 Players = Class{__includes = Listener}
 
-function Players:init(level)
+function Players:init(world)
     Listener:init(self)
     self.players = {}
-    self.level = level
+    self.world = world
 end
 
 function Players:createEntity(id, state)
-    self.players[id] = Entity(state, self.level)
+    local entity = Entity(state, self.world)
+    self.players[id] = entity
+    self.world:add(entity, entity.x, entity.y, entity.w, entity.h)
+    
     self:broadcastEvent('NEW PLAYER', id)
 
     return self.players[id]
@@ -26,6 +29,7 @@ function Players:getEntity(id)
 end
 
 function Players:removeEntity(id)
+    self.world:remove(self.players[id])
     self.players[id] = nil
     self:broadcastEvent('PLAYER REMOVED', id)
 end
@@ -54,14 +58,6 @@ function Players:getUpdates()
     end
 
     return players
-end
-
-function Players:collision(collider)
-    for id, player in pairs(self.players) do
-        if collider:collides(player) then
-            return player
-        end
-    end
 end
 
 function Players:update(dt)

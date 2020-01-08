@@ -17,11 +17,11 @@ end
 
 -- AABB collision
 function math.rectangleCollidesRectangle(rectangleA, rectangleB)
-    if rectangleA.x > rectangleB.x + rectangleB.width or rectangleB.x > rectangleA.x + rectangleA.width then
+    if rectangleA.x > rectangleB.x + rectangleB.w or rectangleB.x > rectangleA.x + rectangleA.w then
         return false
     end
 
-    if rectangleA.y > rectangleB.y + rectangleB.height or rectangleB.y > rectangleA.y + rectangleA.height then
+    if rectangleA.y > rectangleB.y + rectangleB.h or rectangleB.y > rectangleA.y + rectangleA.h then
         return false
     end
 
@@ -29,16 +29,16 @@ function math.rectangleCollidesRectangle(rectangleA, rectangleB)
 end
 
 function math.rectangleCenter(rectangle)
-    local x = math.floor(rectangle.x + (rectangle.width / 2))
-    local y = math.floor(rectangle.y + (rectangle.height / 2))
+    local x = math.floor(rectangle.x + (rectangle.w / 2))
+    local y = math.floor(rectangle.y + (rectangle.h / 2))
 
     return x, y
 end
 
 function math.circleCollidesRectangle(circle, rectangle)
     -- closest x and y to circle
-    closestX = math.clamp(circle.x, rectangle.x, rectangle.x + rectangle.width)
-    closestY = math.clamp(circle.y, rectangle.y, rectangle.y + rectangle.height)
+    closestX = math.clamp(circle.x, rectangle.x, rectangle.x + rectangle.w)
+    closestY = math.clamp(circle.y, rectangle.y, rectangle.y + rectangle.h)
 
     distanceX = circle.x - closestX
     distanceY = circle.y - closestY
@@ -49,8 +49,8 @@ function math.circleCollidesRectangle(circle, rectangle)
 end
 
 function math.circleContainsRectangle(circle, rectangle)
-    for x = rectangle.x, rectangle.x + rectangle.width, rectangle.width do
-        for y = rectangle.y, rectangle.y + rectangle.height, rectangle.height do
+    for x = rectangle.x, rectangle.x + rectangle.w, rectangle.w do
+        for y = rectangle.y, rectangle.y + rectangle.h, rectangle.h do
             if not circle:hasPoint(x, y) then
                 return false
             end

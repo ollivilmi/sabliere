@@ -14,11 +14,7 @@ function Tile:getState()
 end
 
 function Tile:setState(def)
-    self.x = (def.x - 1) * def.size
-    self.y = (def.y - 1) * def.size
-    self.width = def.size
-    self.height = def.size
-
+    self.isTile = true
     self.type = def.type
     self.health = def.health or def.type.maxHealth
 end

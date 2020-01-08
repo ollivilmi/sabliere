@@ -10,4 +10,10 @@ function IdleState:update(dt)
     if self.entity.dx ~= 0 then
         self.entity:changeState('moving')
     end
+
+    self.entity:checkGround()
+end
+
+function IdleState:collisions(collisions)
+
 end

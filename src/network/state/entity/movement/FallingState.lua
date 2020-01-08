@@ -8,17 +8,26 @@ end
 
 function FallingState:update(dt)
     self.entity.dy = self.entity.dy + (self.entity.weight * dt)
+end
 
-    self.entity:bottomCollision()
+function FallingState:collisions(collisions)
+    for __, col in pairs(collisions) do
+        if col.other.isTile then
+            -- ground collision
+            if col.normal.y == -1 then
+                self.entity.dy = 0
 
-    if self.entity.dy == 0 then
-        if self.entity.dx ~= 0 then
-            self.entity:changeState('moving')
-        else
-            self.entity:changeState('idle')
+                if self.entity.dx ~= 0 then
+                    self.entity:changeState('moving')
+                else
+                    self.entity:changeState('idle')
+                end
+            end
+
+            -- prevent sticking to walls
+            if col.normal.x ~= 0 then
+                self.entity.x = self.entity.x + col.normal.x
+            end
         end
-
-    else
-        self.entity:horizontalCollision()
     end
 end

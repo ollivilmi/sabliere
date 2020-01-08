@@ -16,6 +16,8 @@ function Host:init(def)
 	self.updates = ServerUpdates()
 	
 	self.t = 0
+
+	self.state.level:addTestTiles()
 end
 
 function Host:validClientId(clientId)

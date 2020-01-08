@@ -40,11 +40,11 @@ function Model:render(entity)
 
     -- X and Y we draw at need to be shifted by half our width and height because we're setting the origin
     -- to that amount for proper scaling, which reverse-shifts rendering
-    math.floor(entity.x) + entity.width / 2, math.floor(entity.y) + entity.height / 2, 
+    math.floor(entity.x) + entity.w / 2, math.floor(entity.y) + entity.h / 2, 
 
     -- 0 rotation, then the X and Y scales
     0, entity.direction == 'left' and -1 or 1, 1,
 
     -- lastly, the origin offsets relative to 0,0 on the sprite (set here to the sprite's center)
-    entity.width / 2, entity.height / 2)
+    entity.w / 2, entity.h / 2)
 end

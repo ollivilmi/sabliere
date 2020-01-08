@@ -28,7 +28,7 @@ function Connection:update(dt)
     
     self:checkTimeout(dt)
 
-	if self.tickrateTimer > self.tickrate then
+    if self.tickrateTimer > self.tickrate then
 		self:sendUpdates(dt)
 
 		self.tickrateTimer = self.tickrateTimer - self.tickrate
