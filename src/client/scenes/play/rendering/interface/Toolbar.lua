@@ -3,9 +3,10 @@ Toolbar = Class{}
 -- Toolbar is the main HUD component that displays current
 -- active tool/ability for the player.
 --
-function Toolbar:init(gui, group)
+function Toolbar:init(gui, abilityDetails, group)
     self.gui = gui
     self.unit = gui.style.unit
+    self.abilityDetails = abilityDetails
     
     local abilityCount = 10
 
@@ -23,17 +24,16 @@ end
 
 -- Create buttons, assign abilities
 function Toolbar:load(abilityControls)
-    local abilities = abilityControls.abilities
-    local keys = abilityControls.keys
+    local hotkeys = abilityControls.hotkeys
 
-    for i = 1, table.getn(keys) do
-        self:createButton(i, keys[i], abilities[keys[i]])
+    for key, id in pairs(hotkeys) do
+        self:createButton(id, key, self.abilityDetails[id])
     end
 
-    self.group.value = keys[1]
+    self.group.value = 1
 
-    abilityControls:addListener('ABILITY CHANGED', function(key)
-        self.group.value = key
+    abilityControls:addListener('ABILITY CHANGED', function(id)
+        self.group.value = id
     end)
 end
 
@@ -44,10 +44,12 @@ function Toolbar:clear()
 end
 
 function Toolbar:createButton(index, key, ability)
-    local button = self.gui:option(key, {(index - 1) * self.unit, 0, self.unit, self.unit}, self.group, key)
+    local button = self.gui:option(key, {(index - 1) * self.unit, 0, self.unit, self.unit}, self.group, index)
 
     if ability then
-        self.gui:image(nil, {5, 5, 0, 0}, button, ability.icon)
+        -- todo tooltip : name, description
+        -- probably have to customize it quite heavily
+        local icon = self.gui:image(nil, {5, 5, 0, 0}, button, ability.icon)
     end
 
     -- Handle clicks as keypresses

@@ -45,6 +45,10 @@ function Players:getSnapshot()
 end
 
 function Players:setSnapshot(players)
+    for id, __ in pairs(self.players) do
+        self:removeEntity(id)
+    end
+
     for id, playerState in pairs(players) do
         self:createEntity(id, playerState)
     end

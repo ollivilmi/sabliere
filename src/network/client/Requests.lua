@@ -12,7 +12,10 @@ local Requests = {
     updatePlayer = update.player.update,
     quitPlayer = update.player.disconnect,
 
-    snapshot = duplex.snapshot.set,
+    ability = update.ability.handle,
+
+    playerConnected = duplex.snapshot.connect,
+    snapshot = duplex.snapshot.update,
     chunk = duplex.tilemap.chunk,
 }
 

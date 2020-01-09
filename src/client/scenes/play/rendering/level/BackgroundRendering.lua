@@ -20,6 +20,7 @@ function BackgroundRendering:update(dt)
 end
 
 function BackgroundRendering:render()
+    love.graphics.setColor(1,1,1)
     love.graphics.draw(self.sky, self.skyQuad, 0, 0)
     love.graphics.draw(self.ground, self.groundQuad, 0, 500)
 end

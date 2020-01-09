@@ -26,23 +26,16 @@ end
 
 function Camera:follow(entity)
     self.entity = entity
-    local x, y = self:getEntityCenter(entity)
+    local x, y = math.rectangleCenter(entity)
 
-    self.x = math.max(0, x)
-    self.y = math.max(0, y)
-end
-
-function Camera:getEntityCenter(entity)
-    local x = ((entity.x + entity.w / 2) - self.center.x)
-    local y = ((entity.y + entity.h / 2) - self.center.y)
-
-    return x, y
+    self.x = math.max(0, x - self.center.x)
+    self.y = math.max(0, y - self.center.y)
 end
 
 function Camera:update(dt)
-    local x, y = self:getEntityCenter(self.entity)
+    local x, y = math.rectangleCenter(self.entity)
 
-    self:move(self.speed, x, y)
+    self:move(self.speed, x - self.center.x, y - self.center.y)
 end
 
 function Camera:move(speed, dx, dy)
@@ -67,10 +60,10 @@ function Camera:unset()
     love.graphics.pop()
 end
 
-function Camera:coordinates()
-    return Coordinates(self.x, self.y)
+function Camera:worldCoordinates(x, y)
+    return x * self.zoom + self.x, y * self.zoom + self.y
 end
 
-function Camera:worldCoordinates(cursorX, cursorY)
-    return cursorX * self.zoom + self.x, cursorY * self.zoom + self.y
+function Camera:worldToUi(x, y)
+    return (x - self.x) / self.zoom , (y - self.y) / self.zoom 
 end

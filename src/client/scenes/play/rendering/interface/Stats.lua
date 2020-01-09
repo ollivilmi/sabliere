@@ -17,6 +17,9 @@ function Stats:init(gui, group)
     self.stats = {}
 
     self:setStyle()
+
+    self:add('ping', Game.metrics.connection)
+    self:add('fps', Game.metrics)
 end
 
 function Stats:add(name, object)

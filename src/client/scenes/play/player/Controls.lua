@@ -7,20 +7,30 @@ require 'src/client/scenes/play/player/input/CameraControls'
 
 Controls = Class{}
 
-function Controls:init(hotkeys, rendering)
+function Controls:init(hotkeys, interface)
+    self.hotkeys = hotkeys
+    self.interface = interface
+
     self.controls = {
-        camera = CameraControls(hotkeys.camera, rendering.camera),
-        interface = InterfaceControls(hotkeys.interface, rendering.interface)
+        camera = CameraControls(hotkeys.camera),
+        interface = InterfaceControls(hotkeys.interface, interface)
     }
 
+    Game.client:addListener('PLAYER CONNECTED', function(player)
+        self:controlEntity(player)
+    end)
+
     self.active = true
-    self.hotkeys = hotkeys
-    self.rendering = rendering
 end
 
 function Controls:controlEntity(entity)
-    self.controls.entity = EntityControls(self.hotkeys.movement, entity)
-    self.controls.ability = AbilityControls(self.hotkeys.toolbar, self.rendering.interface)
+    self.player = entity
+
+    -- Movement
+    self.controls.entity = EntityControls(self.hotkeys.movement, self.player)
+
+    -- Interface: Toolbar and cursor listen to Ability changed
+    self.controls.ability = AbilityControls(self.hotkeys.toolbar, self.interface)
 end
 
 function Controls:update(dt)

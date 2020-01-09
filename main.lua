@@ -1,11 +1,10 @@
 require 'lib/language/language-extensions'
 require 'src/network/Client'
 require 'src/network/Host'
-require 'src/client/Game'
+require 'src/client/GameClient'
 
 Gui = require 'lib/game/love-utils/interface/Gspot'
 local lovebird = require 'lib/game/love-utils/debug/lovebird'
-local game
 local graphics = require 'src/client/scenes/menu/settings/Graphics'
 
 function love.load()
@@ -19,7 +18,7 @@ function love.load()
         }
     )
 
-    game = Game(Client{
+    Game = GameClient(Client{
         address = '127.0.0.1',
         port = 12345,
         tickrate = 0.05
@@ -27,7 +26,7 @@ function love.load()
 
     math.randomseed(os.time())
 
-    game.scene:changeState('menu')
+    Game:load()
 end
 
 function love.update(dt)
@@ -35,7 +34,7 @@ function love.update(dt)
     Timer.update(dt)
     Gui:update(dt)
 
-    game:update(dt)
+    Game:update(dt)
 end
 
 function log(message)
@@ -45,5 +44,5 @@ function log(message)
 end
 
 function love.draw()
-    game:render()
+    Game:render()
 end

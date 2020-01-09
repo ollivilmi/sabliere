@@ -11,6 +11,8 @@ local Requests = {
     connectPlayer = update.player.connect,
     quitPlayer = update.player.quit,
     updatePlayer = update.player.update,
+
+    ability = update.ability.handle,
 }
 
 return Requests

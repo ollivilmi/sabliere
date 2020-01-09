@@ -64,6 +64,16 @@ function Entity:getState()
     }
 end
 
+-- When we only care about passing entity position (eg. ability fired)
+function Entity:getPos()
+    return {
+        x = self.x,
+        y = self.y,
+        w = self.w,
+        h = self.h
+    }
+end
+
 -- to pass parameters that change rapidly
 function Entity:getUpdates()
     return {

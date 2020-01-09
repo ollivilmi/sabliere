@@ -1,8 +1,7 @@
 require 'src/network/state/tilemap/Tilemap'
 require 'src/network/state/entity/Players'
 
-require 'src/network/state/entity/projectile/Bullet'
-require 'src/network/state/entity/Projectiles'
+require 'src/network/state/abilities/Abilities'
 
 -- physics Library
 local bump = require '/lib/game/physics/bump'
@@ -12,6 +11,7 @@ Level = Class{}
 function Level:init()
     self.world = bump.newWorld(80)
     self.tilemap = Tilemap(100, 100, self.world)
+    self.abilities = Abilities:init(self)
 
     self.players = Players(self.world)
 end

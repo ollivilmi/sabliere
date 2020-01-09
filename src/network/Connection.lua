@@ -5,7 +5,7 @@ Connection = Class{__includes = Listener}
 
 function Connection:init(self, def)
     Listener:init(self)
-    self.state = GameState(self)
+    self.state = GameState()
     self.tickrate = def.tickrate or 0.05
     
 	self.socket = require "socket"

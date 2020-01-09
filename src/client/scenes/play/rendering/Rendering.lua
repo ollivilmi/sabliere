@@ -4,20 +4,25 @@ require 'src/client/scenes/play/rendering/level/TilemapRendering'
 
 require 'src/client/scenes/play/rendering/Camera'
 require 'src/client/scenes/play/rendering/interface/Interface'
+require 'src/client/scenes/play/rendering/interface/AbilityRendering'
 
 -- Wraps GameState level for animations and stuff
 Rendering = Class{}
 
-function Rendering:init(level)
-    self.level = level
+function Rendering:init()
+    self.level = Game.state.level
 
-    self.camera = Camera(1)
+    Camera = Camera(1)
+
+    Game.client:addListener('PLAYER CONNECTED', function(player)
+        Camera:follow(player)
+    end)
 
     self.background = BackgroundRendering()
     self.tilemap = TilemapRendering(self.level.tilemap)
     self.players = PlayerRendering(self.level.players)
 
-    self.interface = Interface(game)
+    self.interface = Interface()
 
     self.renderingLayers = {
         { self.background }, -- to add: background, background tiles?
@@ -35,12 +40,12 @@ function Rendering:addRenderable(layer, renderable)
 end
 
 function Rendering:update(dt)
-    self.camera:update(dt)
+    Camera:update(dt)
     self.players:update(dt)
 end
 
 function Rendering:render()
-    self.camera:set()
+    Camera:set()
 
     for depth, layer in pairs(self.renderingLayers) do
         for k, renderable in pairs(layer) do
@@ -48,6 +53,6 @@ function Rendering:render()
         end
     end
 
-    self.camera:unset()
+    Camera:unset()
     self.interface:render()
 end

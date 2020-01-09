@@ -1,9 +1,9 @@
 CameraControls = Class{}
 
-function CameraControls:init(hotkeys, camera)
+function CameraControls:init(hotkeys)
     self.inputs = {
-        [hotkeys.zoomIn] = function() camera:setZoom(camera.zoom + 0.05) end,
-        [hotkeys.zoomOut] = function() camera:setZoom(camera.zoom - 0.05) end
+        [hotkeys.zoomIn] = function() Camera:setZoom(Camera.zoom + 0.05) end,
+        [hotkeys.zoomOut] = function() Camera:setZoom(Camera.zoom - 0.05) end
     }
 end
 

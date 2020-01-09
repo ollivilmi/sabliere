@@ -12,7 +12,6 @@ GameState = Class{}
 
 function GameState:init()
     self.level = Level()
-    self.client = {}
 end
 
 function GameState:update(dt)

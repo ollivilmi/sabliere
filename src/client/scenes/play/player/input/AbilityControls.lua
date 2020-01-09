@@ -2,37 +2,36 @@ AbilityControls = Class{__includes = Listener}
 
 -- Manages current, active player ability
 --
--- Takes in keymap for keybindings
+-- Takes in keymap for keybindings -> abilityId
 --
--- Interface is needed to check if mouse if hovering over GUI,
--- and to load Toolbar
+-- Interface is needed to check if mouse if hovering over GUI
 --
 function AbilityControls:init(hotkeys, interface)
     Listener:init(self)
-    self.keys = hotkeys
+
+    self.hotkeys = {}
     
-    self.abilities = {
-        [self.keys[1]] = {
-            name = "Build sand",
-            icon = love.graphics.newImage('src/client/assets/textures/tile/sand.png'),
-            onclick = function() print ("build") end
-        },
-        [self.keys[2]] = {
-            name = "Shoot",
-            icon = love.graphics.newImage('src/client/assets/textures/tile/sand.png'),
-            onclick = function() print ("pew") end
-        }
-    }
-    self.currentAbility = self.abilities[self.keys[1]]
-
-    interface.toolbar:load(self)
-
+    self.abilities = Game.state.level.abilities
     self.interface = interface
+
+    for i, key in pairs(hotkeys) do
+        self.hotkeys[key] = i
+    end
+
+    self.current = 1
+
+    self.interface.toolbar:load(self)
+    self.interface.cursor:load(self)
 end
 
 function AbilityControls:update()
     if love.mouse.wasPressed(1) and not self.interface.gui.mousein then
-        self.currentAbility.onclick()
+        local x, y = Camera:worldCoordinates(love.mouse.getX(), love.mouse.getY())
+        
+        Game.client.updates:pushEvent(Data(
+            {request = 'ability', abilityId = self.current},
+            {coords = Coordinates(x, y)})
+        )
     end
 
     for key, __ in pairs(love.keyboard.keysPressed) do
@@ -41,10 +40,10 @@ function AbilityControls:update()
 end
 
 function AbilityControls:switchAbility(key)
-    local ability = self.abilities[key]
+    local ability = self.abilities[self.hotkeys[key]]
     
-    if ability and ability ~= self.currentAbility then 
-        self.currentAbility = ability
-        self:broadcastEvent('ABILITY CHANGED', key, ability)
+    if ability and self.hotkeys[key] ~= self.current then 
+        self.current = self.hotkeys[key]
+        self:broadcastEvent('ABILITY CHANGED', self.current)
     end
 end

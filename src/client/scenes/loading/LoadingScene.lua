@@ -2,8 +2,7 @@ require 'lib/game/State'
 
 LoadingScene = Class{__includes = State}
 
-function LoadingScene:init(game)
-    self.game = game
+function LoadingScene:init()
     self.font = love.graphics.newFont('src/client/assets/fonts/Provicali.otf', 24)
     self.gui = Gui()
 
@@ -24,13 +23,12 @@ end
 
 function LoadingScene:update(dt)
     if love.keyboard.wasPressed('escape') then
-        self.game.client:setDisconnected()
-        self.game.scene:changeState('menu')
+        Game.client:setDisconnected()
+        Game.scene:changeState('menu')
     end
 
-
     if self.timePassed > self.timeOut then
-        self.game.scene:changeState('menu', {msg = "Connection timed out"})
+        Game.scene:changeState('menu', {msg = "Connection timed out"})
     end
 
     self.t = self.t + dt
@@ -41,7 +39,7 @@ function LoadingScene:update(dt)
         coroutine.resume(self.loadingCoroutine)
 
         if coroutine.status(self.loadingCoroutine) == 'dead' then
-            self.game.scene:changeState('play')
+            Game.scene:changeState('play')
         end
     end
 end

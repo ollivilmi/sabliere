@@ -26,7 +26,7 @@ function MainMenu:init(menuScene)
     )
     
     connectButton.click = function(this)
-        menuScene.game.scene:changeState('loading', menuScene.game.client:connect())
+        Game.scene:changeState('loading', Game.client:connect())
     end
 
     gui:button('Host', {

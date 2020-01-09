@@ -18,7 +18,7 @@ function PlayerUpdates.connect(data, host, ip, port)
     host.updates:pushEntity(clientId, player)
     
     -- Send state snapshot to connecting player
-    host.updates:pushDuplex(clientId, Data({request = 'snapshot'}, host.state:getSnapshot()))
+    host.updates:pushDuplex(clientId, Data({request = 'playerConnected'}, host.state:getSnapshot()))
 
     -- Add update of new player for all clients
     -- Todo: duplex
