@@ -1,68 +1,40 @@
-require 'src/dependencies'
+require 'lib/language/language-extensions'
+require 'src/network/Client'
+require 'src/network/Host'
+require 'src/client/GameClient'
+
+Gui = require 'lib/game/love-utils/interface/Gspot'
+local lovebird = require 'lib/game/love-utils/debug/lovebird'
+local graphics = require 'src/client/scenes/menu/settings/Graphics'
 
 function love.load()
-    love.graphics.setDefaultFilter('nearest', 'nearest')
     love.filesystem.setIdentity('sabliere')
-    settings.loadAll()
-
-    math.randomseed(os.time())
-    initStateMachine()
-
     love.window.setTitle('Sabliere')
-    push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
-        vsync = true,
-        fullscreen = false,
-        resizable = true
+    -- Load resolution, fullscreen from settings file
+    local graphics = graphics:load()
+    love.window.setMode(graphics.resolution.width, graphics.resolution.height, {
+            fullscreen = graphics.resolution.fullscreen,
+            vsync = graphics.resolution.vsync,
+        }
+    )
+
+    Game = GameClient(Client{
+        address = '127.0.0.1',
+        port = 12345,
+        tickrate = 0.05
     })
 
-    love.keyboard.keysPressed = {}
-    love.mouse.buttonsPressed = {}
-    love.mouse.buttonsReleased = {}
-    love.mouse.wheelmoved = 0
-end
+    math.randomseed(os.time())
 
-function love.resize(w,h)
-    push:resize(w,h)
+    Game:load()
 end
 
 function love.update(dt)
-    gStateMachine:update(dt)
-    love.keyboard.keysPressed = {}
-    love.mouse.buttonsPressed = {}
-    love.mouse.buttonsReleased = {}
-    love.mouse.wheelmoved = 0
-end
+    lovebird.update()
+    Timer.update(dt)
+    Gui:update(dt)
 
-function love.keypressed(key)
-    love.keyboard.keysPressed[key] = true
-end
-
-function love.mousepressed(x, y, button)
-    love.mouse.buttonsPressed[button] = true
-end
-
-function love.mousereleased(x, y, button)
-    love.mouse.buttonsReleased[button] = true
-end
-
-function love.wheelmoved(x, y)
-    love.mouse.wheelmoved = y
-end
-
-function love.keyboard.wasPressed(key)
-    if love.keyboard.keysPressed[key] then
-        return true
-    else
-        return false
-    end
-end
-
-function love.mouse.wasPressed(button)
-    return love.mouse.buttonsPressed[button]
-end
-
-function love.mouse.wasReleased(button)
-    return love.mouse.buttonsReleased[button]
+    Game:update(dt)
 end
 
 function log(message)
@@ -72,7 +44,5 @@ function log(message)
 end
 
 function love.draw()
-    push:apply('start')
-    gStateMachine:render()
-    push:apply('end')
+    Game:render()
 end
