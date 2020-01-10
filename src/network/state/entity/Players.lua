@@ -11,11 +11,14 @@ Players = Class{__includes = Listener}
 function Players:init(world)
     Listener:init(self)
     self.players = {}
+    self.disconnectedPlayers = {}
     self.world = world
 end
 
 function Players:createEntity(id, state)
-    local entity = Entity(state, self.world)
+    if self.players[id] then return self.players[id] end
+
+    local entity = self.disconnectedPlayers[id] or Entity(state, self.world)
     self.players[id] = entity
     self.world:add(entity, entity.x, entity.y, entity.w, entity.h)
     
@@ -30,6 +33,7 @@ end
 
 function Players:removeEntity(id)
     self.world:remove(self.players[id])
+    self.disconnectedPlayers[id] = self.players[id]
     self.players[id] = nil
     self:broadcastEvent('PLAYER REMOVED', id)
 end
@@ -45,12 +49,18 @@ function Players:getSnapshot()
 end
 
 function Players:setSnapshot(players)
-    for id, __ in pairs(self.players) do
-        self:removeEntity(id)
-    end
-
-    for id, playerState in pairs(players) do
-        self:createEntity(id, playerState)
+    for id, newState in pairs(players) do
+        local player = self.players[id]
+        if not player then
+            self:createEntity(id, newState)
+        else
+            -- only update player x, y if player is too far from previous location
+            -- this is to prevent hitches in the game
+            if math.distance(player.x, player.y, newState.x, newState.y) > 300 then
+                player.x = newState.x
+                player.y = newState.y
+            end
+        end
     end
 end
 

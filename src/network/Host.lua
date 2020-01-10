@@ -13,8 +13,16 @@ function Host:init(def)
 
 	-- [id] = ip, port, time from last ping
 	self.clients = {}
-	self.updates = ServerUpdates()
+	self.updates = ServerUpdates(self)
 	
+	self.snapshotInterval = 60
+
+	Timer.every(self.snapshotInterval, function()
+		for id, __ in pairs(self.clients) do
+			self.updates:pushDuplex(id, Data({request = 'snapshot'}, self.state:getSnapshot()))
+		end
+    end)
+
 	self.t = 0
 
 	self.state.level:addTestTiles()
@@ -26,24 +34,20 @@ function Host:validClientId(clientId)
 	return self.clients[clientId] ~= nil
 end
 
-function Host:send(data, ip, port)
-	self.udp:sendto(data:encode(), ip, port)
-end
-
-function Host:sendToClient(clientId, data)
+function Host:send(data, clientId)
 	local client = self.clients[clientId]
 
-	self:send(data, client.ip, client.port)
+	self.udp:sendto(data:encode(), client.ip, client.port)
 end
 
 function Host:sendUpdates()
-	for clientId, client in pairs(self.clients) do
+	for clientId, __ in pairs(self.clients) do
 		for _, data in pairs(self.updates:getUpdates()) do
-			self:send(data, client.ip, client.port)
+			self:send(data, clientId)
 		end
 
 		for _, data in pairs(self.updates:getUpdatesForClient(clientId)) do
-			self:send(data, client.ip, client.port)
+			self:send(data, clientId)
 		end
 	end
 end

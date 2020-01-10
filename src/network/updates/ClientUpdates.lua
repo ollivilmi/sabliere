@@ -8,14 +8,14 @@ function ClientUpdates:init(client)
 
     -- updates that require confirmation and must be sent in order
     -- requires clientId to work
-    self.duplexQueue = DuplexQueue()
+    self.duplexQueue = DuplexQueue(nil, client)
 
     client:addListener('CONNECTED', function(clientId)
-        self.duplexQueue = DuplexQueue(clientId)
+        self.duplexQueue = DuplexQueue(clientId, client)
     end)
 
     client:addListener('DISCONNECTED', function()
-        self.duplexQueue = DuplexQueue()
+        self.duplexQueue = DuplexQueue(nil, client)
     end)
 end
 

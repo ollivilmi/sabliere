@@ -25,12 +25,13 @@ function testMd5()
     m2 = md5.sumhexa('this is our very important message payload ')
     assert(m1 ~= m2, "message 2 has an extra space, should not equal")
 
-    local tilemap = Tilemap(10, 10, 10)
+    local bump = require '/lib/game/physics/bump'
+    local tilemap = Tilemap(10, 10, bump.newWorld(20))
 
     -- Generate a tile chunk that is twice as large as 1920x1080p
     -- quite big, but still should perform very fast
 
-    tilemap:addRectangle(BoxCollider(0, 0, 384, 216))
+    tilemap:addRectangle({x=0,y=0,w=384,h=216})
     local socket = require 'socket'
     local start = socket.gettime()
     md5.sumhexa(lzw.compress(json.encode(tilemap:getChunk({

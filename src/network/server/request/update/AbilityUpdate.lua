@@ -12,7 +12,7 @@ function AbilityUpdates.handle(data, host, ip, port)
     data.headers.clientId = nil
 
     -- Add snapshot of player when the ability was triggered
-    data.payload.player = player:getPos(),
+    data.payload.player = player:getPos()
 
     host.updates:pushEvent(data)
 end

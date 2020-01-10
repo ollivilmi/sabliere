@@ -42,7 +42,7 @@ function Tilemap:addRectangle(rectangle, type)
 
     for y = y, fy do
         for x = x, fx do
-            self:setTile(x, y, {t = type})
+            self:setTile(x, y, type)
         end
     end
 end
@@ -54,13 +54,11 @@ function Tilemap:removeTile(x, y)
     end
 end
 
-function Tilemap:setTile(x, y, state)
+function Tilemap:setTile(x, y, type)
     self:removeTile(x, y)
 
-    self.tiles[y][x] = Tile{
-        type = self.types[state.t],
-        health = self.types[state.h]
-    }
+    self.tiles[y][x] = Tile(self.types[type])
+
     local cx, cy = self:toCoordinates(x,y)
     self.world:add(self.tiles[y][x], 
         cx,
@@ -86,7 +84,7 @@ function Tilemap:getChunk(entity)
         for x = chunk.x, chunk.width do
             if self:hasTile(x, y) then
                 table.insert(chunk.tiles[y], 
-                    self.tiles[y][x]:getState()
+                    self.tiles[y][x].type.id
                 )
             else
                 table.insert(chunk.tiles[y], {})
@@ -100,10 +98,10 @@ end
 function Tilemap:setChunk(chunk)
     for y = chunk.y, chunk.height do
         for x = chunk.x, chunk.width do
-            local state = chunk.tiles[y][x]
+            local tile = chunk.tiles[y][x]
 
-            if state.t ~= nil then
-                self:setTile(x, y, state)
+            if type(tile) == 'string' then
+                self:setTile(x, y, tile)
             else
                 self:removeTile(x, y)
             end
@@ -116,7 +114,7 @@ function Tilemap:inBounds(x, y)
 end
 
 function Tilemap:hasTile(x, y)
-    return self:inBounds(x,y) and self.tiles[y][x].type
+    return self:inBounds(x,y) and self.tiles[y][x].isTile
 end
 
 function Tilemap:toMapCoordinates(x, y)

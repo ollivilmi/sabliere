@@ -3,7 +3,7 @@ require 'src/network/updates/DuplexQueue'
 
 ServerUpdates = Class{__includes = Updates}
 
-function ServerUpdates:init()
+function ServerUpdates:init(host)
     Updates:init(self)
 
     -- updates to specific client
@@ -11,6 +11,8 @@ function ServerUpdates:init()
     
     -- updates that require confirmation and must be sent in order
     self.duplexToClient = {}
+
+    self.host = host
 end
 
 function ServerUpdates:pushClientEvent(clientId, data)
@@ -18,7 +20,7 @@ function ServerUpdates:pushClientEvent(clientId, data)
 end
 
 function ServerUpdates:pushDuplex(clientId, data)
-	self.duplexToClient[clientId]:push(data)
+    self.duplexToClient[clientId]:push(data)
 end
 
 function ServerUpdates:sendACK(data)
@@ -31,7 +33,7 @@ function ServerUpdates:receiveACK(data)
 end
 
 function ServerUpdates:addClient(clientId)
-    self.duplexToClient[clientId] = DuplexQueue(clientId)
+    self.duplexToClient[clientId] = DuplexQueue(clientId, self.host)
     self.clientEvents[clientId] = {}
 end
 
@@ -45,16 +47,6 @@ function ServerUpdates:removeClient(clientId)
     end
 end
 
-function ServerUpdates:duplexData(clientId)
-    local request = self.duplexToClient[clientId]
-
-    if request:timedOut() then
-        -- NOTIFY: CONNECTION TIMED OUT FOR CLIENT_ID
-    end
-
-    return request:refresh()
-end
-
 function ServerUpdates:getUpdatesForClient(clientId)
     local updates = {}
 
@@ -62,9 +54,12 @@ function ServerUpdates:getUpdatesForClient(clientId)
         table.insert(updates, data)
     end
 
-    local data = self:duplexData(clientId)
-    if data then
-        table.insert(updates, data)
+    local duplex = self.duplexToClient[clientId]
+
+    if duplex:timedOut() then
+        -- NOTIFY: CONNECTION TIMED OUT FOR CLIENT_ID
+    else
+        duplex:refresh()
     end
 
     return updates

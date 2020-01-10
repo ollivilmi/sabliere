@@ -16,14 +16,15 @@ local currentTime = host.socket.gettime()
 
 local fiveseconds = host.socket.gettime()
 
+Timer.every(5, function()
+    host.state.level.players:print()
+end)
+
 while running do
-    -- update game state by delta time
     currentTime = host.socket.gettime()
-    host:update(currentTime - previousTime)
+    local dt = currentTime - previousTime
     previousTime = currentTime
 
-    if currentTime - fiveseconds > 5 then
-        host.state.level.players:print()
-        fiveseconds = currentTime
-    end
+    Timer.update(dt)
+    host:update(dt)
 end

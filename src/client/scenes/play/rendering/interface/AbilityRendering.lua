@@ -29,10 +29,12 @@ function AbilityRendering:init()
             local px, py = math.rectangleCenter(self.player)
             local wx, wy = Camera:worldCoordinates(x, y)
 
-            local color = math.distance(px, py, wx, wy) < ability.range and {0,0,0} or {0,0,0,0.5}
-            
-            love.graphics.setColor(color)
+            local color = math.distance(px, py, wx, wy) < ability.range and {0,0,0,0.6} or {0,0,0,0.15}
+
+            love.graphics.setColor(0,0,0)
             love.graphics.rectangle('line', x, y, ability.radius / Camera.zoom, ability.radius / Camera.zoom)
+            love.graphics.setColor(color)
+            love.graphics.rectangle('fill', x, y, ability.radius / Camera.zoom, ability.radius / Camera.zoom)
         end,
         [2] = function(x, y)
             love.graphics.setColor(0,0,0)

@@ -17,7 +17,7 @@ function TilemapRendering:init(tilemap)
 end
 
 function TilemapRendering:renderTile(tile, x, y)
-    if not tile.type then
+    if not tile.isTile then
         return
     end
 
