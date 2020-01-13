@@ -1,81 +1,72 @@
 Resources = Class{}
 
 function Resources:init(level)
-    self.resources = {{}}
     self.world = level.world
+    self.chunk = level.chunk
+
+    self.types = {
+        t = {
+            id = 't',
+            size = 10
+        }
+    }
 end
 
-function Resources:add(x, y, type)
-    local x, y = math.floor(x), math.floor(y)
-    if not self.resources[y] then 
-        self.resources[y] = {} 
+function Resources:addResource(x, y, id)
+    local type = self.types[id]
+    if not type then return end
+
+    local resource = {id = id, x = x, y = y, isResource = true}
+
+    self.world:add(resource, x, y, type.size, type.size)
+end
+
+function Resources:setResource(x, y, id)
+    local type = self.types[id]
+
+    if type then
+        self:removeIfExists(x, y)
+        self:addResource(x, y, id)
     end
-    self.resources[y][x] = {type = type, x = x, y = y, isResource = true}
-
-    self.world:add(type, x, y, self.size, self.size)
 end
 
-function Resources:remove(x, y)
-    local resource = self.resources[y][x]
+function Resources:getResource(x, y, id)
+    local items, len = self.world:queryPoint(x, y, function(item)
+        return item.isResource
+    end)
 
+    return items[0]
+end
+
+function Resources:removeResource(resource)
+    self.world:remove(resource)
+end
+
+function Resources:removeIfExists(x, y)
+    local resource = self:getResource(x, y)
     if resource then
-        self.world:remove(resource)
-        self.resources[y][x] = nil
+        self:removeResource(resource)
     end
 end
 
-function Resources:getChunk(entity)
-    local x, y = math.rectangleCenter(entity)
+function Resources:getChunk(chunk)
+    local resourceChunk = {}
 
-    local chunk = {
-        x = math.max(0, x - 1920),
-        y = math.max(0, y - 1080),
-        w = 3840,
-        h = 2160,
-        resources = {}
-    }
-
-    local items, len = self.world:queryRect(
-        chunk.x,
-        chunk.y,
-        chunk.w,
-        chunk.h,
-        function(item)
+    local resources, len = self.world:queryRect(
+        chunk.x, chunk.y, self.chunk.w, self.chunk.h, function(item)
             return item.isResource
         end
     )
 
-    for i, item in pairs(items) do
-        chunk.resources[i] = item.type
+    for __, resource in pairs(resources) do
+        table.insert(resourceChunk, {id = resource.id, x = resource.x, y = resource.y})
     end
 
-    return chunk
+    return resourceChunk
 end
 
-function Resources:setChunk(chunk)
-    local x, y = math.rectangleCenter(entity)
-
-    local chunk = {
-        x = math.max(0, x - 1920),
-        y = math.max(0, y - 1080),
-        w = 3840,
-        h = 2160,
-        resources = {}
-    }
-
-    local items, len = self.world:queryRect(
-        chunk.x,
-        chunk.y,
-        chunk.w,
-        chunk.h,
-        function(item)
-            return item.isResource
-        end
-    )
-
-    for i, item in pairs(items) do
-        chunk.resources[i] = item.type
+function Resources:setResources(resources)
+    for id, resource in pairs(resources) do
+        self:setResource(resource.x, resource.y, resource.id)
     end
-
-    return chunk
 end

@@ -29,14 +29,26 @@ function Entity:changeState(state)
     self.state = state
 end
 
+local function entityCollision(player, other)
+    if other.isResource then return 'cross'
+    else
+        return 'slide'
+    end
+end
+
 function Entity:update(dt)
     self.movementState:update(dt)
-    self.x, self.y, cols, cols_len = self.world:move(self, self.x + self.dx * dt, self.y + self.dy * dt)
+    self.x, self.y, cols, cols_len = self.world:move(
+        self, self.x + self.dx * dt, self.y + self.dy * dt,
+        entityCollision
+    )
     self.movementState.current:collisions(cols)
 end
 
 function Entity:checkGround()
-    local items, len = self.world:queryRect(self.x, self.y + self.h + 1, self.w, 1)
+    local items, len = self.world:queryRect(self.x, self.y + self.h + 1, self.w, 1, function(item)
+        return item.isTile or item.isEntity
+    end)
     if len == 0 then
         self:changeState('falling')
     end

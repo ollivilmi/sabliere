@@ -68,11 +68,14 @@ end
 function Level:getChunk(chunk)
     return {
         tilemap = self.tilemap:getChunk(chunk),
+        resources = self.resources:getChunk(chunk)
     }
 end
 
 function Level:setChunk(segment, snapshot)
     if segment == 'tilemap' then
         self.tilemap:setChunk(snapshot)
+    elseif segment == 'resources' then
+        self.resources:setResources(snapshot)
     end
 end

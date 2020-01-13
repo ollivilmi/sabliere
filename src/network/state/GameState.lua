@@ -38,6 +38,7 @@ function GameState:getSnapshot(clientId)
     return {
         players = self.players:getSnapshot(),
         tilemap = levelChunk.tilemap,
+        resources = levelChunk.resources
     }
 end
 
