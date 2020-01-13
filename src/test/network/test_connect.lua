@@ -19,13 +19,14 @@ function testDisconnect()
     assert(not host.clients[client.status.id])
 
     -- Player entity is removed
-    assert(not host.state.level.players:getEntity(client.status.id))    
+    assert(not host.state.players:getEntity(client.status.id))    
 
     host:close()
 end
 
 function testTimeout()
     local client, host = setupClientAndHost()
+    connectPlayer(client, host)
 
     host:update(host.timeout + 1)
 
@@ -33,7 +34,7 @@ function testTimeout()
     assert(not host.clients[client.status.id])
 
     -- Player entity is removed
-    assert(not host.state.level.players:getEntity(client.status.id))
+    assert(not host.state.players:getEntity(client.status.id))
 
     client:update(client.timeout + 1)
 

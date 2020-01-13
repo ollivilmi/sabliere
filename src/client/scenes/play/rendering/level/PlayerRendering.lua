@@ -6,7 +6,7 @@ local models = require 'src/client/scenes/play/entity/models/playerModels'
 PlayerRendering = Class{}
 
 function PlayerRendering:init(players)
-    self.playerEntities = players
+    self.players = players
 
     players:addListener('NEW PLAYER', function(id)
         self:animatePlayer(id)
@@ -26,7 +26,7 @@ function PlayerRendering:update(dt)
 end
 
 function PlayerRendering:animatePlayer(id)
-    local entity = self.playerEntities:getEntity(id)
+    local entity = self.players:getEntity(id)
 
     self.animatedPlayers[id] = AnimatedEntity(entity, models[entity.model]())
 end

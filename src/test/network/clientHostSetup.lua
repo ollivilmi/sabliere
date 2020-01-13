@@ -31,6 +31,22 @@ function setupClientAndHost()
     return client, host
 end
 
+function connectPlayer(client, host)
+    client.updates:pushDuplex(Data{request = 'connectPlayer'})
+
+    -- local connecting = true
+    -- client:addListener('PLAYER CONNECTED', function()
+    --     connecting = false
+    -- end)
+
+    -- while connecting do
+    --     client:sendUpdates(client.tickrate)
+    --     host:receive()
+    --     host:sendUpdates(host.tickrate)
+    --     client:receive()
+    -- end
+end
+
 function cleanup(client, host)
     client:setDisconnected()
     host:close()

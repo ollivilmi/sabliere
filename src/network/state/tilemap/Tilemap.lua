@@ -1,157 +1,113 @@
 require 'src/network/state/tilemap/Tile'
+local tilemath = require 'lib/game/math/tilemath'
 
 Tilemap = Class{}
 
-function Tilemap:init(width, height, world)
-    self.tileSize = (world.cellSize / 2) / 2
-    self.world = world
+function Tilemap:init(level)
+    self.tileSize = level.tileSize
+    self.world = level.world
+    self.chunk = level.chunk
 
-    self.width = width
-    self.height = height
-
-    self.tiles = {}
     self.types = require 'src/network/state/tilemap/TileTypes'
+end
 
-    for y = 1, self.height do
-        table.insert(self.tiles, {})
-        for x = 1, self.width do
-            table.insert(self.tiles[y], {
-                {}
-            })
+function Tilemap:addRectangle(rectangle, id)
+    local id = id or 'r'
+
+    sx = tilemath.snap(self.tileSize, rectangle.x)
+    sy = tilemath.snap(self.tileSize, rectangle.y)
+
+    local ex = tilemath.snap(self.tileSize, sx + rectangle.w) - 1
+    local ey = tilemath.snap(self.tileSize, sy + rectangle.h) - 1
+
+    for x = sx, ex, self.tileSize do
+        for y = sy, ey, self.tileSize do
+            self:setTile(x, y, id)
         end
     end
 end
 
-function Tilemap:toCoordinates(x, y)
-    return (x - 1) * self.tileSize, (y - 1) * self.tileSize
+function Tilemap:getTile(x, y)
+    local items, len = self.world:queryRect(x, y, self.tileSize, self.tileSize,
+    function(item)
+        return item.isTile
+    end)
+
+    return items[1]
 end
 
-function Tilemap:addRectangle(rectangle, type)
-    -- translate rectangle to tilemap coordinates, add tiles there
-    -- expand if necessary
-    local type = type or 'r'
+function Tilemap:removeTile(tile)
+    self.world:remove(tile)
+end
 
-    local x, y = self:toMapCoordinates(rectangle.x, rectangle.y)
-
-    local fy = (y - 1) + (rectangle.h / self.tileSize)
-    local fx = (x - 1) + (rectangle.w / self.tileSize)
-
-    if not self:inBounds(fx, fy) then
-        self:expand(fx, fy)
-    end
-
-    for y = y, fy do
-        for x = x, fx do
-            self:setTile(x, y, type)
-        end
+function Tilemap:removeIfExists(x, y)
+    local tile = self:getTile(x, y)
+    if tile then
+        self:removeTile(tile)
     end
 end
 
-function Tilemap:removeTile(x, y)
-    if self:hasTile(x, y) then
-        self.world:remove(self.tiles[y][x])
-        self.tiles[y][x] = {}
+function Tilemap:setTile(x, y, id)
+    if id ~= 0 and type(id) == 'string' then
+        self:removeIfExists(x, y)
+
+        self.world:add(Tile(x, y, self.types[id]), 
+            x,
+            y,
+            self.tileSize,
+            self.tileSize
+        )
     end
 end
 
-function Tilemap:setTile(x, y, type)
-    self:removeTile(x, y)
-
-    self.tiles[y][x] = Tile(self.types[type])
-
-    local cx, cy = self:toCoordinates(x,y)
-    self.world:add(self.tiles[y][x], 
-        cx,
-        cy,
-        self.tileSize,
-        self.tileSize
-    )
+-- World coordinates -> table coordinates (eg. tileSize 20 -> 20,20 -> 2,2)
+function Tilemap:toTableCoordinates(x, y)
+    return (x / self.tileSize) + 1, (y / self.tileSize) + 1
 end
 
-function Tilemap:getChunk(entity)
-    -- todo: use entity to defer active chunk
+-- Compressed format for sending
+function Tilemap:getChunk(chunk)
     local chunk = {
-        x = 1,
-        y = 1,
-        width = self.width,
-        height = self.height,
+        x = chunk.x,
+        y = chunk.y,
         tiles = {}
     }
 
-    for y = chunk.y, chunk.height do
+    for y = 1, self.chunk.h / self.tileSize do
         chunk.tiles[y] = {}
-
-        for x = chunk.x, chunk.width do
-            if self:hasTile(x, y) then
-                table.insert(chunk.tiles[y], 
-                    self.tiles[y][x].type.id
-                )
-            else
-                table.insert(chunk.tiles[y], {})
-            end
+        for x = 1, self.chunk.w / self.tileSize do
+            chunk.tiles[y][x] = 0
         end
+    end
+
+    local tiles, len = self.world:queryRect(
+        chunk.x, chunk.y, self.chunk.w, self.chunk.h, function(item)
+            return item.isTile
+        end
+    )
+
+    for __, tile in pairs(tiles) do
+        local x, y = self:toTableCoordinates(tile.x - chunk.x, tile.y - chunk.y)
+
+        chunk.tiles[y][x] = tile.type.id
     end
 
     return chunk
 end
 
+-- Table coordinates -> world coordinates
+function Tilemap:fromTableCoordinates(x, y)
+    return (x - 1) * self.tileSize, (y - 1) * self.tileSize
+end
+
+-- Set tiles from compressed format
 function Tilemap:setChunk(chunk)
-    for y = chunk.y, chunk.height do
-        for x = chunk.x, chunk.width do
-            local tile = chunk.tiles[y][x]
-
-            if type(tile) == 'string' then
-                self:setTile(x, y, tile)
-            else
-                self:removeTile(x, y)
-            end
+    for y = 1, self.chunk.h / self.tileSize do
+        for x = 1, self.chunk.w / self.tileSize do
+            local id = chunk.tiles[y][x]
+            
+            local cx, cy = self:fromTableCoordinates(x, y)
+            self:setTile(cx + chunk.x, cy + chunk.y, id)
         end
-    end
-end
-
-function Tilemap:inBounds(x, y)
-    return y > 0 and x > 0 and y <= self.height and x <= self.width
-end
-
-function Tilemap:hasTile(x, y)
-    return self:inBounds(x,y) and self.tiles[y][x].isTile
-end
-
-function Tilemap:toMapCoordinates(x, y)
-    return math.floor(x / self.tileSize) + 1, math.floor(y / self.tileSize) + 1
-end
-
-function Tilemap:pointToTile(x, y)
-    x,y = self:toMapCoordinates(x,y)
-
-    if not self:hasTile(x,y) then
-        return nil
-    end
-
-    return self.tiles[y][x]
-end
-
-function Tilemap:expand(x,y)
-    if y > self.height then
-        for y = self.height + 1, y do
-            table.insert(self.tiles, {})
-            for x = 1, self.width do
-                table.insert(self.tiles[y], {
-                    {}
-                })
-            end
-        end
-        self.height = y
-    end
-
-    if x > self.width then
-        for y = 1, self.height do
-            for x = self.width + 1, x do
-                table.insert(self.tiles[y], {
-                    {}
-                })
-            end
-        end
-        self.width = x
     end
 end

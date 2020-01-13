@@ -19,6 +19,7 @@ function Entity:init(parameters, world)
     }
 
     self:setState(parameters)
+    self.isEntity = true
 
     self.world = world
 end

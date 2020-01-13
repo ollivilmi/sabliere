@@ -8,18 +8,26 @@ local json = require 'lib/language/json'
 
 Players = Class{__includes = Listener}
 
-function Players:init(world)
+function Players:init(world, level)
     Listener:init(self)
     self.players = {}
     self.disconnectedPlayers = {}
+
+    self.chunkHistory = require 'src/network/state/entity/ChunkHistory'
     self.world = world
+    self.level = level
 end
 
 function Players:createEntity(id, state)
     if self.players[id] then return self.players[id] end
 
     local entity = self.disconnectedPlayers[id] or Entity(state, self.world)
+    entity.isPlayer = true
+
     self.players[id] = entity
+    self.chunkHistory[id] = {}
+    self.chunkHistory:update(id, self.level:getEntityChunk(entity))
+
     self.world:add(entity, entity.x, entity.y, entity.w, entity.h)
     
     self:broadcastEvent('NEW PLAYER', id)
@@ -35,6 +43,7 @@ function Players:removeEntity(id)
     self.world:remove(self.players[id])
     self.disconnectedPlayers[id] = self.players[id]
     self.players[id] = nil
+    self.chunkHistory[id] = nil
     self:broadcastEvent('PLAYER REMOVED', id)
 end
 
@@ -77,6 +86,18 @@ end
 function Players:update(dt)
     for id, player in pairs(self.players) do
         player:update(dt)
+        self:updateChunk(id, player)
+    end
+end
+
+function Players:updateChunk(id, player)
+    local chunk = self.level:getEntityChunk(player)
+    local current = self.chunkHistory[id].current
+
+    if chunk.x ~= current.x or chunk.y ~= current.y then
+        local timeElapsed = self.chunkHistory:timeElapsed(id, chunk)
+        self.chunkHistory:update(id, chunk)
+        self:broadcastEvent('PLAYER CHUNK', id, timeElapsed)
     end
 end
 

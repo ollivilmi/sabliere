@@ -8,10 +8,10 @@ local Requests = {
     ACK = duplex.protocol.acknowledge,
     ping = duplex.protocol.ping,
 
-    connectPlayer = update.player.connect,
+    connectPlayer = duplex.player.connect,
+
     quitPlayer = update.player.quit,
     updatePlayer = update.player.update,
-
     ability = update.ability.handle,
 }
 

@@ -1,7 +1,7 @@
 AbilityRendering = Class{}
 
 function AbilityRendering:init()
-    self.abilities = Game.state.level.abilities
+    self.abilities = Game.state.abilities
 
     Game.client:addListener('PLAYER CONNECTED', function(player)
         self.player = player

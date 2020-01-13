@@ -11,7 +11,7 @@ function AbilityControls:init(hotkeys, interface)
 
     self.hotkeys = {}
     
-    self.abilities = Game.state.level.abilities
+    self.abilities = Game.state.abilities
     self.interface = interface
 
     for i, key in pairs(hotkeys) do

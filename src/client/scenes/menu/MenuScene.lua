@@ -10,7 +10,11 @@ function MenuScene:init()
     self.titleFont = love.graphics.newFont('src/client/assets/fonts/Provicali.otf', 62)
     self.font = love.graphics.newFont('src/client/assets/fonts/Provicali.otf', 28)
     self.background = love.graphics.newImage('src/client/assets/textures/background/mountain.png')
-    
+    self.backgroundScale = {
+        x = love.graphics.getWidth() / self.background:getWidth(),
+        y = love.graphics.getHeight() / self.background:getHeight()
+    }
+
     self.gui = Gui()
 
     self.gui.style.fg = {1,1,1}
@@ -76,7 +80,7 @@ end
 
 function MenuScene:render()
     love.graphics.setColor(1,1,1)
-    love.graphics.draw(self.background, -200, -200)
+    love.graphics.draw(self.background, 0, 0, 0, self.backgroundScale.x, self.backgroundScale.y)
 
     self.gui:draw()
 end

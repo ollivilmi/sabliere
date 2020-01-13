@@ -13,6 +13,29 @@ function ServerUpdates:init(host)
     self.duplexToClient = {}
 
     self.host = host
+	self.snapshotInterval = 30
+
+    Timer.every(self.snapshotInterval, function()
+		for clientId, __ in pairs(self.host.clients) do
+			self:updateLevel(clientId)
+		end
+    end)
+    
+    local chunkHistory = {}
+
+    host.state.players:addListener('PLAYER CHUNK', function(clientId, timeElapsed)
+        if timeElapsed > self.snapshotInterval or timeElapsed == -1 then
+            self:updateLevel(clientId)
+        end
+	end)
+end
+
+function ServerUpdates:updateLevel(clientId)
+	local snapshot = self.host.state:getLevelChunk(clientId)
+
+	for segment, payload in pairs(snapshot) do
+		self:pushDuplex(clientId, Data({request = 'snapshot', segment = segment}, payload))
+	end
 end
 
 function ServerUpdates:pushClientEvent(clientId, data)

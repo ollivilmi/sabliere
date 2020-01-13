@@ -53,9 +53,10 @@ function DuplexQueue:addTry()
 end
 
 function DuplexQueue:refresh()
-    if not self.queue:isEmpty() then
-        if self:shouldRetry() then
-            self.connection:send(self.queue:peek(), self.clientId)
+    if self:shouldRetry() then
+        local data = self.queue:peek()
+        if data then
+            self.connection:send(data, self.clientId)
             self:addTry()
         end
     end

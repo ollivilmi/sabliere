@@ -1,5 +1,6 @@
 require "src/network/state/GameState"
 require 'lib/language/Listener'
+Timer = require 'lib/game/love-utils/knife/timer'
 
 Connection = Class{__includes = Listener}
 
@@ -22,6 +23,7 @@ function Connection:init(self, def)
 end
 
 function Connection:update(dt)
+    Timer.update(dt)
 	self:receive()
 
     self.tickrateTimer = self.tickrateTimer + dt

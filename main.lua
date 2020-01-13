@@ -31,16 +31,8 @@ end
 
 function love.update(dt)
     lovebird.update()
-    Timer.update(dt)
     Gui:update(dt)
-
     Game:update(dt)
-end
-
-function log(message)
-    if DEBUG_MODE then
-        print(message)
-    end
 end
 
 function love.draw()

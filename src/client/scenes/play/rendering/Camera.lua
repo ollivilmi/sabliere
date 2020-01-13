@@ -1,13 +1,19 @@
 Camera = Class{}
 
+local DEFAULT_RES = 720
+
 function Camera:init(speed)
-    self.entity = {x = 0, y = 0}
+    self.entity = {x = 0, y = 0, w = 50, h = 50}
     self.speed = speed
     self.x = 0
     self.y = 0
     self.dx = 0
     self.dy = 0
-    self.zoom = 1.2
+
+    local screen = Game.state.level.screen
+
+    self.maxZoom = math.floor((screen.h / love.graphics.getHeight()) * 10) / 10
+    self.zoom = self.maxZoom -- max zoom for performance / chunks are always loaded
 
     self.center = {
         x = love.graphics.getWidth() / 2 * self.zoom,
@@ -16,6 +22,7 @@ function Camera:init(speed)
 end
 
 function Camera:setZoom(zoom)
+    -- self.zoom = math.min(self.maxZoom, zoom)
     self.zoom = zoom
 
     self.center = {

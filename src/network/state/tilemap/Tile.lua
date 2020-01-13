@@ -2,7 +2,9 @@ local types = require 'src/network/state/tilemap/TileTypes'
 
 Tile = Class{}
 
-function Tile:init(type)
+function Tile:init(x, y, type)
     self.isTile = true
     self.type = type
+    self.x = x
+    self.y = y
 end

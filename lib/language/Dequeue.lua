@@ -46,6 +46,12 @@ function Dequeue:peek()
     return self.items[self.head]
 end
 
+function Dequeue:peekLast()
+    if self:isEmpty() then return nil end
+
+    return self.items[self.tail]
+end
+
 function Dequeue:length()
     return (self.tail + 1) - self.head
 end

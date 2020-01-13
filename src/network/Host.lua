@@ -14,14 +14,6 @@ function Host:init(def)
 	-- [id] = ip, port, time from last ping
 	self.clients = {}
 	self.updates = ServerUpdates(self)
-	
-	self.snapshotInterval = 60
-
-	Timer.every(self.snapshotInterval, function()
-		for id, __ in pairs(self.clients) do
-			self.updates:pushDuplex(id, Data({request = 'snapshot'}, self.state:getSnapshot()))
-		end
-    end)
 
 	self.t = 0
 

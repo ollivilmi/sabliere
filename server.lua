@@ -17,7 +17,7 @@ local currentTime = host.socket.gettime()
 local fiveseconds = host.socket.gettime()
 
 Timer.every(5, function()
-    host.state.level.players:print()
+    host.state.players:print()
 end)
 
 while running do
@@ -25,6 +25,5 @@ while running do
     local dt = currentTime - previousTime
     previousTime = currentTime
 
-    Timer.update(dt)
     host:update(dt)
 end

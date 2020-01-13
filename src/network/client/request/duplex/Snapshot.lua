@@ -1,14 +1,12 @@
 local Snapshot = {}
 
 function Snapshot.update(data, client)
-    client.state:setSnapshot(data.payload)
-    client:broadcastEvent('SNAPSHOT')
+    client.state:setSnapshot(data.headers.segment, data.payload)
+    client:broadcastEvent('SNAPSHOT', data.headers.segment)
 end
 
 function Snapshot.connect(data, client)
-    client.state:setSnapshot(data.payload)
-
-    local player = client.state.level.players:getEntity(client.status.id)
+    local player = client.state.players:getEntity(client.status.id)
     
     -- Periodically send movement updates to server
     client.updates:pushEntity(client.status.id, player)

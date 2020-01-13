@@ -1,17 +1,16 @@
 require 'src/client/scenes/play/rendering/level/BackgroundRendering'
 require 'src/client/scenes/play/rendering/level/PlayerRendering'
 require 'src/client/scenes/play/rendering/level/TilemapRendering'
+require 'src/client/scenes/play/rendering/level/ResourceRendering'
 
 require 'src/client/scenes/play/rendering/Camera'
 require 'src/client/scenes/play/rendering/interface/Interface'
 require 'src/client/scenes/play/rendering/interface/AbilityRendering'
 
--- Wraps GameState level for animations and stuff
+-- Wraps GameState for animations and stuff
 Rendering = Class{}
 
 function Rendering:init()
-    self.level = Game.state.level
-
     Camera = Camera(1)
 
     Game.client:addListener('PLAYER CONNECTED', function(player)
@@ -19,14 +18,17 @@ function Rendering:init()
     end)
 
     self.background = BackgroundRendering()
-    self.tilemap = TilemapRendering(self.level.tilemap)
-    self.players = PlayerRendering(self.level.players)
+    -- Instead: LevelRendering
+    self.tilemap = TilemapRendering(Game.state.level)
+    -- self.resources = ResourceRendering(self.level.resources)
+    self.players = PlayerRendering(Game.state.players)
 
     self.interface = Interface()
 
     self.renderingLayers = {
-        { self.background }, -- to add: background, background tiles?
+        { self.background },
         { self.tilemap },
+        -- { self.resources },
         { self.players }
     }
 end
@@ -47,7 +49,7 @@ end
 function Rendering:render()
     Camera:set()
 
-    for depth, layer in pairs(self.renderingLayers) do
+    for z, layer in pairs(self.renderingLayers) do
         for k, renderable in pairs(layer) do
             renderable:render()
         end

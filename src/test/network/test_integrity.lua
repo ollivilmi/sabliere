@@ -4,6 +4,7 @@ Class = require 'lib/language/class'
 require "src/test/network/clientHostSetup"
 require 'lib/language/Dequeue'
 require 'src/network/state/tilemap/Tilemap'
+require 'src/network/state/Level'
 
 local md5 = require 'lib/language/md5'
 local lzw = require 'lib/language/lzw'
@@ -26,7 +27,8 @@ function testMd5()
     assert(m1 ~= m2, "message 2 has an extra space, should not equal")
 
     local bump = require '/lib/game/physics/bump'
-    local tilemap = Tilemap(10, 10, bump.newWorld(20))
+    local level = Level(bump.newWorld(80))
+    local tilemap = level.tilemap
 
     -- Generate a tile chunk that is twice as large as 1920x1080p
     -- quite big, but still should perform very fast
@@ -35,14 +37,13 @@ function testMd5()
     local socket = require 'socket'
     local start = socket.gettime()
     md5.sumhexa(lzw.compress(json.encode(tilemap:getChunk({
-        x = 1,
-        y = 1,
-        width = tilemap.width,
-        height = tilemap.height,
+        x = 0,
+        y = 0,
     }))))
 
     -- if it's slower than 0.025 things will be bad
-    assert(socket.gettime() - start < 0.025, "generating checksum slow, may cause issues")
+    local timeSpent = socket.gettime() - start
+    assert(timeSpent < 0.025, "generating checksum slow, may cause issues: " .. timeSpent)
 end
 
 function testQueue()

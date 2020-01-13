@@ -7,13 +7,13 @@ local PlayerUpdate = {}
 
 function PlayerUpdate.connect(data, client)
     if (data.headers.entityId ~= client.status.id) then
-        client.state.level.players:createEntity(data.headers.entityId, data.payload)
+        client.state.players:createEntity(data.headers.entityId, data.payload)
     end
 end
 
 function PlayerUpdate.update(data, client)
     if (data.headers.entityId ~= client.status.id) then
-        local player = client.state.level.players:getEntity(data.headers.entityId)
+        local player = client.state.players:getEntity(data.headers.entityId)
 
         if player then
             player:tween(client.tickrate, data.payload)
@@ -24,7 +24,7 @@ function PlayerUpdate.update(data, client)
 end
 
 function PlayerUpdate.disconnect(data, client)
-    client.state.level.players:removeEntity(data.headers.entityId)
+    client.state.players:removeEntity(data.headers.entityId)
 end
 
 return PlayerUpdate
