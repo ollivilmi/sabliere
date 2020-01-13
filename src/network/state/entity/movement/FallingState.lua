@@ -12,7 +12,7 @@ end
 
 function FallingState:collisions(collisions)
     for __, col in pairs(collisions) do
-        if col.other.isTile then
+        if col.type == 'slide' then
             -- ground collision
             if col.normal.y == -1 then
                 self.entity.dy = 0

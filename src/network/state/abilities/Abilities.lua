@@ -16,7 +16,7 @@ function Abilities:init(level)
                     if item.isTile then
                         local x, y = level.world:getRect(item)
                         level.tilemap:removeIfExists(x, y)
-                        -- level.resources:add(x, y, 's')
+                        level.resources:addResource(x, y, 't')
                     end
                 end
             end

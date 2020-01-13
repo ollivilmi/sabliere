@@ -10,7 +10,6 @@ function Snapshot.connect(data, client)
     
     -- Periodically send movement updates to server
     client.updates:pushEntity(client.status.id, player)
-
     client:broadcastEvent('PLAYER CONNECTED', player)
 end
 

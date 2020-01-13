@@ -1,7 +1,6 @@
 require 'src/client/scenes/play/rendering/level/BackgroundRendering'
 require 'src/client/scenes/play/rendering/level/PlayerRendering'
-require 'src/client/scenes/play/rendering/level/TilemapRendering'
-require 'src/client/scenes/play/rendering/level/ResourceRendering'
+require 'src/client/scenes/play/rendering/level/LevelRendering'
 
 require 'src/client/scenes/play/rendering/Camera'
 require 'src/client/scenes/play/rendering/interface/Interface'
@@ -18,17 +17,14 @@ function Rendering:init()
     end)
 
     self.background = BackgroundRendering()
-    -- Instead: LevelRendering
-    self.tilemap = TilemapRendering(Game.state.level)
-    -- self.resources = ResourceRendering(self.level.resources)
+    self.level = LevelRendering(Game.state.level)
     self.players = PlayerRendering(Game.state.players)
 
     self.interface = Interface()
 
     self.renderingLayers = {
         { self.background },
-        { self.tilemap },
-        -- { self.resources },
+        { self.level },
         { self.players }
     }
 end
