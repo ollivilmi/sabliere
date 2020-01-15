@@ -23,7 +23,8 @@ end
 
 function LevelRendering:renderResource(resource)
     local texture = self.resourceTextures[resource.id] or self.resourceTextures['t']
-    love.graphics.draw(texture, resource.x, resource.y)
+    local x, y = self.level.world:getRect(resource)
+    love.graphics.draw(texture, x, y)
 end
 
 function LevelRendering:render()

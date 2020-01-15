@@ -1,5 +1,7 @@
 Resources = Class{}
 
+local RESOURCE_SIZE = 10
+
 function Resources:init(level)
     self.world = level.world
     self.chunk = level.chunk
@@ -7,18 +9,16 @@ function Resources:init(level)
     self.types = {
         t = {
             id = 't',
-            size = 10
         }
     }
 end
 
 function Resources:addResource(x, y, id)
-    local type = self.types[id]
+    local type = self.types[id] or 't'
     if not type then return end
 
-    local resource = {id = id, x = x, y = y, isResource = true}
-
-    self.world:add(resource, x, y, type.size, type.size)
+    local resource = {id = id, falling = true, isResource = true}
+    self.world:add(resource, x, y, RESOURCE_SIZE, RESOURCE_SIZE)
 end
 
 function Resources:setResource(x, y, id)
@@ -30,12 +30,12 @@ function Resources:setResource(x, y, id)
     end
 end
 
-function Resources:getResource(x, y, id)
-    local items, len = self.world:queryPoint(x, y, function(item)
+function Resources:getResource(x, y)
+    local items, len = self.world:queryRect(x, y, RESOURCE_SIZE, RESOURCE_SIZE, function(item)
         return item.isResource
     end)
 
-    return items[0]
+    return items[1]
 end
 
 function Resources:removeResource(resource)
@@ -59,7 +59,8 @@ function Resources:getChunk(chunk)
     )
 
     for __, resource in pairs(resources) do
-        table.insert(resourceChunk, {id = resource.id, x = resource.x, y = resource.y})
+        local x, y = self.world:getRect(resource)
+        table.insert(resourceChunk, {id = resource.id, x = x, y = y})
     end
 
     return resourceChunk
@@ -70,3 +71,32 @@ function Resources:setResources(resources)
         self:setResource(resource.x, resource.y, resource.id)
     end
 end
+
+-- function Resources:update(chunk, dt)
+--     local resources = self.world:queryRect(chunk.x, chunk.y, self.chunk.w, self.chunk.h, function(item)
+--         return item.isResource
+--     end)
+
+--     for __, resource in pairs(resources) do
+--         local x, y = self.world:getRect(resource)
+
+--         if resource.falling then
+--             local __, __, cols, cols_len  = self.world:move(resource, x, y + (50 * dt))
+
+--             if cols_len ~= 0 then
+--                 resource.falling = false
+--             end
+--         else
+--             if not self:resourceIsGrounded(resource, x, y) then
+--                 resource.falling = true
+--             end
+--         end
+--     end
+-- end
+
+-- function Resources:resourceIsGrounded(resource, x, y)
+--     local size = self.types[resource.id].size
+
+--     local items, len = self.world:queryRect(x, y + size + 1, size, 1)
+--     return len ~= 0
+-- end
