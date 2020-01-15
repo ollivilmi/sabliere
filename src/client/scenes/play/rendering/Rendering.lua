@@ -12,10 +12,6 @@ Rendering = Class{}
 function Rendering:init()
     Camera = Camera(1)
 
-    Game.client:addListener('PLAYER CONNECTED', function(player)
-        Camera:follow(player)
-    end)
-
     self.background = BackgroundRendering()
     self.level = LevelRendering(Game.state.level)
     self.players = PlayerRendering(Game.state.players)
@@ -27,6 +23,11 @@ function Rendering:init()
         { self.level },
         { self.players }
     }
+
+    Game.client:addListener('PLAYER CONNECTED', function(player)
+        Camera:follow(player)
+        self.interface.healthbar:load(player)
+    end)
 end
 
 function Rendering:addRenderable(layer, renderable)
