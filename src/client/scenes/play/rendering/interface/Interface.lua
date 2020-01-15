@@ -1,6 +1,7 @@
 require 'src/client/scenes/play/rendering/interface/Toolbar'
 require 'src/client/scenes/play/rendering/interface/Stats'
 require 'src/client/scenes/play/rendering/interface/Cursor'
+require 'src/client/scenes/play/rendering/interface/Healthbar'
 
 Interface = Class{}
 
@@ -9,6 +10,7 @@ function Interface:init()
     self.gui.style.unit = math.max(40, love.graphics.getWidth() / 25)
 
     self.stats = Stats(self.gui)
+    self.healthbar = Healthbar(self.gui, {health = 100, resources = 0})
 
     self.abilities = AbilityRendering()
     self.toolbar = Toolbar(self.gui, self.abilities.icons)
@@ -22,6 +24,7 @@ function Interface:toggle()
 end
 
 function Interface:render()
+    self.healthbar:update()
     self.stats:update()
     self.gui:draw()
     self.cursor:render()

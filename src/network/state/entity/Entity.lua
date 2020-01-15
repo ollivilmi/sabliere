@@ -125,7 +125,7 @@ function Entity:setState(state)
     self.direction = state.direction or 'right'
     self.weight = state.weight or 2000
     self.health = state.health or 100
-    self.resources = state.resources or 100
+    self.resources = state.resources or 0
     self.state = state.state or 'falling'
     self.model = state.model or 'dude'
 
