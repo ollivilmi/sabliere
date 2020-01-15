@@ -85,8 +85,25 @@ end
 
 function Players:update(dt)
     for id, player in pairs(self.players) do
-        player:update(dt)
+        local cols = player:update(dt)
+        self:collisions(id, cols)
         self:updateChunk(id, player)
+    end
+end
+
+function Players:collisions(player, cols)
+    local resources = {}
+
+    for __, col in pairs(cols) do
+        if col.other.isResource then
+            table.insert(resources, col.other)
+        elseif col.other.isProjectile then
+            self:broadcastEvent('PROJECTILE COLLISION', player, col.other)
+        end
+    end
+
+    if #resources > 0 then
+        self:broadcastEvent('RESOURCE COLLISION', player, resources)
     end
 end
 
@@ -99,6 +116,19 @@ function Players:updateChunk(id, player)
         self.chunkHistory:update(id, chunk)
         self:broadcastEvent('PLAYER CHUNK', id, timeElapsed)
     end
+end
+
+function Players:getActiveChunks()
+    local chunkSet = {}
+
+    for id, __ in pairs(self.players) do
+        local chunk = self.chunkHistory[id].current
+        if chunk then
+            chunkSet[chunk.x .. chunk.y] = chunk
+        end
+    end
+
+    return chunkSet
 end
 
 function Players:print()

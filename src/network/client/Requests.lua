@@ -14,6 +14,8 @@ local Requests = {
 
     ability = update.ability.handle,
 
+    pickup = update.resource.pickup,
+
     playerConnected = duplex.snapshot.connect,
     snapshot = duplex.snapshot.update,
     chunk = duplex.tilemap.chunk,

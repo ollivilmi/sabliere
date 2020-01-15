@@ -1,5 +1,4 @@
 require 'src/network/state/tilemap/Tilemap'
-require 'src/network/state/entity/Players'
 
 require 'src/network/state/resources/Resources'
 

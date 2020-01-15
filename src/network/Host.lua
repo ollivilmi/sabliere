@@ -1,6 +1,7 @@
 require 'src/network/Connection'
 require 'src/network/Data'
 require 'src/network/updates/ServerUpdates'
+require 'src/network/state/ServerOnlyEvents'
 
 Host = Class{__includes = Connection}
 
@@ -14,6 +15,8 @@ function Host:init(def)
 	-- [id] = ip, port, time from last ping
 	self.clients = {}
 	self.updates = ServerUpdates(self)
+
+	self.serverOnlyEvents = ServerOnlyEvents(self)
 
 	self.t = 0
 

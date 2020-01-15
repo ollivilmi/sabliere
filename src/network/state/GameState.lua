@@ -3,6 +3,7 @@ require 'src/network/Data'
 require 'src/network/state/Level'
 require 'src/network/state/tilemap/Tilemap'
 require 'src/network/state/abilities/Abilities'
+require 'src/network/state/Players'
 
 -- State holds the current server state for everything necessary
 -- Can be compared to redux index

@@ -30,7 +30,8 @@ function Entity:changeState(state)
 end
 
 local function entityCollision(player, other)
-    if other.isResource then return 'cross'
+    if other.isResource then 
+        return 'cross'
     else
         return 'slide'
     end
@@ -43,6 +44,7 @@ function Entity:update(dt)
         entityCollision
     )
     self.movementState.current:collisions(cols)
+    return cols
 end
 
 function Entity:checkGround()
