@@ -26,7 +26,7 @@ function Players:createEntity(id, state)
 
     self.players[id] = entity
     self.chunkHistory[id] = {}
-    self.chunkHistory:update(id, self.level:getEntityChunk(entity))
+    self.chunkHistory:update(id, self.level:getChunk(entity))
 
     self.world:add(entity, entity.x, entity.y, entity.w, entity.h)
     
@@ -97,8 +97,6 @@ function Players:collisions(player, cols)
     for __, col in pairs(cols) do
         if col.other.isResource then
             table.insert(resources, col.other)
-        elseif col.other.isProjectile then
-            self:broadcastEvent('PROJECTILE COLLISION', player, col.other)
         end
     end
 
@@ -108,7 +106,7 @@ function Players:collisions(player, cols)
 end
 
 function Players:updateChunk(id, player)
-    local chunk = self.level:getEntityChunk(player)
+    local chunk = self.level:getChunk(player)
     local current = self.chunkHistory[id].current
 
     if chunk.x ~= current.x or chunk.y ~= current.y then

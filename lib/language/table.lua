@@ -15,6 +15,20 @@ function table.allElementsEqual(t, comparator)
     return true
 end
 
+function table.update(t, values)
+   for k, v in pairs(values) do
+       if t[k] then
+           t[k] = v
+       end
+   end
+end
+
+function table.print(t)
+   for k, v in pairs(t) do
+      print(k,v)
+  end
+end
+
 function table.pack(...)
    local t = {}
    

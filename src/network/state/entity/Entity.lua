@@ -56,10 +56,6 @@ function Entity:checkGround()
     end
 end
 
-function Entity:getLocation()
-    return {x = self.x, y = self.y}
-end
-
 --  to pass all state between client and server
 function Entity:getState()
     return {

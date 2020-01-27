@@ -6,11 +6,11 @@ function Abilities:init(level)
         [1] = {
             range = 200,
             radius = 40,
-            use = function(this, player, coords)
-                local px, py = math.rectangleCenter(player)
-                if math.distance(px, py, coords.x, coords.y) > this.range then return end
+            use = function(this, player, pos, cursor)
+                local x, y = math.rectangleCenter(pos)
+                if math.distance(x, y, cursor.x, cursor.y) > this.range then return end
                 
-                local items, len = level.world:queryRect(coords.x, coords.y, this.radius, this.radius)
+                local items, len = level.world:queryRect(cursor.x, cursor.y, this.radius, this.radius)
                         
                 for __, item in pairs(items) do
                     if item.isTile then
@@ -22,8 +22,11 @@ function Abilities:init(level)
             end
         },
         [2] = {
-            use = function(this, player, coords)
-                -- spawn bullet if player has resources, subtract resources
+            use = function(this, player, pos, cursor)
+                if player.resources > 0 then
+                    level.projectiles:spawnBullet(pos, cursor)
+                    player.resources = player.resources - 1
+                end
             end
         }
     }

@@ -22,7 +22,11 @@ function ServerOnlyEvents:init(host)
         host.updates:pushEvent(Data({request = "pickup", entityId = player},{coords = coords}))
     end)
 
-    state.players:addListener('PROJECTILE COLLISION', function(player, bullet)
+    -- state.players:addListener('PROJECTILE COLLISION', function(player, bullet)
+    --     print("projectile col")
+    -- end)
+
+    state.level.projectiles:addListener('PROJECTILE COLLISION', function(player)
         print("projectile col")
     end)
 end

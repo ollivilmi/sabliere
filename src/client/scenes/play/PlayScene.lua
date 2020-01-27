@@ -26,7 +26,7 @@ function PlayScene:playerConnectionSettings()
     --
     -- (todo: press button to spectate or join as player)
     Game.client:addListener('CONNECTED', function()
-        Game.client.updates:pushDuplex(Data{request = 'connectPlayer'})
+        Game.client.updates:sendDuplex(Data{request = 'connectPlayer'})
     end)
 
     Game.client:addListener('CONNECTION TIMED OUT', function()

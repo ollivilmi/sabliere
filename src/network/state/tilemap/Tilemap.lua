@@ -27,6 +27,20 @@ function Tilemap:addRectangle(rectangle, id)
     end
 end
 
+function Tilemap:removeRectangle(rectangle)
+    sx = tilemath.snap(self.tileSize, rectangle.x)
+    sy = tilemath.snap(self.tileSize, rectangle.y)
+
+    local ex = tilemath.snap(self.tileSize, sx + rectangle.w) - 1
+    local ey = tilemath.snap(self.tileSize, sy + rectangle.h) - 1
+
+    for x = sx, ex, self.tileSize do
+        for y = sy, ey, self.tileSize do
+            self:removeIfExists(x, y, id)
+        end
+    end
+end
+
 function Tilemap:getTile(x, y)
     local items, len = self.world:queryRect(x, y, self.tileSize, self.tileSize,
     function(item)

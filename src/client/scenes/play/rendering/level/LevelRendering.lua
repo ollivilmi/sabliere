@@ -27,6 +27,12 @@ function LevelRendering:renderResource(resource)
     love.graphics.draw(texture, x, y)
 end
 
+function LevelRendering:renderProjectile(projectile)
+    love.graphics.setColor(0,0,0)
+    love.graphics.circle('fill', projectile.x, projectile.y, 5, 30)
+    love.graphics.setColor(1,1,1)
+end
+
 function LevelRendering:render()
     love.graphics.setColor(1,1,1)
 
@@ -36,7 +42,7 @@ function LevelRendering:render()
         love.graphics.getWidth() * Camera.zoom,
         love.graphics.getHeight() * Camera.zoom,
         function(item)
-            return item.isTile or item.isResource
+            return not item.isPlayer
         end
     )
 
@@ -45,6 +51,8 @@ function LevelRendering:render()
             self:renderTile(asset)
         elseif asset.isResource then
             self:renderResource(asset)
+        elseif asset.isProjectile then
+            self:renderProjectile(asset)
         end
     end
 end

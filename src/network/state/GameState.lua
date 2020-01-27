@@ -25,16 +25,17 @@ end
 
 function GameState:update(dt)
     self.players:update(dt)
+    self.level:update(dt)
 end
 
 -- For periodic synchronization, level may get corrupted
-function GameState:getLevelChunk(clientId)
-    return self.level:getChunk(self.players.chunkHistory[clientId].current)
+function GameState:getLevelSnapshot(clientId)
+    return self.level:getSnapshot(self.players.chunkHistory[clientId].current)
 end
 
 -- When connecting to server, get all state
 function GameState:getSnapshot(clientId)
-    local levelChunk = self:getLevelChunk(clientId)
+    local levelChunk = self:getLevelSnapshot(clientId)
 
     return {
         players = self.players:getSnapshot(),
@@ -47,6 +48,6 @@ function GameState:setSnapshot(segment, snapshot)
     if segment == 'players' then
         self.players:setSnapshot(snapshot)
     else
-        self.level:setChunk(segment, snapshot)
+        self.level:setSnapshot(segment, snapshot)
     end
 end
