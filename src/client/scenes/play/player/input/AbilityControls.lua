@@ -30,7 +30,7 @@ function AbilityControls:update()
         
         Game.client.updates:pushEvent(Data(
             {request = 'ability', abilityId = self.current},
-            {coords = Coordinates(x, y)})
+            {cursor = Coordinates(x, y)})
         )
     end
 

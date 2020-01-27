@@ -32,7 +32,7 @@ function setupClientAndHost()
 end
 
 function connectPlayer(client, host)
-    client.updates:pushDuplex(Data{request = 'connectPlayer'})
+    client.updates:sendDuplex(Data{request = 'connectPlayer'})
 
     -- local connecting = true
     -- client:addListener('PLAYER CONNECTED', function()

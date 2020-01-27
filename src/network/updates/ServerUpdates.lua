@@ -31,10 +31,10 @@ function ServerUpdates:init(host)
 end
 
 function ServerUpdates:updateLevel(clientId)
-	local snapshot = self.host.state:getLevelChunk(clientId)
+	local snapshot = self.host.state:getLevelSnapshot(clientId)
 
 	for segment, payload in pairs(snapshot) do
-		self:pushDuplex(clientId, Data({request = 'snapshot', segment = segment}, payload))
+		self:sendDuplex(clientId, Data({request = 'snapshot', segment = segment}, payload))
 	end
 end
 
@@ -42,8 +42,14 @@ function ServerUpdates:pushClientEvent(clientId, data)
 	table.insert(self.clientEvents[clientId], data)
 end
 
-function ServerUpdates:pushDuplex(clientId, data)
+function ServerUpdates:sendDuplex(clientId, data)
     self.duplexToClient[clientId]:push(data)
+end
+
+function ServerUpdates:pushDuplex(data)
+    for id, queue in pairs(self.duplexToClient) do
+        queue:push(data)
+    end
 end
 
 function ServerUpdates:sendACK(data)

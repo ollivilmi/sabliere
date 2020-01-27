@@ -13,10 +13,10 @@ function PlayerDuplex.connect(data, host, ip, port)
     local snapshot = host.state:getSnapshot(clientId)
 
     for segment, payload in pairs(snapshot) do
-        host.updates:pushDuplex(clientId, Data({request = 'snapshot', segment = segment}, payload))
+        host.updates:sendDuplex(clientId, Data({request = 'snapshot', segment = segment}, payload))
     end
 
-    host.updates:pushDuplex(clientId, Data({request = 'playerConnected'}))
+    host.updates:sendDuplex(clientId, Data({request = 'playerConnected'}))
 
     -- Add update of new player for all clients
     host.updates:pushEvent(Data({

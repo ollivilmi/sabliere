@@ -19,7 +19,7 @@ function ClientUpdates:init(client)
     end)
 end
 
-function ClientUpdates:pushDuplex(data)
+function ClientUpdates:sendDuplex(data)
 	self.duplexQueue:push(data)
 end
 

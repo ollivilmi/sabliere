@@ -18,8 +18,6 @@ function Host:init(def)
 
 	self.serverOnlyEvents = ServerOnlyEvents(self)
 
-	self.t = 0
-
 	self.state.level:addTestTiles()
 end
 

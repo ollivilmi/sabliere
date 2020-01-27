@@ -5,14 +5,14 @@ local AbilityUpdates = {}
 function AbilityUpdates.handle(data, host, ip, port)
     local player = host.state.players:getEntity(data.headers.clientId)
 
-    host.state.abilities[data.headers.abilityId]:use(player, data.payload.coords)
+    -- Use position of player when the ability was triggered
+    local pos = player:getPos()
+    host.state.abilities[data.headers.abilityId]:use(player, pos, data.payload.cursor)
 
     -- Set clientId to entityId so that every client can receive it
     data.headers.entityId = data.headers.clientId
     data.headers.clientId = nil
-
-    -- Add snapshot of player when the ability was triggered
-    data.payload.player = player:getPos()
+    data.payload.pos = pos
 
     host.updates:pushEvent(data)
 end

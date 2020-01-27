@@ -63,7 +63,6 @@ function Connection:handleRequest(dataString, ip, port)
                 end
             end
         else
-            -- add packet loss statistics here?
             print(data:toString())
         end
     end
