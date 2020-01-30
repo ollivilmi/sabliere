@@ -30,53 +30,58 @@ function Connection:update(dt)
     
     self:checkTimeout(dt)
 
-    if self.tickrateTimer > self.tickrate then
+    if self.tickrateTimer >= self.tickrate then
 		self:sendUpdates(dt)
 
 		self.tickrateTimer = self.tickrateTimer - self.tickrate
-		self.updates:clearEvents()
 	end
 
-	self.state:update(dt)
+    self.state:update(dt)
 end
 
-function Connection:isDuplexRequest(data)
-    return data.headers.duplex and data.headers.clientId and data.headers.request ~= 'ACK'
-end
+function Connection:handlePayload(data, ip, port)
+    local requestHandler = self.requests[data.headers.request]
 
-function Connection:handleRequest(dataString, ip, port)
-    if dataString then
-        local decoded, data = pcall(Data.decode, dataString)
-        
-        if decoded and self:validClientId(data.headers.clientId) then
-            if self:isDuplexRequest(data) then
-                self.updates:sendACK(data)
-            end
+    if requestHandler then
+        success, error = pcall(requestHandler, data, self, ip, port)
 
-            local requestHandler = self.requests[data.headers.request]
-
-            if requestHandler then
-                success, error = pcall(requestHandler, data, self, ip, port)
-
-                if not success then
-                    print(error)
-                end
-            end
-        else
-            print(data:toString())
+        if not success then
+            print("Payload error: " .. error)
         end
     end
 end
 
-function Connection:close()
-    self.udp:close()
+function Connection:handleBatch(batch, ip, port)
+    for __, request in pairs(batch.payload) do
+        request.headers.clientId = batch.headers.clientId
+        self:handlePayload(request, ip, port)
+    end
+end
+
+function Connection:handleMessage(dataString, ip, port)
+    if dataString then
+        local decoded, data = pcall(Data.decode, dataString)
+        
+        if decoded and self:validRequest(data, ip, port) then
+            self.updates:handleHeaders(data.headers)
+
+            if data.headers.batch then
+                self:handleBatch(data, ip, port)
+            else
+                self:handlePayload(data, ip, port)
+            end
+        else
+            print("Error: invalid message")
+        end
+    end
 end
 
 function Connection:receive()
     while true do
         local data, msg_or_ip, port = self.receiveFunction(self.udp)
+
         if data then
-            self:handleRequest(data, msg_or_ip, port)
+            self:handleMessage(data, msg_or_ip, port)
         elseif msg_or_ip ~= 'timeout' then 
             error("Network error: "..tostring(msg))
         else
@@ -85,3 +90,6 @@ function Connection:receive()
     end
 end
 
+function Connection:close()
+    self.udp:close()
+end

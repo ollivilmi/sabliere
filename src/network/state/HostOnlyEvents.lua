@@ -1,6 +1,6 @@
-ServerOnlyEvents = Class{}
+HostOnlyEvents = Class{}
 
-function ServerOnlyEvents:init(host)
+function HostOnlyEvents:init(host)
     local state = host.state
 
     state.players:addListener('RESOURCE COLLISION', function(player, resources)
@@ -21,10 +21,6 @@ function ServerOnlyEvents:init(host)
 
         host.updates:pushEvent(Data({request = "pickup", entityId = player},{coords = coords}))
     end)
-
-    -- state.players:addListener('PROJECTILE COLLISION', function(player, bullet)
-    --     print("projectile col")
-    -- end)
 
     state.level.projectiles:addListener('PROJECTILE COLLISION', function(player)
         print("projectile col")

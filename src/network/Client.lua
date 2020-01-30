@@ -17,19 +17,17 @@ function Client:init(def)
     -- ping, connected, connecting...
     self.status = ClientStatus(self)
 
-    -- For duplex communication queue
     self.updates = ClientUpdates(self)
-end
-
-function Client:validClientId(clientId)
-	if clientId == nil then return true end
-
-	return self.status.id == clientId
 end
 
 function Client:send(data)
     data.headers.clientId = self.status.id
     self.udp:send(data:encode())
+end
+
+-- Could be used to validate requests if necessary.
+function Client:validRequest(data)
+	return true
 end
 
 function Client:connect()
@@ -55,13 +53,14 @@ end
 
 function Client:sendUpdates()
     if self.status.connected then
-        for _, data in pairs(self.updates:clientUpdates()) do
-            self:send(data)
-        end
-
-        -- Could be combined with playerUpdates for performance
-        self:send(Data({request = 'ping'}, {sentTime = self.socket.gettime()}))
+        self:send(self.updates:getEntities())
+        self:send(self.updates:getEvents())
+        self.updates:nextTick()
     end
+end
+
+function Client:resetTimeout()
+    self.status.lastMessage = 0
 end
 
 function Client:checkTimeout(dt)
@@ -69,4 +68,8 @@ function Client:checkTimeout(dt)
         self:setDisconnected()
         self:broadcastEvent('CONNECTION TIMED OUT')
     end
+end
+
+function Client:setPing(sentTime)
+    self.status:setPing(sentTime)
 end
