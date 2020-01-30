@@ -16,25 +16,32 @@ function DuplexQueue:init(clientId, connection, maxRetries, retryInterval)
     self.previousTry = self.retryInterval
 end
 
-function DuplexQueue:push(data)
+function DuplexQueue:resetRetry()
+    self.previousTry = self.retryInterval
+    self.sentCount = 0
+end
+
+function DuplexQueue:addHeaders(data)
     data.headers.duplex = true
     data.headers.clientId = self.clientId
+end
+
+function DuplexQueue:push(data)
+    self:addHeaders(data)
     self.queue:push(data)
-    self:refresh()
 end
 
 function DuplexQueue:pushFirst(data)
-    data.headers.duplex = true
-    data.headers.clientId = self.clientId
+    self:addHeaders(data)
     self.queue:pushFirst(data)
+    self:resetRetry()
     self:refresh()
 end
 
 -- Called after receiving confirmation that the update was successful
 function DuplexQueue:next()
     self.queue:pop()
-    self.sentCount = 0
-    self.previousTry = self.retryInterval
+    self:resetRetry()
 end
 
 function DuplexQueue:timedOut()
@@ -69,7 +76,7 @@ function DuplexQueue:currentRequest()
 end
 
 function DuplexQueue:sendACK(request)
-    self:pushFirst(Data({request = 'ACK'},{request = request}))
+    self:pushFirst(Data({request = 'ACK', update = request},{}))
 end
 
 function DuplexQueue:receiveACK(request)

@@ -4,11 +4,14 @@ require 'src/network/updates/DuplexQueue'
 ClientUpdates = Class{__includes = Updates}
 
 function ClientUpdates:init(client)
-    Updates:init(self)
+    Updates:init(self, client)
 
     -- updates that require confirmation and must be sent in order
     -- requires clientId to work
     self.duplexQueue = DuplexQueue(nil, client)
+
+    self.ackMask = PacketLoss.BITMASK
+    self.lastReceived = 0
 
     client:addListener('CONNECTED', function(clientId)
         self.duplexQueue = DuplexQueue(clientId, client)
@@ -23,26 +26,44 @@ function ClientUpdates:sendDuplex(data)
 	self.duplexQueue:push(data)
 end
 
-function ClientUpdates:sendACK(data)
-    self.duplexQueue:sendACK(data.headers.request)
+-- eg. send ACK Snapshot received
+function ClientUpdates:sendACK(headers)
+    self.duplexQueue:sendACK(headers.request)
 end
 
--- Called upon completing current update in queue, move to next
-function ClientUpdates:receiveACK(data)
-    return self.duplexQueue:receiveACK(data.payload.request)
+-- eg. receive ACK Snapshot received. -> Send ACK ACK
+function ClientUpdates:receiveACK(headers)
+    self.duplexQueue:receiveACK(headers.update)
+
+    if headers.update ~= "ACK" then
+        self.connection:send(Updates.ACK)
+    end
 end
 
-function ClientUpdates:clientUpdates()
-    local updates = self:getUpdates()
-
+function ClientUpdates:refreshDuplex()
     if self.duplexQueue:timedOut() then
         -- NOTIFY: CONNECTION TIMED OUT
+        print("DUPLEX QUEUE TIMED OUT")
     end
 
-    local data = self.duplexQueue:refresh()
-    if data then
-        table.insert(updates, data)
-    end
+    self.duplexQueue:refresh()
+end
 
-    return updates
+function ClientUpdates:setLastReceived(sequenceNumber)
+    self.ackMask, self.lastReceived = 
+    PacketLoss.update(self.ackMask, self.lastReceived, sequenceNumber)
+end
+
+function ClientUpdates:getEvents()
+    local data = self.events:get()
+
+    data.headers.ack = self.ackMask
+    data.headers.last = self.lastReceived
+
+    return data
+end
+
+function ClientUpdates:nextTick()
+	self:refreshDuplex()
+	self.events.sequence:next()
 end

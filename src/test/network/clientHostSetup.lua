@@ -3,20 +3,14 @@ Class = require 'lib/language/class'
 require "src/network/Host"
 require "src/network/Client"
 
-function setupClientAndHost()
+function addClient(host)
     local client = Client{
         requests = require 'src/network/client/Requests',
         address = '127.0.0.1',
         port = 12345,
         tickrate = 0.05,
     }
-
-    local host = Host{
-        requests = require 'src/network/server/Requests',
-        interface = '*',
-        port = 12345
-    }
-
+    
     client:send(Data{request = 'connect'})
     host:receive()
     client:receive()
@@ -28,23 +22,18 @@ function setupClientAndHost()
     assert(client.status.connected)
     assert(not client.status.connecting)
 
-    return client, host
+    return client
 end
 
-function connectPlayer(client, host)
-    client.updates:sendDuplex(Data{request = 'connectPlayer'})
+function setupClientAndHost()
+    local host = Host{
+        requests = require 'src/network/server/Requests',
+        interface = '*',
+        port = 12345
+    }
+    local client = addClient(host)
 
-    -- local connecting = true
-    -- client:addListener('PLAYER CONNECTED', function()
-    --     connecting = false
-    -- end)
-
-    -- while connecting do
-    --     client:sendUpdates(client.tickrate)
-    --     host:receive()
-    --     host:sendUpdates(host.tickrate)
-    --     client:receive()
-    -- end
+    return client, host
 end
 
 function cleanup(client, host)
@@ -55,4 +44,10 @@ end
 function nextTick(client, host)
     host:update(host.tickrate)
     client:update(client.tickrate)
+end
+
+function nTicks(client, host, n)
+    for i = 1, n do
+        nextTick(client, host)
+    end
 end

@@ -1,7 +1,7 @@
 require 'src/network/Connection'
 require 'src/network/Data'
-require 'src/network/updates/ServerUpdates'
-require 'src/network/state/ServerOnlyEvents'
+require 'src/network/updates/HostUpdates'
+require 'src/network/state/HostOnlyEvents'
 
 Host = Class{__includes = Connection}
 
@@ -14,17 +14,11 @@ function Host:init(def)
 
 	-- [id] = ip, port, time from last ping
 	self.clients = {}
-	self.updates = ServerUpdates(self)
+	self.updates = HostUpdates(self)
 
-	self.serverOnlyEvents = ServerOnlyEvents(self)
+	self.serverOnlyEvents = HostOnlyEvents(self)
 
 	self.state.level:addTestTiles()
-end
-
-function Host:validClientId(clientId)
-	if clientId == nil then return true end
-
-	return self.clients[clientId] ~= nil
 end
 
 function Host:send(data, clientId)
@@ -33,20 +27,28 @@ function Host:send(data, clientId)
 	self.udp:sendto(data:encode(), client.ip, client.port)
 end
 
+-- Requests must contain clientId header for a valid client
+-- for anything other than a connect request
+function Host:validRequest(data, ip, port)
+	if data.headers.clientId then
+		local client = self.clients[data.headers.clientId]
+		
+		return client and client.ip == ip and client.port == port
+	end
+
+	return data.headers.request == "connect"
+end
+
 function Host:sendUpdates()
 	for clientId, __ in pairs(self.clients) do
-		for _, data in pairs(self.updates:getUpdates()) do
-			self:send(data, clientId)
-		end
-
-		for _, data in pairs(self.updates:getUpdatesForClient(clientId)) do
-			self:send(data, clientId)
-		end
+		self:send(self.updates:getEntities(), clientId)
+		self:send(self.updates:getEvents(clientId), clientId)
 	end
+	self.updates:nextTick()
 end
 
 function Host:addClient(clientId, ip, port)
-    self.clients[clientId] = {ip = ip, port = port, lastMessage = 0}
+    self.clients[clientId] = {ip = ip, port = port, lastMessage = 0, ping = 0}
 	self.updates:addClient(clientId)
 end
 
@@ -69,5 +71,11 @@ function Host:checkTimeout(dt)
 			self:removeClient(clientId)
 			self.requests.quitPlayer({headers = {clientId = clientId}}, self)
 		end
+	end
+end
+
+function Host:setPing(sentTime, clientId)
+	if clientId then
+		self.clients[clientId].ping = (self.socket.gettime() - sentTime) * 1000 * 2
 	end
 end

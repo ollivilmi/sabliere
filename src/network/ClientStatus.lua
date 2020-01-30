@@ -3,8 +3,8 @@ ClientStatus = Class{}
 function ClientStatus:init(client)
     self.lastMessage = 0
     self.timeout = client.timeout
+    -- todo: sequence
     self.ping = 0
-    self.rtt = 0
     self.id = nil
     self.connecting = false
     self.connected = false
@@ -24,11 +24,9 @@ function ClientStatus:setDisconnected()
     self.id = nil
 end
 
-function ClientStatus:setPing(data)
-    self.lastMessage = 0
+function ClientStatus:setPing(sentTime)
     -- Todo: avg previous 50 entries
-    self.ping = (data.receivedTime - data.sentTime) * 1000
-    self.rtt = (self.gettime() - data.sentTime) * 1000
+    self.ping = (self.gettime() - sentTime) * 1000 * 2
 end
 
 function ClientStatus:isTimedOut(dt)
